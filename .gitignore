@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# uv
+.python-version
+
+# Django
+*.sqlite3
+static/dist/
+media/
+
+# Environment
+.env
+
+# Node
+frontend/node_modules/
+frontend/.vite/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+.coverage
+htmlcov/
+
+# Compiled translations
+*.mo
