@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Login" %} — Limpide{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-md">
+  <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+    <h1 class="mb-6 text-center text-2xl font-bold text-gray-900">{% trans "Login" %}</h1>
+
+    <form method="post" action="{% url 'account_login' %}" class="space-y-4">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% for field in form %}
+      <div>
+        <label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-medium text-gray-700">
+          {{ field.label }}
+        </label>
+        <input type="{{ field.field.widget.input_type }}"
+               name="{{ field.html_name }}"
+               id="{{ field.id_for_label }}"
+               value="{{ field.value|default:'' }}"
+               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 {% if field.errors %}border-red-500{% endif %}"
+               {% if field.field.required %}required{% endif %}>
+        {% if field.errors %}
+        <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <button type="submit"
+              class="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        {% trans "Login" %}
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-gray-600">
+      {% trans "Don't have an account?" %}
+      <a href="{% url 'account_signup' %}" class="font-medium text-blue-600 hover:text-blue-500">
+        {% trans "Sign up" %}
+      </a>
+    </p>
+  </div>
+</div>
+{% endblock %}
