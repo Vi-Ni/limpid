@@ -11,30 +11,34 @@
 
   <meta name="htmx-config" content='{"defaultSwapStyle":"innerHTML"}'>
 </head>
-<body class="flex min-h-full flex-col bg-gray-50 text-gray-900"
+<body class="flex min-h-full flex-col"
       hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
   {% include "components/disclaimer_banner.html" %}
   {% include "components/nav.html" %}
 
-  <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
-    {% if messages %}
-    <div class="mb-6 space-y-2">
-      {% for message in messages %}
-      <div class="rounded-lg border px-4 py-3 text-sm
-        {% if message.tags == 'error' %}border-red-200 bg-red-50 text-red-800
-        {% elif message.tags == 'success' %}border-green-200 bg-green-50 text-green-800
-        {% else %}border-blue-200 bg-blue-50 text-blue-800{% endif %}"
-        role="alert">
-        {{ message }}
+  <div class="flex flex-1 flex-col md:pl-60">
+    <main class="container-limpide flex-1 py-8">
+      {% if messages %}
+      <div class="mb-6 space-y-2">
+        {% for message in messages %}
+        <div class="rounded-lg border px-4 py-3 text-sm
+          {% if message.tags == 'error' %}border-danger-100 bg-danger-50 text-red-800
+          {% elif message.tags == 'success' %}border-success-100 bg-success-50 text-green-800
+          {% else %}border-primary-100 bg-primary-50 text-primary-800{% endif %}"
+          role="alert">
+          {{ message }}
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
-    {% endif %}
+      {% endif %}
 
-    {% block content %}{% endblock %}
-  </main>
+      {% block content %}{% endblock %}
+    </main>
 
-  {% include "components/footer.html" %}
+    {% include "components/footer.html" %}
+  </div>
+
+  {% include "components/bottom_nav.html" %}
 </body>
 </html>
