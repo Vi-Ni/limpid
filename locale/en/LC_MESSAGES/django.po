@@ -1,0 +1,7 @@
+# English translations for Limpide
+# Copyright (C) 2025 Limpide
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"

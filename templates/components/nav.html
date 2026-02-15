@@ -1,0 +1,67 @@
+{% load i18n %}
+<nav class="border-b border-gray-200 bg-white" x-data="{ mobileOpen: false }">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="{% url 'home' %}" class="text-xl font-bold text-blue-600">Limpide</a>
+        <div class="hidden items-center gap-6 md:flex">
+          <a href="{% url 'portfolio:list' %}" class="text-sm text-gray-600 hover:text-gray-900">
+            {% trans "Portfolios" %}
+          </a>
+          <a href="{% url 'education:path' %}" class="text-sm text-gray-600 hover:text-gray-900">
+            {% trans "Learn" %}
+          </a>
+          <a href="{% url 'scenarios:lab' %}" class="text-sm text-gray-600 hover:text-gray-900">
+            {% trans "Scenarios" %}
+          </a>
+          <a href="{% url 'impact:directory' %}" class="text-sm text-gray-600 hover:text-gray-900">
+            {% trans "Impact" %}
+          </a>
+        </div>
+      </div>
+
+      <div class="hidden items-center gap-4 md:flex">
+        {% if user.is_authenticated %}
+        <a href="{% url 'accounts:profile' %}" class="text-sm text-gray-600 hover:text-gray-900">
+          {% trans "Profile" %}
+        </a>
+        <a href="{% url 'account_logout' %}" class="text-sm text-gray-600 hover:text-gray-900">
+          {% trans "Logout" %}
+        </a>
+        {% else %}
+        <a href="{% url 'account_login' %}" class="text-sm text-gray-600 hover:text-gray-900">
+          {% trans "Login" %}
+        </a>
+        <a href="{% url 'account_signup' %}" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+          {% trans "Sign up" %}
+        </a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile menu button -->
+      <button @click="mobileOpen = !mobileOpen" class="md:hidden" aria-label="{% trans 'Toggle menu' %}">
+        <svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path x-show="!mobileOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <path x-show="mobileOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div x-show="mobileOpen" x-transition class="border-t border-gray-200 py-4 md:hidden">
+      <div class="flex flex-col gap-3">
+        <a href="{% url 'portfolio:list' %}" class="text-sm text-gray-600">{% trans "Portfolios" %}</a>
+        <a href="{% url 'education:path' %}" class="text-sm text-gray-600">{% trans "Learn" %}</a>
+        <a href="{% url 'scenarios:lab' %}" class="text-sm text-gray-600">{% trans "Scenarios" %}</a>
+        <a href="{% url 'impact:directory' %}" class="text-sm text-gray-600">{% trans "Impact" %}</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'accounts:profile' %}" class="text-sm text-gray-600">{% trans "Profile" %}</a>
+        <a href="{% url 'account_logout' %}" class="text-sm text-gray-600">{% trans "Logout" %}</a>
+        {% else %}
+        <a href="{% url 'account_login' %}" class="text-sm text-gray-600">{% trans "Login" %}</a>
+        <a href="{% url 'account_signup' %}" class="text-sm text-gray-600">{% trans "Sign up" %}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>

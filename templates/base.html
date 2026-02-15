@@ -1,0 +1,40 @@
+{% load i18n %}{% load django_vite %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Limpide{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{% trans 'Educational investment dashboard for beginners' %}{% endblock %}">
+
+  {% vite_asset "src/main.js" %}
+
+  <meta name="htmx-config" content='{"defaultSwapStyle":"innerHTML"}'>
+</head>
+<body class="flex min-h-full flex-col bg-gray-50 text-gray-900"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+  {% include "components/disclaimer_banner.html" %}
+  {% include "components/nav.html" %}
+
+  <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+    {% if messages %}
+    <div class="mb-6 space-y-2">
+      {% for message in messages %}
+      <div class="rounded-lg border px-4 py-3 text-sm
+        {% if message.tags == 'error' %}border-red-200 bg-red-50 text-red-800
+        {% elif message.tags == 'success' %}border-green-200 bg-green-50 text-green-800
+        {% else %}border-blue-200 bg-blue-50 text-blue-800{% endif %}"
+        role="alert">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "components/footer.html" %}
+</body>
+</html>

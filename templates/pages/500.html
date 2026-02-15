@@ -1,0 +1,17 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>500 — {% trans "Server error" %}</title>
+</head>
+<body class="flex min-h-screen items-center justify-center bg-gray-50">
+  <div class="text-center">
+    <p class="text-6xl font-bold text-gray-300">500</p>
+    <h1 class="mt-4 text-2xl font-bold text-gray-900">{% trans "Server error" %}</h1>
+    <p class="mt-2 text-gray-600">{% trans "Something went wrong. Please try again later." %}</p>
+    <a href="/" class="mt-8 inline-block text-blue-600 hover:underline">{% trans "Back to home" %}</a>
+  </div>
+</body>
+</html>

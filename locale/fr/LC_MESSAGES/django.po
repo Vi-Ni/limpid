@@ -1,0 +1,97 @@
+# French translations for Limpide
+# Copyright (C) 2025 Limpide
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "This tool is for educational purposes only. It does not constitute financial advice."
+msgstr "Cet outil est à des fins éducatives seulement. Il ne constitue pas un conseil financier."
+
+msgid "Dismiss"
+msgstr "Fermer"
+
+msgid "Educational investment dashboard for beginners"
+msgstr "Tableau de bord éducatif d'investissement pour débutants"
+
+msgid "Understand your investments"
+msgstr "Comprenez vos investissements"
+
+msgid "A free, educational dashboard that shows you exactly what you hold, what it costs, and what you need to learn — without ever telling you what to buy."
+msgstr "Un tableau de bord éducatif et gratuit qui montre exactement ce que vous détenez, ce que ça coûte et ce que vous devez apprendre — sans jamais vous dire quoi acheter."
+
+msgid "Portfolios"
+msgstr "Portefeuilles"
+
+msgid "Learn"
+msgstr "Apprendre"
+
+msgid "Scenarios"
+msgstr "Scénarios"
+
+msgid "Impact"
+msgstr "Impact"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Login"
+msgstr "Connexion"
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "Sign up"
+msgstr "S'inscrire"
+
+msgid "Toggle menu"
+msgstr "Ouvrir le menu"
+
+msgid "My portfolios"
+msgstr "Mes portefeuilles"
+
+msgid "Get started"
+msgstr "Commencer"
+
+msgid "Start learning"
+msgstr "Commencer à apprendre"
+
+msgid "Total transparency"
+msgstr "Transparence totale"
+
+msgid "See every fee, every holding, every risk — nothing hidden."
+msgstr "Voyez chaque frais, chaque titre, chaque risque — rien de caché."
+
+msgid "Learn at your pace"
+msgstr "Apprenez à votre rythme"
+
+msgid "A progressive learning path that grows with your understanding."
+msgstr "Un parcours d'apprentissage progressif qui grandit avec votre compréhension."
+
+msgid "No advice, ever"
+msgstr "Aucun conseil, jamais"
+
+msgid "We help you understand — we never tell you what to do with your money."
+msgstr "Nous vous aidons à comprendre — nous ne vous disons jamais quoi faire avec votre argent."
+
+msgid "Educational tool, not financial advice."
+msgstr "Outil éducatif, pas un conseil financier."
+
+msgid "About"
+msgstr "À propos"
+
+msgid "Page not found"
+msgstr "Page introuvable"
+
+msgid "The page you are looking for does not exist."
+msgstr "La page que vous cherchez n'existe pas."
+
+msgid "Back to home"
+msgstr "Retour à l'accueil"
+
+msgid "Server error"
+msgstr "Erreur serveur"
+
+msgid "Something went wrong. Please try again later."
+msgstr "Quelque chose s'est mal passé. Veuillez réessayer plus tard."

@@ -1,0 +1,10 @@
+{% load i18n %}
+<div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs text-amber-800"
+     x-data="{ show: true }" x-show="show">
+  <span>
+    {% trans "This tool is for educational purposes only. It does not constitute financial advice." %}
+  </span>
+  <button @click="show = false" class="ml-2 font-medium underline hover:no-underline">
+    {% trans "Dismiss" %}
+  </button>
+</div>
