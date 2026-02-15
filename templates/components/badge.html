@@ -1,0 +1,6 @@
+{% if variant == 'success' %}<span class="inline-flex items-center rounded-full bg-success-50 px-2.5 py-0.5 text-xs font-medium text-success-700">{{ label }}</span>
+{% elif variant == 'warning' %}<span class="inline-flex items-center rounded-full bg-warning-50 px-2.5 py-0.5 text-xs font-medium text-warning-700">{{ label }}</span>
+{% elif variant == 'danger' %}<span class="inline-flex items-center rounded-full bg-danger-50 px-2.5 py-0.5 text-xs font-medium text-danger-700">{{ label }}</span>
+{% elif variant == 'neutral' %}<span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">{{ label }}</span>
+{% else %}<span class="inline-flex items-center rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700">{{ label }}</span>
+{% endif %}

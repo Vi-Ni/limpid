@@ -1,0 +1,7 @@
+<div class="flex items-baseline justify-between py-2">
+  <dt class="text-sm text-text-muted">{{ label }}</dt>
+  <dd class="text-sm font-medium text-text">
+    {{ value }}
+    {% if annotation %}<span class="ml-1 text-xs text-text-muted">({{ annotation }})</span>{% endif %}
+  </dd>
+</div>

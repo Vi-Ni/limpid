@@ -1,0 +1,9 @@
+{% load i18n %}
+<div>
+  <div class="mb-2 flex justify-between text-sm text-text-muted">
+    <span>{% blocktrans with current=current total=total %}Step {{ current }} of {{ total }}{% endblocktrans %}</span>
+  </div>
+  <div class="h-2 w-full rounded-full bg-gray-200">
+    <div class="h-2 rounded-full bg-primary-600 transition-all" style="width: {% widthratio current total 100 %}%"></div>
+  </div>
+</div>

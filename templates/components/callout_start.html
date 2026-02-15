@@ -1,0 +1,4 @@
+{% load i18n %}
+<div class="my-4 rounded-lg border-l-4 px-4 py-3 {% if type == 'warning' %}border-warning-500 bg-warning-50{% elif type == 'example' %}border-primary-400 bg-primary-50{% elif type == 'impact' %}border-success-500 bg-success-50{% else %}border-primary-500 bg-primary-50{% endif %}">
+  {% if title %}<p class="mb-1 text-sm font-semibold {% if type == 'warning' %}text-warning-700{% elif type == 'impact' %}text-success-700{% else %}text-primary-700{% endif %}">{{ title }}</p>{% endif %}
+  <div class="text-sm {% if type == 'warning' %}text-warning-700{% elif type == 'impact' %}text-success-700{% else %}text-primary-700{% endif %}">

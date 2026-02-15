@@ -1,0 +1,9 @@
+{% load i18n %}
+<div class="rounded-xl border bg-bg-card shadow-sm {% if variant == 'warning' %}border-warning-500/30{% elif variant == 'success' %}border-success-500/30{% else %}border-border{% endif %}">
+  {% if title %}
+  <div class="flex items-center gap-2 border-b border-border px-5 py-4">
+    {% if icon %}<span class="text-text-muted">{{ icon }}</span>{% endif %}
+    <h3 class="text-base font-semibold text-text">{{ title }}</h3>
+  </div>
+  {% endif %}
+  <div class="px-5 py-4">
