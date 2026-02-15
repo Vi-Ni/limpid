@@ -1,0 +1,1 @@
+# Impact view tests

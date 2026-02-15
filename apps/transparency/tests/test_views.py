@@ -1,0 +1,1 @@
+# Transparency view tests
