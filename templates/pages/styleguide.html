@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Design System Styleguide" %} — Limpide{% endblock %}
+
+{% block content %}
+<div class="space-y-12">
+  <h1 class="text-3xl font-bold text-text">{% trans "Design System Styleguide" %}</h1>
+
+  <!-- Colors -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Colors</h2>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p class="mb-2 text-sm font-medium text-text-muted">Primary</p>
+        <div class="flex gap-1">
+          <div class="h-10 w-10 rounded bg-primary-50" title="primary-50"></div>
+          <div class="h-10 w-10 rounded bg-primary-100" title="primary-100"></div>
+          <div class="h-10 w-10 rounded bg-primary-200" title="primary-200"></div>
+          <div class="h-10 w-10 rounded bg-primary-400" title="primary-400"></div>
+          <div class="h-10 w-10 rounded bg-primary-600" title="primary-600"></div>
+          <div class="h-10 w-10 rounded bg-primary-800" title="primary-800"></div>
+        </div>
+      </div>
+      <div>
+        <p class="mb-2 text-sm font-medium text-text-muted">Success</p>
+        <div class="flex gap-1">
+          <div class="h-10 w-10 rounded bg-success-50" title="success-50"></div>
+          <div class="h-10 w-10 rounded bg-success-100" title="success-100"></div>
+          <div class="h-10 w-10 rounded bg-success-500" title="success-500"></div>
+          <div class="h-10 w-10 rounded bg-success-700" title="success-700"></div>
+        </div>
+      </div>
+      <div>
+        <p class="mb-2 text-sm font-medium text-text-muted">Warning</p>
+        <div class="flex gap-1">
+          <div class="h-10 w-10 rounded bg-warning-50" title="warning-50"></div>
+          <div class="h-10 w-10 rounded bg-warning-100" title="warning-100"></div>
+          <div class="h-10 w-10 rounded bg-warning-500" title="warning-500"></div>
+          <div class="h-10 w-10 rounded bg-warning-700" title="warning-700"></div>
+        </div>
+      </div>
+      <div>
+        <p class="mb-2 text-sm font-medium text-text-muted">Danger</p>
+        <div class="flex gap-1">
+          <div class="h-10 w-10 rounded bg-danger-50" title="danger-50"></div>
+          <div class="h-10 w-10 rounded bg-danger-100" title="danger-100"></div>
+          <div class="h-10 w-10 rounded bg-danger-500" title="danger-500"></div>
+          <div class="h-10 w-10 rounded bg-danger-700" title="danger-700"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Typography -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Typography</h2>
+    <div class="space-y-3">
+      <p class="text-3xl font-bold text-text">Heading 1 (text-3xl bold)</p>
+      <p class="text-2xl font-bold text-text">Heading 2 (text-2xl bold)</p>
+      <p class="text-xl font-semibold text-text">Heading 3 (text-xl semibold)</p>
+      <p class="text-base font-semibold text-text">Heading 4 (text-base semibold)</p>
+      <p class="text-text">Body text — base size 15px, line-height 1.6</p>
+      <p class="text-sm text-text-muted">Muted text (text-sm text-muted)</p>
+      <p class="text-xs text-text-muted">Small text (text-xs text-muted)</p>
+    </div>
+  </section>
+
+  <!-- Buttons -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Buttons</h2>
+    <div class="flex flex-wrap gap-3">
+      <button class="rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700">Primary</button>
+      <button class="rounded-lg bg-danger-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-danger-700">Danger</button>
+      <button class="rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm font-medium text-text hover:bg-gray-50">Secondary</button>
+      <a href="#" class="text-sm font-medium text-primary-600 hover:text-primary-500">Link button &rarr;</a>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Cards</h2>
+    <div class="grid gap-4 sm:grid-cols-3">
+      {% include "components/card_start.html" with title="Default card" %}
+        <p class="text-sm text-text-muted">Default card with a title header.</p>
+      {% include "components/card_end.html" %}
+
+      {% include "components/card_start.html" with title="Warning card" variant="warning" %}
+        <p class="text-sm text-text-muted">Warning variant for elevated risk.</p>
+      {% include "components/card_end.html" %}
+
+      {% include "components/card_start.html" with title="Success card" variant="success" %}
+        <p class="text-sm text-text-muted">Success variant for completed items.</p>
+      {% include "components/card_end.html" %}
+    </div>
+  </section>
+
+  <!-- Badges -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Badges</h2>
+    <div class="flex flex-wrap gap-2">
+      {% include "components/badge.html" with label="Info" variant="info" %}
+      {% include "components/badge.html" with label="Success" variant="success" %}
+      {% include "components/badge.html" with label="Warning" variant="warning" %}
+      {% include "components/badge.html" with label="Danger" variant="danger" %}
+      {% include "components/badge.html" with label="Neutral" variant="neutral" %}
+    </div>
+  </section>
+
+  <!-- Callouts -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Callouts</h2>
+
+    {% include "components/callout_start.html" with type="info" title="Information" %}
+      <p>This is an info callout for definitions and key concepts.</p>
+    {% include "components/callout_end.html" %}
+
+    {% include "components/callout_start.html" with type="warning" title="Watch out" %}
+      <p>This is a warning callout for common pitfalls.</p>
+    {% include "components/callout_end.html" %}
+
+    {% include "components/callout_start.html" with type="example" title="Example" %}
+      <p>This is an example callout for illustrations.</p>
+    {% include "components/callout_end.html" %}
+
+    {% include "components/callout_start.html" with type="impact" title="Impact" %}
+      <p>This is an impact callout for local/ESG angles.</p>
+    {% include "components/callout_end.html" %}
+  </section>
+
+  <!-- Metric rows -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Metric rows</h2>
+    {% include "components/card_start.html" with title="Portfolio metrics" %}
+      <dl class="divide-y divide-border">
+        {% include "components/metric_row.html" with label="Total value" value="$12,450.00" %}
+        {% include "components/metric_row.html" with label="Annual fees" value="0.22%" annotation="below average" %}
+        {% include "components/metric_row.html" with label="Risk score" value="6/10" %}
+      </dl>
+    {% include "components/card_end.html" %}
+  </section>
+
+  <!-- Tooltip -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Tooltip</h2>
+    <p class="text-sm text-text">
+      MER stands for Management Expense Ratio
+      {% include "components/tooltip.html" with id="mer" text="The MER is the total annual fee charged by a fund, expressed as a percentage of assets. It includes management fees, operating expenses, and taxes." %}
+    </p>
+  </section>
+
+  <!-- Progress bar -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Progress bar</h2>
+    <div class="max-w-md space-y-4">
+      {% include "components/progress_bar.html" with current=1 total=5 %}
+      {% include "components/progress_bar.html" with current=3 total=5 %}
+      {% include "components/progress_bar.html" with current=5 total=5 %}
+    </div>
+  </section>
+
+  <!-- Form elements -->
+  <section>
+    <h2 class="mb-4 text-xl font-semibold text-text">Form elements</h2>
+    <div class="max-w-md space-y-4">
+      <div>
+        <label class="mb-1 block text-sm font-medium text-text">Text input</label>
+        <input type="text" placeholder="Enter text..." class="w-full rounded-lg border border-border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
+      </div>
+      <div>
+        <label class="mb-1 block text-sm font-medium text-text">Select</label>
+        <select class="w-full rounded-lg border border-border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
+          <option>Option 1</option>
+          <option>Option 2</option>
+        </select>
+      </div>
+      <div>
+        <label class="flex cursor-pointer items-center gap-3 rounded-lg border border-border px-4 py-3 hover:border-primary-300 hover:bg-primary-50 has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+          <input type="radio" name="demo" value="1" class="text-primary-600 focus:ring-primary-500">
+          <span class="text-sm text-text">Radio option (quiz style)</span>
+        </label>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

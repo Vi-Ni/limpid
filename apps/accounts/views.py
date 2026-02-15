@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 
@@ -167,3 +169,10 @@ def risk_quiz_results(request):
             "description": get_risk_profile_description(score),
         },
     )
+
+
+def styleguide_view(request):
+    """Render the design system styleguide (DEBUG only)."""
+    if not settings.DEBUG:
+        raise Http404
+    return render(request, "pages/styleguide.html")
