@@ -1,50 +1,91 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}Limpide — {% trans "Understand your investments" %}{% endblock %}
+{% block title %}Limpide — {% trans "Understand before you invest" %}{% endblock %}
 
 {% block content %}
-<div class="py-12 text-center">
-  <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-    {% trans "Understand your investments" %}
+<!-- Hero -->
+<div class="py-12 text-center md:py-16">
+  <h1 class="text-3xl font-bold tracking-tight text-text sm:text-4xl md:text-5xl">
+    {% trans "Understand before you invest" %}
   </h1>
-  <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-    {% trans "A free, educational dashboard that shows you exactly what you hold, what it costs, and what you need to learn — without ever telling you what to buy." %}
+  <p class="mx-auto mt-4 max-w-2xl text-lg text-text-muted">
+    {% trans "Radical transparency and a progressive learning path — so you always know what you hold, what it costs, and what you need to learn." %}
   </p>
-  <div class="mt-10 flex items-center justify-center gap-4">
+  <div class="mt-8 flex items-center justify-center gap-4">
     {% if user.is_authenticated %}
-    <a href="{% url 'portfolio:list' %}" class="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700">
+    <a href="{% url 'portfolio:list' %}" class="rounded-lg bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-700">
       {% trans "My portfolios" %}
     </a>
     {% else %}
-    <a href="{% url 'account_signup' %}" class="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700">
+    <a href="{% url 'account_signup' %}" class="rounded-lg bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-700">
       {% trans "Get started" %}
     </a>
-    <a href="{% url 'education:path' %}" class="text-sm font-semibold text-gray-900 hover:text-gray-700">
+    <a href="{% url 'education:path' %}" class="text-sm font-semibold text-text hover:text-text-muted">
       {% trans "Start learning" %} &rarr;
     </a>
     {% endif %}
   </div>
 </div>
 
-<div class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-  <div class="rounded-xl border border-gray-200 bg-white p-6">
-    <h3 class="text-lg font-semibold text-gray-900">{% trans "Total transparency" %}</h3>
-    <p class="mt-2 text-sm text-gray-600">
-      {% trans "See every fee, every holding, every risk — nothing hidden." %}
-    </p>
-  </div>
-  <div class="rounded-xl border border-gray-200 bg-white p-6">
-    <h3 class="text-lg font-semibold text-gray-900">{% trans "Learn at your pace" %}</h3>
-    <p class="mt-2 text-sm text-gray-600">
-      {% trans "A progressive learning path that grows with your understanding." %}
-    </p>
-  </div>
-  <div class="rounded-xl border border-gray-200 bg-white p-6">
-    <h3 class="text-lg font-semibold text-gray-900">{% trans "No advice, ever" %}</h3>
-    <p class="mt-2 text-sm text-gray-600">
-      {% trans "We help you understand — we never tell you what to do with your money." %}
-    </p>
+<!-- 3 pillars -->
+<div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  {% include "components/card_start.html" with title="" variant="" %}
+    <div class="flex items-start gap-3">
+      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.64 0 8.577 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.64 0-8.577-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+      </div>
+      <div>
+        <h3 class="text-base font-semibold text-text">{% trans "Total transparency" %}</h3>
+        <p class="mt-1 text-sm text-text-muted">{% trans "See every fee, every holding, every risk — nothing hidden." %}</p>
+      </div>
+    </div>
+  {% include "components/card_end.html" %}
+
+  {% include "components/card_start.html" with title="" variant="" %}
+    <div class="flex items-start gap-3">
+      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+      </div>
+      <div>
+        <h3 class="text-base font-semibold text-text">{% trans "Learn at your pace" %}</h3>
+        <p class="mt-1 text-sm text-text-muted">{% trans "A progressive learning path that grows with your understanding." %}</p>
+      </div>
+    </div>
+  {% include "components/card_end.html" %}
+
+  {% include "components/card_start.html" with title="" variant="" %}
+    <div class="flex items-start gap-3">
+      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+      </div>
+      <div>
+        <h3 class="text-base font-semibold text-text">{% trans "No advice, ever" %}</h3>
+        <p class="mt-1 text-sm text-text-muted">{% trans "We help you understand — we never tell you what to do with your money." %}</p>
+      </div>
+    </div>
+  {% include "components/card_end.html" %}
+</div>
+
+<!-- How it works -->
+<div class="mt-16">
+  <h2 class="text-center text-2xl font-bold text-text">{% trans "How it works" %}</h2>
+  <div class="mt-8 grid gap-6 sm:grid-cols-3">
+    <div class="text-center">
+      <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-primary-600 text-sm font-bold text-white">1</div>
+      <h3 class="mt-3 text-sm font-semibold text-text">{% trans "Define your profile" %}</h3>
+      <p class="mt-1 text-sm text-text-muted">{% trans "Answer a few questions about your goals and risk tolerance." %}</p>
+    </div>
+    <div class="text-center">
+      <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-primary-600 text-sm font-bold text-white">2</div>
+      <h3 class="mt-3 text-sm font-semibold text-text">{% trans "Explore a portfolio" %}</h3>
+      <p class="mt-1 text-sm text-text-muted">{% trans "Import or build a sandbox portfolio to explore." %}</p>
+    </div>
+    <div class="text-center">
+      <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-primary-600 text-sm font-bold text-white">3</div>
+      <h3 class="mt-3 text-sm font-semibold text-text">{% trans "Understand everything" %}</h3>
+      <p class="mt-1 text-sm text-text-muted">{% trans "Holdings, fees, risks, impact — understand what you own." %}</p>
+    </div>
   </div>
 </div>
 {% endblock %}
