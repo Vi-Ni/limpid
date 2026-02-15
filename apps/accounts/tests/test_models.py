@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from apps.accounts.models import RiskQuizResponse, UserProfile
 
@@ -25,14 +25,17 @@ class UserProfileTest(TestCase):
         profile = UserProfile.objects.create(user=self.user)
         assert profile.risk_profile_label == ""
 
+    @override_settings(LANGUAGE_CODE="en")
     def test_risk_profile_label_conservative(self):
         profile = UserProfile.objects.create(user=self.user, risk_profile_score=2)
         assert str(profile.risk_profile_label) == "Conservative"
 
+    @override_settings(LANGUAGE_CODE="en")
     def test_risk_profile_label_moderate(self):
         profile = UserProfile.objects.create(user=self.user, risk_profile_score=5)
         assert str(profile.risk_profile_label) == "Moderate"
 
+    @override_settings(LANGUAGE_CODE="en")
     def test_risk_profile_label_growth(self):
         profile = UserProfile.objects.create(user=self.user, risk_profile_score=8)
         assert str(profile.risk_profile_label) == "Growth"

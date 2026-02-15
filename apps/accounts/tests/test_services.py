@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from apps.accounts.services import calculate_risk_score, get_risk_profile_label
 
@@ -48,6 +48,7 @@ class CalculateRiskScoreTest(TestCase):
             assert 1 <= score <= 10
 
 
+@override_settings(LANGUAGE_CODE="en")
 class GetRiskProfileLabelTest(TestCase):
     def test_conservative(self):
         for score in [1, 2, 3]:
