@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Risk Tolerance Quiz" %} — Limpide{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-lg">
+  <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+    <div id="quiz-content">
+      {% include "accounts/partials/quiz_step.html" %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -4,7 +4,13 @@ from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 
 from .forms import OnboardingStep1Form, OnboardingStep2Form, ProfileForm
-from .models import UserProfile
+from .models import RiskQuizResponse, UserProfile
+from .services import (
+    QUIZ_QUESTIONS,
+    calculate_risk_score,
+    get_risk_profile_description,
+    get_risk_profile_label,
+)
 
 
 def home_view(request):
@@ -90,3 +96,74 @@ def onboarding_step(request, step):
         return redirect("portfolio:list")
 
     return redirect("accounts:onboarding")
+
+
+@login_required
+def risk_quiz_view(request):
+    """Render the risk quiz shell with step 1."""
+    return render(
+        request,
+        "accounts/risk_quiz.html",
+        {"question": QUIZ_QUESTIONS[0], "step": 1, "total": len(QUIZ_QUESTIONS)},
+    )
+
+
+@login_required
+def risk_quiz_step(request, step):
+    """Handle a single quiz step via HTMX."""
+    questions = QUIZ_QUESTIONS
+    total = len(questions)
+    index = step - 1
+
+    if request.method == "POST" and 0 <= index < total:
+        question = questions[index]
+        answer = request.POST.get("answer")
+        if answer:
+            RiskQuizResponse.objects.update_or_create(
+                user=request.user,
+                question_key=question["key"],
+                defaults={"answer_value": int(answer)},
+            )
+
+        next_index = index + 1
+        if next_index < total:
+            return render(
+                request,
+                "accounts/partials/quiz_step.html",
+                {
+                    "question": questions[next_index],
+                    "step": next_index + 1,
+                    "total": total,
+                },
+            )
+        return risk_quiz_results(request)
+
+    if 0 <= index < total:
+        return render(
+            request,
+            "accounts/partials/quiz_step.html",
+            {"question": questions[index], "step": step, "total": total},
+        )
+
+    return redirect("accounts:risk_quiz")
+
+
+@login_required
+def risk_quiz_results(request):
+    """Calculate and display quiz results."""
+    responses = dict(RiskQuizResponse.objects.filter(user=request.user).values_list("question_key", "answer_value"))
+    score = calculate_risk_score(responses)
+
+    profile, _created = UserProfile.objects.get_or_create(user=request.user)
+    profile.risk_profile_score = score
+    profile.save()
+
+    return render(
+        request,
+        "accounts/partials/quiz_result.html",
+        {
+            "score": score,
+            "label": get_risk_profile_label(score),
+            "description": get_risk_profile_description(score),
+        },
+    )
