@@ -95,3 +95,279 @@ msgstr "Erreur serveur"
 
 msgid "Something went wrong. Please try again later."
 msgstr "Quelque chose s'est mal passé. Veuillez réessayer plus tard."
+
+# ── Auth templates ──
+
+msgid "Don't have an account?"
+msgstr "Vous n'avez pas de compte ?"
+
+msgid "Already have an account?"
+msgstr "Vous avez déjà un compte ?"
+
+msgid "Are you sure you want to log out?"
+msgstr "Êtes-vous sûr de vouloir vous déconnecter ?"
+
+# ── Profile ──
+
+msgid "Account information"
+msgstr "Informations du compte"
+
+msgid "Email"
+msgstr "Courriel"
+
+msgid "Risk profile"
+msgstr "Profil de risque"
+
+msgid "Take the risk quiz"
+msgstr "Répondre au questionnaire de risque"
+
+msgid "Preferences"
+msgstr "Préférences"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Profile updated successfully."
+msgstr "Profil mis à jour avec succès."
+
+# ── Onboarding ──
+
+msgid "Onboarding"
+msgstr "Configuration initiale"
+
+msgid "Welcome to Limpide!"
+msgstr "Bienvenue sur Limpide !"
+
+msgid "Let's set up your account. First, select your province."
+msgstr "Configurons votre compte. D'abord, sélectionnez votre province."
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Language preference"
+msgstr "Préférence de langue"
+
+msgid "Choose your preferred language for the dashboard."
+msgstr "Choisissez votre langue préférée pour le tableau de bord."
+
+msgid "You're all set!"
+msgstr "Vous êtes prêt !"
+
+msgid "Here's a summary of your preferences:"
+msgstr "Voici un résumé de vos préférences :"
+
+msgid "Province"
+msgstr "Province"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Go to my portfolios"
+msgstr "Aller à mes portefeuilles"
+
+# ── Risk quiz ──
+
+msgid "Risk Tolerance Quiz"
+msgstr "Questionnaire de tolérance au risque"
+
+msgid "Your Risk Profile"
+msgstr "Votre profil de risque"
+
+msgid "What does this mean?"
+msgstr "Qu'est-ce que cela signifie ?"
+
+msgid "This is for educational purposes only and does not constitute financial advice."
+msgstr "Ceci est à des fins éducatives seulement et ne constitue pas un conseil financier."
+
+msgid "Back to profile"
+msgstr "Retour au profil"
+
+msgid "Retake the quiz"
+msgstr "Refaire le questionnaire"
+
+msgid "See results"
+msgstr "Voir les résultats"
+
+# ── Risk quiz questions ──
+
+msgid "How would you describe your investment knowledge?"
+msgstr "Comment décririez-vous vos connaissances en investissement ?"
+
+msgid "I'm a complete beginner"
+msgstr "Je suis un débutant complet"
+
+msgid "I know the basics (stocks, bonds, ETFs)"
+msgstr "Je connais les bases (actions, obligations, FNB)"
+
+msgid "I have intermediate knowledge and some experience"
+msgstr "J'ai des connaissances intermédiaires et un peu d'expérience"
+
+msgid "I'm experienced and understand most financial products"
+msgstr "J'ai de l'expérience et je comprends la plupart des produits financiers"
+
+msgid "What is your investment time horizon?"
+msgstr "Quel est votre horizon de placement ?"
+
+msgid "Less than 2 years"
+msgstr "Moins de 2 ans"
+
+msgid "2 to 5 years"
+msgstr "2 à 5 ans"
+
+msgid "5 to 10 years"
+msgstr "5 à 10 ans"
+
+msgid "More than 10 years"
+msgstr "Plus de 10 ans"
+
+msgid "If your portfolio lost 20% of its value in a month, what would you do?"
+msgstr "Si votre portefeuille perdait 20 % de sa valeur en un mois, que feriez-vous ?"
+
+msgid "Sell everything immediately"
+msgstr "Tout vendre immédiatement"
+
+msgid "Sell some to reduce risk"
+msgstr "Vendre une partie pour réduire le risque"
+
+msgid "Do nothing and wait for recovery"
+msgstr "Ne rien faire et attendre la reprise"
+
+msgid "Buy more at the lower price"
+msgstr "Acheter plus au prix réduit"
+
+msgid "How much of your portfolio could you afford to lose without impacting your lifestyle?"
+msgstr "Quelle part de votre portefeuille pourriez-vous perdre sans affecter votre mode de vie ?"
+
+msgid "None — I need all of it"
+msgstr "Rien — j'en ai besoin en totalité"
+
+msgid "Up to 10%"
+msgstr "Jusqu'à 10 %"
+
+msgid "Up to 25%"
+msgstr "Jusqu'à 25 %"
+
+msgid "More than 25%"
+msgstr "Plus de 25 %"
+
+msgid "How stable is your current income?"
+msgstr "À quel point votre revenu actuel est-il stable ?"
+
+msgid "Very unstable or no income"
+msgstr "Très instable ou aucun revenu"
+
+msgid "Somewhat unstable"
+msgstr "Assez instable"
+
+msgid "Stable with some variability"
+msgstr "Stable avec une certaine variabilité"
+
+msgid "Very stable (salaried, tenured, etc.)"
+msgstr "Très stable (salarié, permanent, etc.)"
+
+msgid "Which statement best describes your return expectations?"
+msgstr "Quel énoncé décrit le mieux vos attentes de rendement ?"
+
+msgid "I want to preserve my capital, even if returns are low"
+msgstr "Je veux préserver mon capital, même si les rendements sont faibles"
+
+msgid "I prefer steady, modest returns with low risk"
+msgstr "Je préfère des rendements modestes et stables avec peu de risque"
+
+msgid "I want a balance of growth and stability"
+msgstr "Je veux un équilibre entre croissance et stabilité"
+
+msgid "I want maximum growth, even if it means high volatility"
+msgstr "Je veux une croissance maximale, même si cela implique une forte volatilité"
+
+# ── Risk profile labels ──
+
+msgid "Conservative"
+msgstr "Conservateur"
+
+msgid "Moderate"
+msgstr "Modéré"
+
+msgid "Growth"
+msgstr "Croissance"
+
+# ── Risk profile descriptions ──
+
+msgid "You prefer stability and capital preservation. A conservative portfolio typically holds more bonds and GICs, with limited exposure to stocks. Returns may be lower, but so is the risk of losing money."
+msgstr "Vous préférez la stabilité et la préservation du capital. Un portefeuille conservateur détient généralement plus d'obligations et de CPG, avec une exposition limitée aux actions. Les rendements peuvent être plus faibles, mais le risque de perte l'est aussi."
+
+msgid "You seek a balance between growth and safety. A moderate portfolio typically includes a mix of stocks and bonds, offering reasonable growth potential while managing downside risk."
+msgstr "Vous recherchez un équilibre entre croissance et sécurité. Un portefeuille modéré comprend généralement un mélange d'actions et d'obligations, offrant un potentiel de croissance raisonnable tout en gérant le risque de perte."
+
+msgid "You are comfortable with higher volatility in exchange for potentially higher returns. A growth portfolio is typically stock-heavy, which means larger swings but historically better long-term performance."
+msgstr "Vous êtes à l'aise avec une volatilité plus élevée en échange de rendements potentiellement supérieurs. Un portefeuille de croissance est généralement fortement composé d'actions, ce qui signifie des fluctuations plus importantes mais historiquement de meilleures performances à long terme."
+
+# ── Model fields ──
+
+msgid "user profile"
+msgstr "profil utilisateur"
+
+msgid "user profiles"
+msgstr "profils utilisateurs"
+
+msgid "Risk score from 1 (conservative) to 10 (aggressive)."
+msgstr "Score de risque de 1 (conservateur) à 10 (agressif)."
+
+msgid "risk quiz response"
+msgstr "réponse au questionnaire de risque"
+
+msgid "risk quiz responses"
+msgstr "réponses au questionnaire de risque"
+
+# ── Province names ──
+
+msgid "Alberta"
+msgstr "Alberta"
+
+msgid "British Columbia"
+msgstr "Colombie-Britannique"
+
+msgid "Manitoba"
+msgstr "Manitoba"
+
+msgid "New Brunswick"
+msgstr "Nouveau-Brunswick"
+
+msgid "Newfoundland and Labrador"
+msgstr "Terre-Neuve-et-Labrador"
+
+msgid "Nova Scotia"
+msgstr "Nouvelle-Écosse"
+
+msgid "Northwest Territories"
+msgstr "Territoires du Nord-Ouest"
+
+msgid "Nunavut"
+msgstr "Nunavut"
+
+msgid "Ontario"
+msgstr "Ontario"
+
+msgid "Prince Edward Island"
+msgstr "Île-du-Prince-Édouard"
+
+msgid "Quebec"
+msgstr "Québec"
+
+msgid "Saskatchewan"
+msgstr "Saskatchewan"
+
+msgid "Yukon"
+msgstr "Yukon"
+
+# ── Language names ──
+
+msgid "French"
+msgstr "Français"
+
+msgid "English"
+msgstr "Anglais"
+
+#: blocktrans
+msgid "Question %(current)s of %(total)s"
+msgstr "Question %(current)s de %(total)s"
