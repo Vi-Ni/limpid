@@ -5,17 +5,15 @@
 
 {% block content %}
 <div class="mx-auto max-w-lg">
-  <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+  {% include "components/card_start.html" with title="" %}
     <!-- Progress bar -->
-    <div class="mb-8 flex items-center gap-2">
-      {% for i in "123" %}
-      <div class="h-2 flex-1 rounded-full {% if forloop.counter <= step %}bg-blue-600{% else %}bg-gray-200{% endif %}"></div>
-      {% endfor %}
+    <div class="mb-8">
+      {% include "components/progress_bar.html" with current=step total=3 %}
     </div>
 
     <div id="onboarding-content">
       {% include "accounts/partials/onboarding_step_1.html" %}
     </div>
-  </div>
+  {% include "components/card_end.html" %}
 </div>
 {% endblock %}

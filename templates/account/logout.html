@@ -5,23 +5,25 @@
 
 {% block content %}
 <div class="mx-auto max-w-md">
-  <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm text-center">
-    <h1 class="mb-4 text-2xl font-bold text-gray-900">{% trans "Logout" %}</h1>
-    <p class="mb-6 text-gray-600">{% trans "Are you sure you want to log out?" %}</p>
+  {% include "components/card_start.html" with title="" %}
+    <div class="text-center">
+      <h1 class="mb-4 text-2xl font-bold text-text">{% trans "Logout" %}</h1>
+      <p class="mb-6 text-text-muted">{% trans "Are you sure you want to log out?" %}</p>
 
-    <form method="post" action="{% url 'account_logout' %}">
-      {% csrf_token %}
-      <button type="submit"
-              class="w-full rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-        {% trans "Logout" %}
-      </button>
-    </form>
+      <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button type="submit"
+                class="w-full rounded-lg bg-danger-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-danger-700 focus:outline-none focus:ring-2 focus:ring-danger-500 focus:ring-offset-2">
+          {% trans "Logout" %}
+        </button>
+      </form>
 
-    <p class="mt-4">
-      <a href="{% url 'home' %}" class="text-sm font-medium text-blue-600 hover:text-blue-500">
-        {% trans "Back to home" %}
-      </a>
-    </p>
-  </div>
+      <p class="mt-4">
+        <a href="{% url 'home' %}" class="text-sm font-medium text-primary-600 hover:text-primary-500">
+          {% trans "Back to home" %}
+        </a>
+      </p>
+    </div>
+  {% include "components/card_end.html" %}
 </div>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% load i18n %}
 <div>
-  <h1 class="mb-2 text-2xl font-bold text-gray-900">{% trans "Welcome to Limpide!" %}</h1>
-  <p class="mb-6 text-gray-600">{% trans "Let's set up your account. First, select your province." %}</p>
+  <h1 class="mb-2 text-2xl font-bold text-text">{% trans "Welcome to Limpide!" %}</h1>
+  <p class="mb-6 text-text-muted">{% trans "Let's set up your account. First, select your province." %}</p>
 
   <form hx-post="{% url 'accounts:onboarding_step' step=1 %}"
         hx-target="#onboarding-content"
@@ -11,18 +11,18 @@
 
     {% for field in form %}
     <div>
-      <label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-medium text-gray-700">
+      <label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-medium text-text">
         {{ field.label }}
       </label>
       {{ field }}
       {% if field.errors %}
-      <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+      <p class="mt-1 text-sm text-danger-600">{{ field.errors.0 }}</p>
       {% endif %}
     </div>
     {% endfor %}
 
     <button type="submit"
-            class="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700">
+            class="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
       {% trans "Next" %}
     </button>
   </form>

@@ -1,21 +1,21 @@
 {% load i18n %}
 <div class="text-center">
-  <h1 class="mb-2 text-2xl font-bold text-gray-900">{% trans "You're all set!" %}</h1>
-  <p class="mb-4 text-gray-600">{% trans "Here's a summary of your preferences:" %}</p>
+  <h1 class="mb-2 text-2xl font-bold text-text">{% trans "You're all set!" %}</h1>
+  <p class="mb-4 text-text-muted">{% trans "Here's a summary of your preferences:" %}</p>
 
   <dl class="mb-6 space-y-2 text-left">
-    <div class="flex justify-between rounded-lg bg-gray-50 px-4 py-2">
-      <dt class="text-sm font-medium text-gray-500">{% trans "Province" %}</dt>
-      <dd class="text-sm text-gray-900">{{ profile.get_province_display }}</dd>
+    <div class="flex justify-between rounded-lg bg-bg-base px-4 py-2">
+      <dt class="text-sm font-medium text-text-muted">{% trans "Province" %}</dt>
+      <dd class="text-sm text-text">{{ profile.get_province_display }}</dd>
     </div>
-    <div class="flex justify-between rounded-lg bg-gray-50 px-4 py-2">
-      <dt class="text-sm font-medium text-gray-500">{% trans "Language" %}</dt>
-      <dd class="text-sm text-gray-900">{{ profile.get_preferred_language_display }}</dd>
+    <div class="flex justify-between rounded-lg bg-bg-base px-4 py-2">
+      <dt class="text-sm font-medium text-text-muted">{% trans "Language" %}</dt>
+      <dd class="text-sm text-text">{{ profile.get_preferred_language_display }}</dd>
     </div>
   </dl>
 
   <a href="{% url 'accounts:onboarding_step' step=3 %}"
-     class="inline-block w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700">
+     class="inline-block w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
     {% trans "Go to my portfolios" %}
   </a>
 </div>

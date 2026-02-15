@@ -3,8 +3,8 @@ from django import forms
 from .models import UserProfile
 
 TAILWIND_SELECT_CLASS = (
-    "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-    " shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+    "w-full rounded-lg border border-border px-3 py-2 text-sm"
+    " shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
 )
 
 

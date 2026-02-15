@@ -5,20 +5,19 @@
 
 {% block content %}
 <div class="mx-auto max-w-2xl space-y-6">
-  <h1 class="text-2xl font-bold text-gray-900">{% trans "Profile" %}</h1>
+  <h1 class="text-2xl font-bold text-text">{% trans "Profile" %}</h1>
 
   <!-- User info card -->
-  <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-    <h2 class="mb-4 text-lg font-semibold text-gray-900">{% trans "Account information" %}</h2>
-    <dl class="space-y-3">
-      <div>
-        <dt class="text-sm font-medium text-gray-500">{% trans "Email" %}</dt>
-        <dd class="text-sm text-gray-900">{{ user.email }}</dd>
+  {% include "components/card_start.html" with title=_("Account information") %}
+    <dl class="space-y-1">
+      <div class="flex items-baseline justify-between py-2">
+        <dt class="text-sm text-text-muted">{% trans "Email" %}</dt>
+        <dd class="text-sm font-medium text-text">{{ user.email }}</dd>
       </div>
       {% if profile.risk_profile_score %}
-      <div>
-        <dt class="text-sm font-medium text-gray-500">{% trans "Risk profile" %}</dt>
-        <dd class="text-sm text-gray-900">{{ profile.risk_profile_label }} ({{ profile.risk_profile_score }}/10)</dd>
+      <div class="flex items-baseline justify-between py-2">
+        <dt class="text-sm text-text-muted">{% trans "Risk profile" %}</dt>
+        <dd class="text-sm font-medium text-text">{{ profile.risk_profile_label }} <span class="text-xs text-text-muted">({{ profile.risk_profile_score }}/10)</span></dd>
       </div>
       {% endif %}
     </dl>
@@ -26,37 +25,35 @@
     {% if not profile.risk_profile_score %}
     <div class="mt-4">
       <a href="{% url 'accounts:risk_quiz' %}"
-         class="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+         class="inline-block rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
         {% trans "Take the risk quiz" %}
       </a>
     </div>
     {% endif %}
-  </div>
+  {% include "components/card_end.html" %}
 
   <!-- Edit form card -->
-  <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-    <h2 class="mb-4 text-lg font-semibold text-gray-900">{% trans "Preferences" %}</h2>
-
+  {% include "components/card_start.html" with title=_("Preferences") %}
     <form method="post" class="space-y-4">
       {% csrf_token %}
 
       {% for field in form %}
       <div>
-        <label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-medium text-gray-700">
+        <label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-medium text-text">
           {{ field.label }}
         </label>
         {{ field }}
         {% if field.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+        <p class="mt-1 text-sm text-danger-600">{{ field.errors.0 }}</p>
         {% endif %}
       </div>
       {% endfor %}
 
       <button type="submit"
-              class="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+              class="rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
         {% trans "Save" %}
       </button>
     </form>
-  </div>
+  {% include "components/card_end.html" %}
 </div>
 {% endblock %}
