@@ -1,4 +1,8 @@
 import "./styles/main.css";
+
+// Reveal page once CSS is injected (prevents FOUC)
+document.documentElement.style.visibility = "";
+
 import htmx from "htmx.org";
 import Alpine from "alpinejs";
 

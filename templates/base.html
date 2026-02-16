@@ -7,6 +7,8 @@
   <title>{% block title %}Limpide{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}{% trans 'Educational investment dashboard for beginners' %}{% endblock %}">
 
+  <script>document.documentElement.style.visibility='hidden';</script>
+  {% vite_hmr_client %}
   {% vite_asset "src/main.js" %}
 
   <meta name="htmx-config" content='{"defaultSwapStyle":"innerHTML"}'>
