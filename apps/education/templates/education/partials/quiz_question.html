@@ -1,0 +1,33 @@
+{% load i18n %}
+<div>
+  {# Progress #}
+  <div class="mb-6">
+    <div class="mb-2 flex justify-between text-sm text-text-muted">
+      <span>{% blocktrans with current=step total=total %}Question {{ current }} of {{ total }}{% endblocktrans %}</span>
+    </div>
+    <div class="h-2 w-full rounded-full bg-gray-200">
+      <div class="h-2 rounded-full bg-primary-600 transition-all" style="width: {% widthratio step total 100 %}%"></div>
+    </div>
+  </div>
+
+  <h2 class="mb-6 text-lg font-semibold text-text">{{ question.prompt }}</h2>
+
+  <form hx-post="{% url 'education:quiz_step' lesson_id=lesson_id step=step %}"
+        hx-target="#quiz-content"
+        hx-swap="innerHTML"
+        class="space-y-3">
+    {% csrf_token %}
+
+    {% for choice in question.choices %}
+    <label class="flex cursor-pointer items-center gap-3 rounded-lg border border-border px-4 py-3 hover:border-primary-300 hover:bg-primary-50 has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+      <input type="radio" name="choice" value="{{ choice.id }}" class="text-primary-600 focus:ring-primary-500" required>
+      <span class="text-sm text-text">{{ choice.text }}</span>
+    </label>
+    {% endfor %}
+
+    <button type="submit"
+            class="mt-4 w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
+      {% trans "Submit answer" %}
+    </button>
+  </form>
+</div>

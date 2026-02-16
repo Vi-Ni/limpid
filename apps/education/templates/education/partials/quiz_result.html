@@ -1,0 +1,40 @@
+{% load i18n %}
+<div class="text-center">
+  <h2 class="mb-2 text-2xl font-bold text-text">{% trans "Quiz Complete!" %}</h2>
+
+  <div class="my-6">
+    <div class="mx-auto flex h-24 w-24 items-center justify-center rounded-full
+      {% if percentage >= 80 %}bg-success-100{% elif percentage >= 50 %}bg-warning-100{% else %}bg-danger-100{% endif %}">
+      <span class="text-3xl font-bold
+        {% if percentage >= 80 %}text-success-600{% elif percentage >= 50 %}text-warning-600{% else %}text-danger-600{% endif %}">
+        {{ score }}/{{ total }}
+      </span>
+    </div>
+    <p class="mt-3 text-lg font-semibold text-text">{{ percentage }}%</p>
+  </div>
+
+  {% if percentage >= 80 %}
+  {% include "components/callout_start.html" with type="impact" title=_("Excellent!") %}
+    <p>{% trans "You have a strong understanding of this lesson." %}</p>
+  {% include "components/callout_end.html" %}
+  {% elif percentage >= 50 %}
+  {% include "components/callout_start.html" with type="warning" title=_("Good effort!") %}
+    <p>{% trans "You got the basics. Review the lesson to strengthen your understanding." %}</p>
+  {% include "components/callout_end.html" %}
+  {% else %}
+  {% include "components/callout_start.html" with type="info" title=_("Keep learning!") %}
+    <p>{% trans "Re-read the lesson and try again — progress comes from practice." %}</p>
+  {% include "components/callout_end.html" %}
+  {% endif %}
+
+  <div class="mt-6 flex flex-col gap-3">
+    <a href="{% url 'education:lesson' lesson_id=lesson_id %}"
+       class="rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
+      {% trans "Back to lesson" %}
+    </a>
+    <a href="{% url 'education:path' %}"
+       class="text-sm font-medium text-primary-600 hover:text-primary-500">
+      {% trans "Back to learning path" %}
+    </a>
+  </div>
+</div>

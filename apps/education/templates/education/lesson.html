@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ metadata.title }} — Limpide{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl">
+  {# Breadcrumb #}
+  <nav class="mb-6 text-sm text-text-muted">
+    <a href="{% url 'education:path' %}" class="hover:text-primary-600">{% trans "Learning Path" %}</a>
+    <span class="mx-1">/</span>
+    <span class="text-text">{{ metadata.title }}</span>
+  </nav>
+
+  {# Metadata card #}
+  {% include "components/card_start.html" with title="" %}
+    <div class="flex flex-wrap items-center gap-3">
+      {% if metadata.level is not None %}
+        {% include "components/badge.html" with label="Level "|add:metadata.level|stringformat:"s" variant="primary" %}
+      {% endif %}
+      {% if metadata.duration_min %}
+        {% include "components/badge.html" with label=metadata.duration_min|stringformat:"s"|add:" min" variant="neutral" %}
+      {% endif %}
+      {% for tag in metadata.tags %}
+        {% include "components/badge.html" with label=tag variant="neutral" %}
+      {% endfor %}
+    </div>
+    {% if metadata.key_terms %}
+    <div class="mt-3">
+      <span class="text-xs font-medium text-text-muted">{% trans "Key terms" %}:</span>
+      {% for term in metadata.key_terms %}
+        <span class="text-xs text-primary-600">{{ term }}{% if not forloop.last %},{% endif %}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% include "components/card_end.html" %}
+
+  {# Lesson content #}
+  <div class="prose mt-8">
+    {{ content_html|safe }}
+  </div>
+
+  {# Actions #}
+  <div class="mt-10 flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
+    <div id="lesson-complete-btn">
+      {% include "education/partials/lesson_complete_button.html" %}
+    </div>
+
+    {% if has_quiz %}
+    <a href="{% url 'education:quiz_start' lesson_id=lesson_id %}"
+       class="inline-flex items-center justify-center rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
+      {% if quiz_completion %}
+        {% trans "Retake quiz" %}
+        <span class="ml-2 text-xs opacity-75">({{ quiz_completion.score }}/{{ quiz_completion.total }})</span>
+      {% else %}
+        {% trans "Start quiz" %}
+      {% endif %}
+    </a>
+    {% endif %}
+  </div>
+
+  {# Back link #}
+  <div class="mt-6">
+    <a href="{% url 'education:path' %}" class="text-sm font-medium text-primary-600 hover:text-primary-500">
+      &larr; {% trans "Back to learning path" %}
+    </a>
+  </div>
+</div>
+{% endblock %}

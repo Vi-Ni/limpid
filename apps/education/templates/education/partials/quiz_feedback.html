@@ -1,0 +1,56 @@
+{% load i18n %}
+<div>
+  {# Progress #}
+  <div class="mb-6">
+    <div class="mb-2 flex justify-between text-sm text-text-muted">
+      <span>{% blocktrans with current=step total=total %}Question {{ current }} of {{ total }}{% endblocktrans %}</span>
+    </div>
+    <div class="h-2 w-full rounded-full bg-gray-200">
+      <div class="h-2 rounded-full bg-primary-600 transition-all" style="width: {% widthratio step total 100 %}%"></div>
+    </div>
+  </div>
+
+  <h2 class="mb-6 text-lg font-semibold text-text">{{ question.prompt }}</h2>
+
+  {# Choices with feedback highlighting #}
+  <div class="space-y-3">
+    {% for choice in question.choices %}
+    <div class="flex items-center gap-3 rounded-lg border px-4 py-3
+      {% if choice.id == question.answer %}border-success-500 bg-success-50
+      {% elif choice.id == choice_id and not is_correct %}border-danger-500 bg-danger-50
+      {% else %}border-border{% endif %}">
+      {% if choice.id == question.answer %}
+        <svg class="h-5 w-5 shrink-0 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      {% elif choice.id == choice_id and not is_correct %}
+        <svg class="h-5 w-5 shrink-0 text-danger-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      {% else %}
+        <span class="h-5 w-5 shrink-0"></span>
+      {% endif %}
+      <span class="text-sm text-text">{{ choice.text }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  {# Explanation callout #}
+  {% if question.explanation %}
+  {% include "components/callout_start.html" with type="info" title=_("Explanation") %}
+    <p>{{ question.explanation }}</p>
+  {% include "components/callout_end.html" %}
+  {% endif %}
+
+  {# Next button #}
+  <button hx-get="{% url 'education:quiz_next' lesson_id=lesson_id step=step %}"
+          hx-target="#quiz-content"
+          hx-swap="innerHTML"
+          class="mt-4 w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
+    {% if step == total %}
+      {% trans "See results" %}
+    {% else %}
+      {% trans "Next question" %}
+    {% endif %}
+  </button>
+</div>

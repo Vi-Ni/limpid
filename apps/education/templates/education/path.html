@@ -1,9 +1,63 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Learn" %} — Limpide{% endblock %}
+{% block title %}{% trans "Learning Path" %} — Limpide{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold">{% trans "Learn" %}</h1>
-<p class="mt-4 text-gray-600">{% trans "Learning path coming soon." %}</p>
+<div class="mx-auto max-w-3xl">
+  <h1 class="mb-2 text-2xl font-bold text-text">{% trans "Learning Path" %}</h1>
+  <p class="mb-8 text-text-muted">{% trans "A progressive curriculum to understand your investments." %}</p>
+
+  {# Progress overview card #}
+  {% include "components/card_start.html" with title="" %}
+    <div class="flex items-center gap-6">
+      <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary-100">
+        <span class="text-xl font-bold text-primary-600">{{ summary.percentage }}%</span>
+      </div>
+      <div class="flex-1">
+        <p class="text-sm font-medium text-text">
+          {% blocktrans with completed=summary.completed total=summary.total %}{{ completed }} of {{ total }} lessons completed{% endblocktrans %}
+        </p>
+        <div class="mt-2 h-2 w-full rounded-full bg-gray-200">
+          <div class="h-2 rounded-full bg-primary-600 transition-all" style="width: {{ summary.percentage }}%"></div>
+        </div>
+      </div>
+    </div>
+  {% include "components/card_end.html" %}
+
+  {# Levels #}
+  <div class="mt-8 space-y-8">
+    {% for level in summary.by_level %}
+    <section>
+      <div class="mb-3 flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full {% if level.is_complete %}bg-success-100 text-success-700{% else %}bg-primary-100 text-primary-700{% endif %} text-sm font-bold">
+          {% if level.is_complete %}&#10003;{% else %}{{ level.level }}{% endif %}
+        </span>
+        <h2 class="text-lg font-semibold text-text">{{ level.title }}</h2>
+        <span class="text-sm text-text-muted">({{ level.completed }}/{{ level.total }})</span>
+      </div>
+
+      <div class="space-y-2 pl-11">
+        {% for lesson in level.lessons %}
+        <a href="{% url 'education:lesson' lesson_id=lesson.id %}"
+           class="flex items-center justify-between rounded-lg border border-border bg-bg-card px-4 py-3 transition-colors hover:border-primary-300 hover:bg-primary-50">
+          <div class="flex items-center gap-3">
+            {% if lesson.id in summary.completed_ids %}
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-success-100 text-xs text-success-700">&#10003;</span>
+            {% else %}
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs text-text-muted">&#9675;</span>
+            {% endif %}
+            <span class="text-sm font-medium text-text">{{ lesson.title }}</span>
+          </div>
+          <svg class="h-4 w-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+        {% endfor %}
+
+      </div>
+    </section>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

@@ -1,0 +1,22 @@
+{% load i18n %}
+{% if is_completed %}
+<button hx-post="{% url 'education:lesson_complete' lesson_id=lesson_id %}"
+        hx-target="#lesson-complete-btn"
+        hx-swap="innerHTML"
+        class="inline-flex items-center gap-2 rounded-lg border border-success-500 bg-success-50 px-5 py-2.5 text-sm font-medium text-success-700 hover:bg-success-100">
+  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+  </svg>
+  {% trans "Completed" %}
+</button>
+{% else %}
+<button hx-post="{% url 'education:lesson_complete' lesson_id=lesson_id %}"
+        hx-target="#lesson-complete-btn"
+        hx-swap="innerHTML"
+        class="inline-flex items-center gap-2 rounded-lg border border-border bg-bg-card px-5 py-2.5 text-sm font-medium text-text hover:border-primary-300 hover:bg-primary-50">
+  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+  </svg>
+  {% trans "Mark as complete" %}
+</button>
+{% endif %}

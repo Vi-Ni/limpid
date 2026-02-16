@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Quiz" %} — {{ lesson_title }} — Limpide{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-lg">
+  {# Breadcrumb #}
+  <nav class="mb-6 text-sm text-text-muted">
+    <a href="{% url 'education:path' %}" class="hover:text-primary-600">{% trans "Learning Path" %}</a>
+    <span class="mx-1">/</span>
+    <a href="{% url 'education:lesson' lesson_id=lesson_id %}" class="hover:text-primary-600">{{ lesson_id }}</a>
+    <span class="mx-1">/</span>
+    <span class="text-text">{% trans "Quiz" %}</span>
+  </nav>
+
+  {% include "components/card_start.html" with title="" %}
+    <div id="quiz-content">
+      {% include "education/partials/quiz_question.html" %}
+    </div>
+  {% include "components/card_end.html" %}
+</div>
+{% endblock %}
