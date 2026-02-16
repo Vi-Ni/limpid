@@ -1,4 +1,4 @@
-# Limpide
+# Limpid
 
 Educational investment dashboard for beginners (Quebec/Canada first). Radical transparency: see exactly what you hold, what it costs, what it risks, and how to learn — without ever receiving personalized investment advice.
 
