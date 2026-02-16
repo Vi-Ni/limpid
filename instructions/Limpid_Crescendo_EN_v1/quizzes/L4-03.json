@@ -1,0 +1,108 @@
+{
+  "id": "L4-03",
+  "title": "Reading a financial document without panicking: 'fund facts,' statements, and questions to ask",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "3-layer method: layer 1 =",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Key facts in 30 seconds"
+        },
+        {
+          "id": "B",
+          "text": "Read the entire prospectus"
+        },
+        {
+          "id": "C",
+          "text": "Watch videos"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Layer 1 gives you a quick overview: objective, fees, exposures, risks."
+    },
+    {
+      "id": "q2",
+      "prompt": "An essential question is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "What does it actually hold?"
+        },
+        {
+          "id": "B",
+          "text": "How many likes?"
+        },
+        {
+          "id": "C",
+          "text": "What color?"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Holdings + exposure are the foundation of transparency."
+    },
+    {
+      "id": "q3",
+      "prompt": "True/False: without a source/date, information is less reliable.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "A",
+      "explanation": "The freshness and origin of data affect their credibility."
+    },
+    {
+      "id": "q4",
+      "prompt": "'Liquidity' concerns:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "How easily you can retrieve/trade your money"
+        },
+        {
+          "id": "B",
+          "text": "The inflation rate"
+        },
+        {
+          "id": "C",
+          "text": "The fund's logo"
+        }
+      ],
+      "answer": "A",
+      "explanation": "An illiquid investment can make withdrawal difficult or costly."
+    },
+    {
+      "id": "q5",
+      "prompt": "In Limpid, the purpose of checklists is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "To slow the user down"
+        },
+        {
+          "id": "B",
+          "text": "To make due diligence accessible and structured"
+        },
+        {
+          "id": "C",
+          "text": "To avoid diversification"
+        }
+      ],
+      "answer": "B",
+      "explanation": "A checklist turns an intimidating read into simple steps."
+    }
+  ]
+}

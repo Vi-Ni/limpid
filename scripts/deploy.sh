@@ -2,9 +2,9 @@
 # RPi deployment helper
 set -euo pipefail
 
-IMAGE="ghcr.io/${GITHUB_USER:-user}/limpide:latest"
-CONTAINER_NAME="limpide-web"
-ENV_FILE="/opt/limpide/.env"
+IMAGE="ghcr.io/${GITHUB_USER:-user}/limpid:latest"
+CONTAINER_NAME="limpid-web"
+ENV_FILE="/opt/limpid/.env"
 
 echo "Pulling latest image..."
 podman pull "$IMAGE"

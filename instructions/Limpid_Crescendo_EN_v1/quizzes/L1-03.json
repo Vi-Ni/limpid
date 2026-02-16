@@ -1,0 +1,108 @@
+{
+  "id": "L1-03",
+  "title": "Crypto (without the hype): how it's different, and why it's risky",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Crypto differs from a stock because:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "It represents a company"
+        },
+        {
+          "id": "B",
+          "text": "It doesn't represent a company or a loan"
+        },
+        {
+          "id": "C",
+          "text": "It pays coupons"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Its valuation relies more on adoption/usage/liquidity/regulation than on a company's cash flows."
+    },
+    {
+      "id": "q2",
+      "prompt": "A major specific risk in crypto is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Custody (lost key / platform risk)"
+        },
+        {
+          "id": "B",
+          "text": "Coupon payments"
+        },
+        {
+          "id": "C",
+          "text": "Stock splits"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Custody (self-custody or platform) introduces risks not found in most ETFs."
+    },
+    {
+      "id": "q3",
+      "prompt": "True/False: crypto volatility is generally low.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Historically, cryptocurrencies have been highly volatile (fast and large price swings)."
+    },
+    {
+      "id": "q4",
+      "prompt": "Regulation is a risk because:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "It never changes"
+        },
+        {
+          "id": "B",
+          "text": "It can change access, taxation, or liquidity"
+        },
+        {
+          "id": "C",
+          "text": "It guarantees a return"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Regulatory changes can significantly affect the market and platforms."
+    },
+    {
+      "id": "q5",
+      "prompt": "In Limpid, the stance on crypto is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Push you to buy"
+        },
+        {
+          "id": "B",
+          "text": "Explain differences/risks with sources"
+        },
+        {
+          "id": "C",
+          "text": "Promise gains"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Limpid aims for understanding (exposure, risks, sources), not recommendations."
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-"""ASGI config for limpide project."""
+"""ASGI config for limpid project."""
 
 import os
 

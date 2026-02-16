@@ -11,8 +11,8 @@ from django.utils.translation import get_language
 from .models import LessonProgress, QuizCompletion
 
 CURRICULUM_DIRS = {
-    "en": Path(settings.BASE_DIR) / "instructions" / "Limpide_Crescendo_EN_v1",
-    "fr": Path(settings.BASE_DIR) / "instructions" / "Limpide_Crescendo_FR_v1",
+    "en": Path(settings.BASE_DIR) / "instructions" / "Limpid_Crescendo_EN_v1",
+    "fr": Path(settings.BASE_DIR) / "instructions" / "Limpid_Crescendo_FR_v1",
 }
 
 

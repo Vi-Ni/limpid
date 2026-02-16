@@ -1,7 +1,7 @@
 # Design System & Layout Implementation Plan
 
 ## Context
-M1 (accounts & onboarding) is complete. The app works functionally but uses raw Tailwind utilities with no design system, default blue-600 palette, and a simple topbar navigation. The design proposals doc (`Limpide_Design_Proposals.md`) defines direction **A "Clair & calme"** — off-white bg, blue-gray/indigo accent, sidebar nav on desktop, bottom nav on mobile, and a library of reusable components. This plan implements that design foundation before starting M2.
+M1 (accounts & onboarding) is complete. The app works functionally but uses raw Tailwind utilities with no design system, default blue-600 palette, and a simple topbar navigation. The design proposals doc (`Limpid_Design_Proposals.md`) defines direction **A "Clair & calme"** — off-white bg, blue-gray/indigo accent, sidebar nav on desktop, bottom nav on mobile, and a library of reusable components. This plan implements that design foundation before starting M2.
 
 ## Scope
 - Tailwind v4 theme (CSS custom properties for "Clair & calme" palette)
@@ -27,7 +27,7 @@ Added `@theme` block with:
 - Border: `--color-border: #e2e8f0`
 - Semantic: success (green), warning (amber), danger (red)
 - Base layer: body 15px/1.6 typography
-- `@utility container-limpide` (max-width 1200px)
+- `@utility container-limpid` (max-width 1200px)
 
 ### 2. Navigation — sidebar + bottom nav ✅
 **Commit**: `4693e6a`

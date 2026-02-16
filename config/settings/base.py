@@ -72,7 +72,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres://limpide:limpide@localhost:5432/limpide"),
+    "default": env.db("DATABASE_URL", default="postgres://limpid:limpid@localhost:5432/limpid"),
 }
 
 # Password validation

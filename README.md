@@ -31,10 +31,10 @@ uv sync
 cd frontend && npm install && cd ..
 
 # Start PostgreSQL (via Podman)
-podman run -d --name limpide-db \
-  -e POSTGRES_DB=limpide \
-  -e POSTGRES_USER=limpide \
-  -e POSTGRES_PASSWORD=limpide \
+podman run -d --name limpid-db \
+  -e POSTGRES_DB=limpid \
+  -e POSTGRES_USER=limpid \
+  -e POSTGRES_PASSWORD=limpid \
   -p 5432:5432 \
   postgres:16-alpine
 
@@ -74,7 +74,7 @@ uv run pre-commit install
 ## Project Structure
 
 ```
-limpide/
+limpid/
 ├── apps/                 # Django apps
 │   ├── accounts/         # Auth, profile, onboarding, risk quiz
 │   ├── portfolio/        # Sandbox & imported portfolios, CSV import

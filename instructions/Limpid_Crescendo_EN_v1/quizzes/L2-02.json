@@ -1,0 +1,108 @@
+{
+  "id": "L2-02",
+  "title": "Smart diversification: countries, sectors, sizes, styles — without overcomplicating it",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Having 20 lines necessarily means you're diversified:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "If the lines overlap (same holdings), you can be concentrated despite many lines."
+    },
+    {
+      "id": "q2",
+      "prompt": "A useful diversification axis is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "The number of likes on a ticker"
+        },
+        {
+          "id": "B",
+          "text": "Country/sector"
+        },
+        {
+          "id": "C",
+          "text": "The logo color"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Country and sector are structural exposures; they influence risks."
+    },
+    {
+      "id": "q3",
+      "prompt": "Concentration is mainly a risk of:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Depending on a single scenario"
+        },
+        {
+          "id": "B",
+          "text": "Paying fewer fees"
+        },
+        {
+          "id": "C",
+          "text": "Always gaining more"
+        }
+      ],
+      "answer": "A",
+      "explanation": "The more concentrated you are, the more a specific shock can dominate your portfolio."
+    },
+    {
+      "id": "q4",
+      "prompt": "Diversifying is mainly about:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Optimizing to the millimeter"
+        },
+        {
+          "id": "B",
+          "text": "Understanding if you're 'all in the same corner'"
+        },
+        {
+          "id": "C",
+          "text": "Avoiding learning"
+        }
+      ],
+      "answer": "B",
+      "explanation": "The beginner's goal is understanding and reducing obvious risks."
+    },
+    {
+      "id": "q5",
+      "prompt": "In Limpid, an 'anti-fog' question is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "What's my zodiac sign?"
+        },
+        {
+          "id": "B",
+          "text": "What are my top 3 countries?"
+        },
+        {
+          "id": "C",
+          "text": "What's my favorite ETF?"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Identifying dominant countries/sectors quickly reveals hidden risks."
+    }
+  ]
+}

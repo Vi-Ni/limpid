@@ -1,5 +1,5 @@
-# English translations for Limpide
-# Copyright (C) 2025 Limpide
+# English translations for Limpid
+# Copyright (C) 2025 Limpid
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"

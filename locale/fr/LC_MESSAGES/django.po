@@ -1,5 +1,5 @@
-# French translations for Limpide
-# Copyright (C) 2025 Limpide
+# French translations for Limpid
+# Copyright (C) 2025 Limpid
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -162,8 +162,8 @@ msgstr "Profil mis à jour avec succès."
 msgid "Onboarding"
 msgstr "Configuration initiale"
 
-msgid "Welcome to Limpide!"
-msgstr "Bienvenue sur Limpide !"
+msgid "Welcome to Limpid!"
+msgstr "Bienvenue sur Limpid !"
 
 msgid "Let's set up your account. First, select your province."
 msgstr "Configurons votre compte. D'abord, sélectionnez votre province."

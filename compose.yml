@@ -2,9 +2,9 @@ services:
   db:
     image: docker.io/library/postgres:16-alpine
     environment:
-      POSTGRES_DB: limpide
-      POSTGRES_USER: limpide
-      POSTGRES_PASSWORD: limpide
+      POSTGRES_DB: limpid
+      POSTGRES_USER: limpid
+      POSTGRES_PASSWORD: limpid
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -18,7 +18,7 @@ services:
       python manage.py runserver 0.0.0.0:8000
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.development
-      DATABASE_URL: postgres://limpide:limpide@db:5432/limpide
+      DATABASE_URL: postgres://limpid:limpid@db:5432/limpid
       SECRET_KEY: django-insecure-dev-key-change-in-production
     volumes:
       - .:/app

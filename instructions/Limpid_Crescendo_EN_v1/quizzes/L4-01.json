@@ -1,0 +1,112 @@
+{
+  "id": "L4-01",
+  "title": "The true cost of an investment: MER, FX, spreads, taxes (beginner's view)",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Total cost can include:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "MER, FX, spread, taxes"
+        },
+        {
+          "id": "B",
+          "text": "Only MER"
+        },
+        {
+          "id": "C",
+          "text": "Only the purchase price"
+        }
+      ],
+      "answer": "A",
+      "explanation": "MER is just one component; other costs can exist depending on the case."
+    },
+    {
+      "id": "q2",
+      "prompt": "The spread is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "The gap between the buy and sell price"
+        },
+        {
+          "id": "B",
+          "text": "Inflation"
+        },
+        {
+          "id": "C",
+          "text": "Dividends"
+        }
+      ],
+      "answer": "A",
+      "explanation": "It's a 'market' cost often invisible to beginners."
+    },
+    {
+      "id": "q3",
+      "prompt": "FX is both:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "A cost and a risk"
+        },
+        {
+          "id": "B",
+          "text": "A guaranteed return"
+        },
+        {
+          "id": "C",
+          "text": "A tax rule"
+        }
+      ],
+      "answer": "A",
+      "explanation": "You can pay to convert and your result can shift with exchange rates."
+    },
+    {
+      "id": "q4",
+      "prompt": "Why does Limpid display the date/source of estimated costs?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "To look nice"
+        },
+        {
+          "id": "B",
+          "text": "Because some costs are estimates and change over time"
+        },
+        {
+          "id": "C",
+          "text": "To hide fees"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Honest transparency displays data freshness and uncertainties."
+    },
+    {
+      "id": "q5",
+      "prompt": "Exercise: approximate annual cost of 1% on $10,000?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "$1"
+        },
+        {
+          "id": "B",
+          "text": "$100"
+        },
+        {
+          "id": "C",
+          "text": "$1,000"
+        }
+      ],
+      "answer": "B",
+      "explanation": "1% of $10,000 = $100 (approx., per year)."
+    }
+  ]
+}

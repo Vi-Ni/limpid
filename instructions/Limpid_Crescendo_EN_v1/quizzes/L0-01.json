@@ -1,0 +1,108 @@
+{
+  "id": "L0-01",
+  "title": "The investing mental map: goal, time horizon, risk, return",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "In Limpid's approach, investing starts with:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Finding the best ETF of the moment"
+        },
+        {
+          "id": "B",
+          "text": "Defining your goal, time horizon, and acceptable risk"
+        },
+        {
+          "id": "C",
+          "text": "Following the news every day"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Without a goal/horizon/risk framework, you can't judge whether a choice is coherent. The product comes after the framework."
+    },
+    {
+      "id": "q2",
+      "prompt": "'Risk' mainly means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "The certainty of losing money"
+        },
+        {
+          "id": "B",
+          "text": "The uncertainty/variability of outcomes"
+        },
+        {
+          "id": "C",
+          "text": "Investing in the stock market"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Risk means the final outcome can be very different from what you expected, including losses."
+    },
+    {
+      "id": "q3",
+      "prompt": "'Risk capacity' depends mainly on:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Your financial situation (income, debts, savings)"
+        },
+        {
+          "id": "B",
+          "text": "Your optimism"
+        },
+        {
+          "id": "C",
+          "text": "The number of holdings in your portfolio"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Capacity is factual: it measures your real margin to absorb a drop without putting yourself at risk."
+    },
+    {
+      "id": "q4",
+      "prompt": "Diversifying mainly serves to:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Guarantee a gain"
+        },
+        {
+          "id": "B",
+          "text": "Reduce dependence on a single scenario"
+        },
+        {
+          "id": "C",
+          "text": "Have many holdings"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Diversification reduces the 'single bet' risk without eliminating the possibility of an overall decline."
+    },
+    {
+      "id": "q5",
+      "prompt": "True/False: a long time horizon eliminates all risk.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "A long horizon helps absorb temporary drops, but risk doesn't disappear: it changes form."
+    }
+  ]
+}

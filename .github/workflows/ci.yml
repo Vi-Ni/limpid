@@ -26,9 +26,9 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_DB: limpide_test
-          POSTGRES_USER: limpide
-          POSTGRES_PASSWORD: limpide
+          POSTGRES_DB: limpid_test
+          POSTGRES_USER: limpid
+          POSTGRES_PASSWORD: limpid
         ports:
           - 5432:5432
         options: >-
@@ -37,7 +37,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
-      DATABASE_URL: postgres://limpide:limpide@localhost:5432/limpide_test
+      DATABASE_URL: postgres://limpid:limpid@localhost:5432/limpid_test
       DJANGO_SETTINGS_MODULE: config.settings.test
     steps:
       - uses: actions/checkout@v4

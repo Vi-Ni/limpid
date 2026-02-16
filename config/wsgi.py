@@ -1,4 +1,4 @@
-"""WSGI config for limpide project."""
+"""WSGI config for limpid project."""
 
 import os
 

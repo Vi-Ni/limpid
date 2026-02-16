@@ -1,6 +1,6 @@
 {% load i18n %}
 <div>
-  <h1 class="mb-2 text-2xl font-bold text-text">{% trans "Welcome to Limpide!" %}</h1>
+  <h1 class="mb-2 text-2xl font-bold text-text">{% trans "Welcome to Limpid!" %}</h1>
   <p class="mb-6 text-text-muted">{% trans "Let's set up your account. First, select your province." %}</p>
 
   <form hx-post="{% url 'accounts:onboarding_step' step=1 %}"

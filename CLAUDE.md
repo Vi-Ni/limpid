@@ -1,6 +1,6 @@
-# Limpide — Project Guide
+# Limpid — Project Guide
 
-## What is Limpide?
+## What is Limpid?
 Educational investment dashboard for Canadian beginners. Shows what you hold, what it costs, and what you need to learn — without ever giving financial advice.
 
 ## Tech Stack
@@ -38,7 +38,7 @@ instructions/            # Design docs & implementation plans
 
 ## Design System ("Clair & calme")
 - **Direction**: Off-white background, indigo primary, calm & trustworthy
-- **Reference**: `instructions/Limpide_Design_Proposals.md`
+- **Reference**: `instructions/Limpid_Design_Proposals.md`
 - **Implementation**: `instructions/Design_System_Implementation_Plan.md`
 
 ### Theme tokens (defined in `frontend/src/styles/main.css`)
