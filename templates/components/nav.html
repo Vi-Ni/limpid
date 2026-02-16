@@ -39,6 +39,11 @@
     </a>
   </nav>
 
+  <!-- Language switcher -->
+  <div class="px-6 py-2">
+    {% include "components/lang_switcher.html" %}
+  </div>
+
   <!-- Profile / auth section at bottom -->
   <div class="border-t border-border p-3">
     {% if user.is_authenticated %}

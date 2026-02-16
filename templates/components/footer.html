@@ -5,8 +5,9 @@
       <p class="text-sm text-text-muted">
         &copy; {% now "Y" %} Limpide &mdash; {% trans "Educational tool, not financial advice." %}
       </p>
-      <div class="flex gap-4">
+      <div class="flex items-center gap-4">
         <a href="{% url 'home' %}" class="text-sm text-text-muted hover:text-text">{% trans "About" %}</a>
+        {% include "components/lang_switcher.html" %}
       </div>
     </div>
   </div>
