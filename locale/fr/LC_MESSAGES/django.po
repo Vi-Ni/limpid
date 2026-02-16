@@ -423,3 +423,86 @@ msgstr "Compris"
 
 msgid "Design System Styleguide"
 msgstr "Guide de style du design system"
+
+# ── Education / Learning Path ──
+
+msgid "Learning Path"
+msgstr "Parcours d'apprentissage"
+
+msgid "A progressive curriculum to understand your investments."
+msgstr "Un programme progressif pour comprendre vos investissements."
+
+#: blocktrans
+msgid "%(completed)s of %(total)s lessons completed"
+msgstr "%(completed)s leçons sur %(total)s complétées"
+
+msgid "Key terms"
+msgstr "Termes clés"
+
+msgid "Mark as complete"
+msgstr "Marquer comme terminé"
+
+msgid "Completed"
+msgstr "Terminé"
+
+msgid "Start quiz"
+msgstr "Commencer le quiz"
+
+msgid "Retake quiz"
+msgstr "Refaire le quiz"
+
+msgid "Back to lesson"
+msgstr "Retour à la leçon"
+
+msgid "Back to learning path"
+msgstr "Retour au parcours"
+
+msgid "Quiz"
+msgstr "Quiz"
+
+msgid "Submit answer"
+msgstr "Soumettre la réponse"
+
+msgid "Next question"
+msgstr "Question suivante"
+
+msgid "Explanation"
+msgstr "Explication"
+
+msgid "Quiz Complete!"
+msgstr "Quiz terminé !"
+
+msgid "Excellent!"
+msgstr "Excellent !"
+
+msgid "You have a strong understanding of this lesson."
+msgstr "Vous avez une bonne compréhension de cette leçon."
+
+msgid "Good effort!"
+msgstr "Bon effort !"
+
+msgid "You got the basics. Review the lesson to strengthen your understanding."
+msgstr "Vous avez les bases. Révisez la leçon pour renforcer votre compréhension."
+
+msgid "Keep learning!"
+msgstr "Continuez à apprendre !"
+
+msgid "Re-read the lesson and try again — progress comes from practice."
+msgstr "Relisez la leçon et réessayez — on progresse en pratiquant."
+
+# ── Education models ──
+
+msgid "lesson progress"
+msgstr "progression de leçon"
+
+msgid "quiz response"
+msgstr "réponse au quiz"
+
+msgid "quiz responses"
+msgstr "réponses au quiz"
+
+msgid "quiz completion"
+msgstr "complétion de quiz"
+
+msgid "quiz completions"
+msgstr "complétions de quiz"
