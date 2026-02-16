@@ -1,0 +1,108 @@
+{
+  "id": "L5-01",
+  "title": "Radical transparency: holdings, ETF look-through, overlaps — and data limits",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Look-through is used to:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "See the real exposures behind ETFs"
+        },
+        {
+          "id": "B",
+          "text": "Create hype"
+        },
+        {
+          "id": "C",
+          "text": "Eliminate fees"
+        }
+      ],
+      "answer": "A",
+      "explanation": "It translates ETF lines into actual country/sector/holding exposures."
+    },
+    {
+      "id": "q2",
+      "prompt": "Overlaps are common because:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Indices overlap with each other"
+        },
+        {
+          "id": "B",
+          "text": "ETFs are illegal"
+        },
+        {
+          "id": "C",
+          "text": "Bonds don't exist"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Many popular indices share major companies."
+    },
+    {
+      "id": "q3",
+      "prompt": "'Honest' transparency means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Claiming without proof"
+        },
+        {
+          "id": "B",
+          "text": "Displaying sources + dates + uncertainties"
+        },
+        {
+          "id": "C",
+          "text": "Giving a single score"
+        }
+      ],
+      "answer": "B",
+      "explanation": "When data is estimated or outdated, it should be stated explicitly."
+    },
+    {
+      "id": "q4",
+      "prompt": "True/False: ETF holdings are always published in real time.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Publication is often periodic and can have a delay."
+    },
+    {
+      "id": "q5",
+      "prompt": "Why can 'I don't know' be good UX?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Because it avoids lying"
+        },
+        {
+          "id": "B",
+          "text": "Because it hides everything"
+        },
+        {
+          "id": "C",
+          "text": "Because it increases fees"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Humble transparency is better than false precision."
+    }
+  ]
+}

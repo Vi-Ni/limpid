@@ -1,0 +1,112 @@
+{
+  "id": "L3-01",
+  "title": "Performance: realized vs. unrealized, cost basis, and why you're often wrong",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "An unrealized gain means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "You sold"
+        },
+        {
+          "id": "B",
+          "text": "The value went up but you haven't sold"
+        },
+        {
+          "id": "C",
+          "text": "You received a paycheck"
+        }
+      ],
+      "answer": "B",
+      "explanation": "It's a gain 'on paper'; it can disappear if the price drops."
+    },
+    {
+      "id": "q2",
+      "prompt": "A realized gain appears when:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "You check your app"
+        },
+        {
+          "id": "B",
+          "text": "You sell and lock in the result"
+        },
+        {
+          "id": "C",
+          "text": "The market closes"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Realization is tied to a sale (full or partial)."
+    },
+    {
+      "id": "q3",
+      "prompt": "Cost basis is used to:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Calculate profit/loss"
+        },
+        {
+          "id": "B",
+          "text": "Choose a sector"
+        },
+        {
+          "id": "C",
+          "text": "Avoid inflation"
+        }
+      ],
+      "answer": "A",
+      "explanation": "The average cost (cost basis) is the foundation for return and gain/loss calculations."
+    },
+    {
+      "id": "q4",
+      "prompt": "Why look at both $ and %?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "$ for your goal, % for comparison"
+        },
+        {
+          "id": "B",
+          "text": "% is useless"
+        },
+        {
+          "id": "C",
+          "text": "$ is useless"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Dollars relate to your project; percentages allow comparisons across different sizes."
+    },
+    {
+      "id": "q5",
+      "prompt": "A common mistake is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Forgetting fees in your gain estimate"
+        },
+        {
+          "id": "B",
+          "text": "Reading sources"
+        },
+        {
+          "id": "C",
+          "text": "Diversifying"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Fees can reduce an 'apparent' gain and distort your interpretation."
+    }
+  ]
+}

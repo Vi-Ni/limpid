@@ -1,0 +1,108 @@
+{
+  "id": "L4-03",
+  "title": "Lire un document financier sans paniquer : ‘fund facts’, relevés, et questions à poser",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Méthode 3 couches : couche 1 =",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Faits clés en 30 secondes"
+        },
+        {
+          "id": "B",
+          "text": "Lire tout le prospectus"
+        },
+        {
+          "id": "C",
+          "text": "Regarder des vidéos"
+        }
+      ],
+      "answer": "A",
+      "explanation": "La couche 1 te donne un aperçu rapide : objectif, frais, expositions, risques."
+    },
+    {
+      "id": "q2",
+      "prompt": "Une question essentielle est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Qu’est-ce que ça détient vraiment ?"
+        },
+        {
+          "id": "B",
+          "text": "Combien de likes ?"
+        },
+        {
+          "id": "C",
+          "text": "Quelle couleur ?"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Holdings + exposition sont la base de la transparence."
+    },
+    {
+      "id": "q3",
+      "prompt": "Vrai/Faux : sans source/date, une info est moins fiable.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "A",
+      "explanation": "La fraîcheur et l’origine des données influencent leur crédibilité."
+    },
+    {
+      "id": "q4",
+      "prompt": "La ‘liquidité’ concerne :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "La facilité de récupérer/échanger ton argent"
+        },
+        {
+          "id": "B",
+          "text": "Le taux d’inflation"
+        },
+        {
+          "id": "C",
+          "text": "Le logo du fonds"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Un investissement illiquide peut rendre le retrait difficile ou coûteux."
+    },
+    {
+      "id": "q5",
+      "prompt": "Dans Limpide, le but des checklists est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Ralentir l’utilisateur"
+        },
+        {
+          "id": "B",
+          "text": "Rendre la due diligence accessible et structurée"
+        },
+        {
+          "id": "C",
+          "text": "Éviter la diversification"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Une checklist transforme une lecture intimidante en étapes simples."
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "L0-02",
+  "title": "Time, inflation, compound interest: why 'long term' changes everything",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Inflation means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Markets go up"
+        },
+        {
+          "id": "B",
+          "text": "Prices rise and cash loses purchasing power"
+        },
+        {
+          "id": "C",
+          "text": "Fees always increase"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Inflation erodes what your money can buy if its net return is too low."
+    },
+    {
+      "id": "q2",
+      "prompt": "Compound interest is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Gains on capital only"
+        },
+        {
+          "id": "B",
+          "text": "Gains on capital and on past gains"
+        },
+        {
+          "id": "C",
+          "text": "A tax"
+        }
+      ],
+      "answer": "B",
+      "explanation": "One year's gains become a base that generates further gains in subsequent years."
+    },
+    {
+      "id": "q3",
+      "prompt": "CAGR is useful for:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Comparing performance over different time periods"
+        },
+        {
+          "id": "B",
+          "text": "Predicting the future"
+        },
+        {
+          "id": "C",
+          "text": "Avoiding fees"
+        }
+      ],
+      "answer": "A",
+      "explanation": "It provides an 'equivalent' annual rate for cleaner comparisons."
+    },
+    {
+      "id": "q4",
+      "prompt": "Why can 1% in fees be 'serious' over the long term?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Because it's illegal"
+        },
+        {
+          "id": "B",
+          "text": "Because it repeats every year and reduces the compounding effect"
+        },
+        {
+          "id": "C",
+          "text": "Because it makes investing impossible"
+        }
+      ],
+      "answer": "B",
+      "explanation": "A small percentage repeated annually significantly eats into the final result over 10–20 years."
+    },
+    {
+      "id": "q5",
+      "prompt": "True/False: if your balance goes up, you're definitely getting richer.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "If inflation and fees exceed your net return, your purchasing power can stagnate or decline."
+    }
+  ]
+}

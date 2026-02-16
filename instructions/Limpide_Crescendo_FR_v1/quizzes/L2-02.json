@@ -1,0 +1,108 @@
+{
+  "id": "L2-02",
+  "title": "Diversification intelligente : pays, secteurs, tailles, styles… sans te compliquer la vie",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Avoir 20 lignes signifie forcément être diversifié :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Si les lignes se chevauchent (mêmes holdings), tu peux être concentré malgré beaucoup de lignes."
+    },
+    {
+      "id": "q2",
+      "prompt": "Un axe de diversification utile est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Le nombre de likes sur un titre"
+        },
+        {
+          "id": "B",
+          "text": "Le pays/secteur"
+        },
+        {
+          "id": "C",
+          "text": "La couleur du logo"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Pays et secteurs sont des expositions structurelles; elles influencent les risques."
+    },
+    {
+      "id": "q3",
+      "prompt": "La concentration est surtout un risque de :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Dépendre d’un seul scénario"
+        },
+        {
+          "id": "B",
+          "text": "Payer moins de frais"
+        },
+        {
+          "id": "C",
+          "text": "Toujours gagner plus"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Plus tu es concentré, plus un choc spécifique peut dominer ton portefeuille."
+    },
+    {
+      "id": "q4",
+      "prompt": "Diversifier, c’est surtout :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Optimiser au millimètre"
+        },
+        {
+          "id": "B",
+          "text": "Comprendre si on est ‘tout dans le même coin’"
+        },
+        {
+          "id": "C",
+          "text": "Éviter d’apprendre"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Le but débutant est la compréhension et la réduction des risques évidents."
+    },
+    {
+      "id": "q5",
+      "prompt": "Dans Limpide, une question anti-brouillard est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Quel est mon signe astrologique ?"
+        },
+        {
+          "id": "B",
+          "text": "Quels sont mes 3 pays dominants ?"
+        },
+        {
+          "id": "C",
+          "text": "Quel est mon ETF préféré ?"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Identifier pays/secteurs dominants révèle rapidement des risques cachés."
+    }
+  ]
+}

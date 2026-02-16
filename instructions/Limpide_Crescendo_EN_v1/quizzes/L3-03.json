@@ -1,0 +1,108 @@
+{
+  "id": "L3-03",
+  "title": "Scenarios: understanding 'what if…' (without predicting the future)",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "A scenario is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "A prediction"
+        },
+        {
+          "id": "B",
+          "text": "A 'stress test': what happens if…"
+        },
+        {
+          "id": "C",
+          "text": "A promise"
+        }
+      ],
+      "answer": "B",
+      "explanation": "It's meant to understand sensitivity, not to guess the future."
+    },
+    {
+      "id": "q2",
+      "prompt": "The 'market drop' scenario is used to:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "See the impact of a stock decline"
+        },
+        {
+          "id": "B",
+          "text": "Change account types"
+        },
+        {
+          "id": "C",
+          "text": "Avoid fees"
+        }
+      ],
+      "answer": "A",
+      "explanation": "It makes the relationship between allocation and potential decline visible."
+    },
+    {
+      "id": "q3",
+      "prompt": "The FX scenario shows:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "The price of oil"
+        },
+        {
+          "id": "B",
+          "text": "The impact of CAD/USD/EUR exchange rates"
+        },
+        {
+          "id": "C",
+          "text": "The number of holdings"
+        }
+      ],
+      "answer": "B",
+      "explanation": "It shows that your result can shift even if the asset price doesn't change."
+    },
+    {
+      "id": "q4",
+      "prompt": "Why run scenarios?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "To panic"
+        },
+        {
+          "id": "B",
+          "text": "To prepare your decisions and understand your risk"
+        },
+        {
+          "id": "C",
+          "text": "To follow influencers"
+        }
+      ],
+      "answer": "B",
+      "explanation": "The goal is to decide more calmly by understanding the consequences."
+    },
+    {
+      "id": "q5",
+      "prompt": "True/False: a scenario is useful even if you don't know whether it will happen.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "A",
+      "explanation": "It helps you prepare coherent responses, not be certain."
+    }
+  ]
+}

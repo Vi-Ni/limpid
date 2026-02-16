@@ -1,0 +1,108 @@
+{
+  "id": "L1-02",
+  "title": "ETF/FNB et fonds : la diversification “en un clic” (et ses limites)",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Un ETF/FNB est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Un panier d’actifs"
+        },
+        {
+          "id": "B",
+          "text": "Un prêt bancaire"
+        },
+        {
+          "id": "C",
+          "text": "Une assurance"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Un ETF détient un ensemble d’actifs (actions, obligations…) selon une règle (souvent un indice)."
+    },
+    {
+      "id": "q2",
+      "prompt": "Le MER correspond :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Au spread achat/vente"
+        },
+        {
+          "id": "B",
+          "text": "Aux frais annuels du fonds"
+        },
+        {
+          "id": "C",
+          "text": "À l’impôt"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Le MER est un coût récurrent intégré au fonds, exprimé en % annuel."
+    },
+    {
+      "id": "q3",
+      "prompt": "‘Diversification’ via ETF signifie :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Aucun risque"
+        },
+        {
+          "id": "B",
+          "text": "Moins de risque spécifique à une entreprise"
+        },
+        {
+          "id": "C",
+          "text": "Un rendement garanti"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Un ETF réduit surtout le risque ‘une seule entreprise’, mais pas le risque de marché."
+    },
+    {
+      "id": "q4",
+      "prompt": "Le look-through sert à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Prédire les prix"
+        },
+        {
+          "id": "B",
+          "text": "Voir tes expositions réelles derrière tes ETF"
+        },
+        {
+          "id": "C",
+          "text": "Masquer les frais"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Le look-through transforme des lignes d’ETF en expositions pays/secteurs/holdings réellement détenus."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : un ETF thématique est toujours diversifié.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Un ETF thématique peut être très concentré (peu de titres, même secteur, mêmes pays)."
+    }
+  ]
+}

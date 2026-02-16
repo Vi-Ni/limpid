@@ -1,0 +1,108 @@
+{
+  "id": "L3-02",
+  "title": "Volatility and drawdown: normalizing drops to make better decisions",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Volatility describes:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Internet speed"
+        },
+        {
+          "id": "B",
+          "text": "The magnitude of price swings"
+        },
+        {
+          "id": "C",
+          "text": "The amount of dividends"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Volatility = it moves a lot; the higher it is, the harder the emotional ride."
+    },
+    {
+      "id": "q2",
+      "prompt": "Drawdown is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "The drop from a peak"
+        },
+        {
+          "id": "B",
+          "text": "The average return"
+        },
+        {
+          "id": "C",
+          "text": "The fees"
+        }
+      ],
+      "answer": "A",
+      "explanation": "It's an intuitive measure of how 'deep' a decline goes."
+    },
+    {
+      "id": "q3",
+      "prompt": "Loss aversion means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "We enjoy losing"
+        },
+        {
+          "id": "B",
+          "text": "We feel a loss more strongly than an equivalent gain"
+        },
+        {
+          "id": "C",
+          "text": "We feel nothing"
+        }
+      ],
+      "answer": "B",
+      "explanation": "It's a classic human bias, important in investing."
+    },
+    {
+      "id": "q4",
+      "prompt": "A useful guardrail is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Deciding at the last moment"
+        },
+        {
+          "id": "B",
+          "text": "Writing a plan: 'if -20% then…'"
+        },
+        {
+          "id": "C",
+          "text": "Ignoring your goal"
+        }
+      ],
+      "answer": "B",
+      "explanation": "A written plan prevents making decisions in the middle of a panic."
+    },
+    {
+      "id": "q5",
+      "prompt": "True/False: a drop necessarily means your plan is bad.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Drops can be normal; what matters is coherence with your horizon and allocation."
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "L3-03",
+  "title": "Scénarios : comprendre ‘si… alors…’ (sans prédire l’avenir)",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Un scénario est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Une prédiction"
+        },
+        {
+          "id": "B",
+          "text": "Un ‘stress test’ : que se passe-t-il si…"
+        },
+        {
+          "id": "C",
+          "text": "Une promesse"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Il sert à comprendre la sensibilité, pas à deviner l’avenir."
+    },
+    {
+      "id": "q2",
+      "prompt": "Le scénario ‘market drop’ sert à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Voir l’impact d’une baisse actions"
+        },
+        {
+          "id": "B",
+          "text": "Changer d’enveloppe"
+        },
+        {
+          "id": "C",
+          "text": "Éviter les frais"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Il rend visible la relation allocation ↔ baisse potentielle."
+    },
+    {
+      "id": "q3",
+      "prompt": "Le scénario FX montre :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Le prix du pétrole"
+        },
+        {
+          "id": "B",
+          "text": "L’impact du change CAD/USD/EUR"
+        },
+        {
+          "id": "C",
+          "text": "Le nombre de holdings"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Il montre que ton résultat peut bouger même si le prix de l’actif ne change pas."
+    },
+    {
+      "id": "q4",
+      "prompt": "Pourquoi faire des scénarios ?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Pour paniquer"
+        },
+        {
+          "id": "B",
+          "text": "Pour préparer tes décisions et comprendre ton risque"
+        },
+        {
+          "id": "C",
+          "text": "Pour suivre les influenceurs"
+        }
+      ],
+      "answer": "B",
+      "explanation": "L’objectif est de décider plus calmement, en comprenant les conséquences."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : un scénario est utile même si on ne sait pas s’il arrivera.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Il sert à préparer des réponses cohérentes, pas à être certain."
+    }
+  ]
+}

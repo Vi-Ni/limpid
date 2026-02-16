@@ -1,0 +1,112 @@
+{
+  "id": "L3-01",
+  "title": "Performance : réalisé vs non réalisé, prix de revient, et pourquoi tu te trompes souvent",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Un gain non réalisé signifie :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Tu as vendu"
+        },
+        {
+          "id": "B",
+          "text": "La valeur a monté mais tu n’as pas vendu"
+        },
+        {
+          "id": "C",
+          "text": "Tu as reçu un salaire"
+        }
+      ],
+      "answer": "B",
+      "explanation": "C’est un gain ‘sur le papier’; il peut disparaître si le prix baisse."
+    },
+    {
+      "id": "q2",
+      "prompt": "Le gain réalisé apparaît quand :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Tu regardes ton appli"
+        },
+        {
+          "id": "B",
+          "text": "Tu vends et matérialises le résultat"
+        },
+        {
+          "id": "C",
+          "text": "Le marché ferme"
+        }
+      ],
+      "answer": "B",
+      "explanation": "La réalisation est liée à une vente (totale ou partielle)."
+    },
+    {
+      "id": "q3",
+      "prompt": "Le prix de revient sert à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Calculer le profit/perte"
+        },
+        {
+          "id": "B",
+          "text": "Choisir un secteur"
+        },
+        {
+          "id": "C",
+          "text": "Éviter l’inflation"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Le coût moyen (prix de revient) est la base du calcul de rendement et de gains/pertes."
+    },
+    {
+      "id": "q4",
+      "prompt": "Pourquoi regarder $ et % ?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "$ pour l’objectif, % pour comparer"
+        },
+        {
+          "id": "B",
+          "text": "% est inutile"
+        },
+        {
+          "id": "C",
+          "text": "$ est inutile"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Les dollars parlent à ton projet; les pourcentages permettent des comparaisons entre tailles différentes."
+    },
+    {
+      "id": "q5",
+      "prompt": "Erreur fréquente :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Oublier les frais dans l’intuition du gain"
+        },
+        {
+          "id": "B",
+          "text": "Lire des sources"
+        },
+        {
+          "id": "C",
+          "text": "Diversifier"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Les frais peuvent réduire un ‘gain’ apparent et fausser ton interprétation."
+    }
+  ]
+}

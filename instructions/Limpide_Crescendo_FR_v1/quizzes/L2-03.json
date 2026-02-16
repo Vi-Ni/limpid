@@ -1,0 +1,108 @@
+{
+  "id": "L2-03",
+  "title": "Devises, contributions régulières, rééquilibrage : le “pilotage” simple d’un portefeuille",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Le risque de devise signifie :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Ton résultat peut bouger à cause du taux de change"
+        },
+        {
+          "id": "B",
+          "text": "Tu ne peux pas investir"
+        },
+        {
+          "id": "C",
+          "text": "Tu as toujours un gain"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Une position en USD peut monter/descendre en CAD à cause du change, même si le prix en USD ne bouge pas."
+    },
+    {
+      "id": "q2",
+      "prompt": "Le DCA sert surtout à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Garantir un gain"
+        },
+        {
+          "id": "B",
+          "text": "Réduire le stress du ‘bon moment’ en investissant régulièrement"
+        },
+        {
+          "id": "C",
+          "text": "Éviter les frais"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Le DCA est une stratégie comportementale qui lisse l’entrée dans le temps."
+    },
+    {
+      "id": "q3",
+      "prompt": "Rééquilibrer consiste à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Changer d’objectif"
+        },
+        {
+          "id": "B",
+          "text": "Revenir à l’allocation cible"
+        },
+        {
+          "id": "C",
+          "text": "Ignorer le portefeuille"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Le rééquilibrage maintient le risque prévu en ramenant la répartition vers la cible."
+    },
+    {
+      "id": "q4",
+      "prompt": "Une méthode simple de rééquilibrage est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Tout vendre"
+        },
+        {
+          "id": "B",
+          "text": "Diriger les nouvelles contributions vers la classe ‘en retard’"
+        },
+        {
+          "id": "C",
+          "text": "Changer de devise"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Rééquilibrer par contributions évite souvent de vendre et réduit la complexité."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : FX = seulement un coût, jamais un risque.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "FX est un coût *et* un facteur de performance (variation des taux de change)."
+    }
+  ]
+}

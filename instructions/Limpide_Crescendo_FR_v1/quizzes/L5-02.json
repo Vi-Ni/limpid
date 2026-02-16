@@ -1,0 +1,108 @@
+{
+  "id": "L5-02",
+  "title": "ESG, éthique, impact : plusieurs angles, pas une vérité unique (et comment éviter le greenwashing)",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "ESG et impact sont :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Toujours identiques"
+        },
+        {
+          "id": "B",
+          "text": "Différents : ESG = gestion, impact = intention + mesure"
+        },
+        {
+          "id": "C",
+          "text": "Inexistants"
+        }
+      ],
+      "answer": "B",
+      "explanation": "ESG parle souvent de gestion de risques/opportunités; l’impact vise un effet positif mesurable."
+    },
+    {
+      "id": "q2",
+      "prompt": "Deux scores ESG peuvent diverger car :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Les fournisseurs n’ont jamais de données"
+        },
+        {
+          "id": "B",
+          "text": "Ils pondèrent et mesurent différemment"
+        },
+        {
+          "id": "C",
+          "text": "Les scores sont aléatoires"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Méthodologies, sources et pondérations varient, d’où des résultats différents."
+    },
+    {
+      "id": "q3",
+      "prompt": "Position Limpide :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Engagé sur la méthode ‘preuves d’abord’"
+        },
+        {
+          "id": "B",
+          "text": "Promettre un score parfait"
+        },
+        {
+          "id": "C",
+          "text": "Ignorer les controverses"
+        }
+      ],
+      "answer": "A",
+      "explanation": "On reste neutre sur les faits, mais exigeant sur les sources, dates et la transparence."
+    },
+    {
+      "id": "q4",
+      "prompt": "Un signal de greenwashing possible :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Méthodologie claire + données"
+        },
+        {
+          "id": "B",
+          "text": "Beaucoup de marketing, peu de preuves"
+        },
+        {
+          "id": "C",
+          "text": "Sources datées"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Le greenwashing se repère souvent par l’absence d’indicateurs et de méthodologie."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : un seul score ESG suffit pour décider ‘en conscience’.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Une approche multi-angles + sources et contexte est plus honnête, surtout pour des choix de valeurs."
+    }
+  ]
+}

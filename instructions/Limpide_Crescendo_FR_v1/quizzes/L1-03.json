@@ -1,0 +1,108 @@
+{
+  "id": "L1-03",
+  "title": "Crypto (sans hype) : en quoi c’est différent, et pourquoi c’est risqué",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "La crypto se distingue d’une action car :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Elle représente une entreprise"
+        },
+        {
+          "id": "B",
+          "text": "Elle ne représente pas une entreprise ni un prêt"
+        },
+        {
+          "id": "C",
+          "text": "Elle verse des coupons"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Son évaluation repose davantage sur adoption/usage/liquidité/régulation que sur des cashflows d’entreprise."
+    },
+    {
+      "id": "q2",
+      "prompt": "Un risque spécifique important en crypto :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Custody (perte de clé / risque plateforme)"
+        },
+        {
+          "id": "B",
+          "text": "Coupon"
+        },
+        {
+          "id": "C",
+          "text": "Split d’actions"
+        }
+      ],
+      "answer": "A",
+      "explanation": "La garde (self-custody ou plateforme) introduit des risques particuliers absents de la plupart des ETF."
+    },
+    {
+      "id": "q3",
+      "prompt": "Vrai/Faux : la volatilité crypto est généralement faible.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Historiquement, les cryptos ont été très volatiles (mouvements rapides et importants)."
+    },
+    {
+      "id": "q4",
+      "prompt": "La régulation est un risque parce que :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Elle ne change jamais"
+        },
+        {
+          "id": "B",
+          "text": "Elle peut changer l’accès, la fiscalité ou la liquidité"
+        },
+        {
+          "id": "C",
+          "text": "Elle garantit un rendement"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Des changements de règles peuvent influencer fortement le marché et les plateformes."
+    },
+    {
+      "id": "q5",
+      "prompt": "Dans Limpide, la posture sur la crypto est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Pousser à acheter"
+        },
+        {
+          "id": "B",
+          "text": "Expliquer différences/risques avec sources"
+        },
+        {
+          "id": "C",
+          "text": "Promettre des gains"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Limpide vise la compréhension (exposition, risques, sources), pas la recommandation."
+    }
+  ]
+}

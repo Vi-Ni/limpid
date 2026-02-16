@@ -1,0 +1,108 @@
+{
+  "id": "L0-01",
+  "title": "La carte mentale de l’investissement : objectif, horizon, risque, rendement",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Investir, dans la logique de Limpide, commence par :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Trouver le meilleur ETF du moment"
+        },
+        {
+          "id": "B",
+          "text": "Définir objectif, horizon, risque acceptable"
+        },
+        {
+          "id": "C",
+          "text": "Suivre les news chaque jour"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Sans objectif/horizon/risque, tu ne peux pas juger si un choix est cohérent. Le produit vient après le cadre."
+    },
+    {
+      "id": "q2",
+      "prompt": "Le ‘risque’ signifie surtout :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "La certitude de perdre"
+        },
+        {
+          "id": "B",
+          "text": "L’incertitude/variabilité des résultats"
+        },
+        {
+          "id": "C",
+          "text": "Le fait d’investir en bourse"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Le risque, c’est que le résultat final puisse être très différent de ce que tu espères, y compris des pertes."
+    },
+    {
+      "id": "q3",
+      "prompt": "La ‘capacité de risque’ dépend surtout :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "De ta situation financière (revenus, dettes, épargne)"
+        },
+        {
+          "id": "B",
+          "text": "De ton optimisme"
+        },
+        {
+          "id": "C",
+          "text": "Du nombre de lignes en portefeuille"
+        }
+      ],
+      "answer": "A",
+      "explanation": "La capacité est factuelle : elle mesure ta marge réelle pour absorber une baisse sans te mettre en danger."
+    },
+    {
+      "id": "q4",
+      "prompt": "Diversifier sert principalement à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Garantir un gain"
+        },
+        {
+          "id": "B",
+          "text": "Réduire la dépendance à un seul scénario"
+        },
+        {
+          "id": "C",
+          "text": "Avoir beaucoup de lignes"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Diversifier réduit le risque ‘un pari unique’, sans éliminer la possibilité de baisse globale."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : un horizon long élimine tout risque.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Un horizon long aide à absorber des baisses temporaires, mais le risque ne disparaît pas : il change de forme."
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "L1-01",
+  "title": "Les 3 moteurs : actions, obligations, cash — comment ça gagne, comment ça perd",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Une action représente :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Un prêt"
+        },
+        {
+          "id": "B",
+          "text": "Une part d’entreprise"
+        },
+        {
+          "id": "C",
+          "text": "Une monnaie"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Action = propriété ; ta valeur dépend de l’entreprise et de ce que les investisseurs sont prêts à payer."
+    },
+    {
+      "id": "q2",
+      "prompt": "Une obligation est surtout sensible à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "La météo"
+        },
+        {
+          "id": "B",
+          "text": "Les taux d’intérêt et le risque de crédit"
+        },
+        {
+          "id": "C",
+          "text": "Les dividendes"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Les taux influencent le prix des obligations existantes; le crédit influence le risque de défaut."
+    },
+    {
+      "id": "q3",
+      "prompt": "Le cash a surtout comme risque :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "L’inflation (pouvoir d’achat)"
+        },
+        {
+          "id": "B",
+          "text": "La faillite d’une entreprise"
+        },
+        {
+          "id": "C",
+          "text": "Le défaut d’un État"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Le cash peut être stable nominalement mais perdre en pouvoir d’achat si les prix montent."
+    },
+    {
+      "id": "q4",
+      "prompt": "Pourquoi mixer actions/obligations/cash ?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Pour réduire la dépendance à un seul scénario"
+        },
+        {
+          "id": "B",
+          "text": "Pour augmenter les frais"
+        },
+        {
+          "id": "C",
+          "text": "Parce que c’est obligatoire"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Le mélange permet d’équilibrer volatilité, liquidité et potentiel de rendement selon l’objectif."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : les obligations ne baissent jamais.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Les obligations peuvent baisser (ex. si les taux montent), même si elles sont souvent moins volatiles que les actions."
+    }
+  ]
+}

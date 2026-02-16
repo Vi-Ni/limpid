@@ -1,0 +1,108 @@
+{
+  "id": "L3-02",
+  "title": "Volatilité et drawdown : normaliser les baisses pour mieux décider",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "La volatilité décrit :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "La vitesse d’internet"
+        },
+        {
+          "id": "B",
+          "text": "L’ampleur des variations de prix"
+        },
+        {
+          "id": "C",
+          "text": "Le montant des dividendes"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Volatilité = ça bouge beaucoup; plus c’est élevé, plus le parcours émotionnel est dur."
+    },
+    {
+      "id": "q2",
+      "prompt": "Le drawdown est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "La baisse depuis un sommet"
+        },
+        {
+          "id": "B",
+          "text": "Le rendement moyen"
+        },
+        {
+          "id": "C",
+          "text": "Les frais"
+        }
+      ],
+      "answer": "A",
+      "explanation": "C’est une mesure intuitive de la ‘profondeur’ d’une chute."
+    },
+    {
+      "id": "q3",
+      "prompt": "L’aversion aux pertes signifie :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "On aime perdre"
+        },
+        {
+          "id": "B",
+          "text": "On ressent une perte plus fortement qu’un gain équivalent"
+        },
+        {
+          "id": "C",
+          "text": "On ne ressent rien"
+        }
+      ],
+      "answer": "B",
+      "explanation": "C’est un biais humain classique, important en investissement."
+    },
+    {
+      "id": "q4",
+      "prompt": "Un garde-fou utile est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Décider au dernier moment"
+        },
+        {
+          "id": "B",
+          "text": "Écrire un plan ‘si -20% alors…’"
+        },
+        {
+          "id": "C",
+          "text": "Ignorer l’objectif"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Un plan écrit évite de prendre une décision en pleine panique."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : une baisse signifie forcément que ton plan est mauvais.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Les baisses peuvent être normales; on juge surtout la cohérence avec l’horizon et l’allocation."
+    }
+  ]
+}

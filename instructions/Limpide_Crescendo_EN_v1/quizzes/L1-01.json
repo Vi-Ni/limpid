@@ -1,0 +1,108 @@
+{
+  "id": "L1-01",
+  "title": "The 3 engines: stocks, bonds, cash — how they gain, how they lose",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "A stock represents:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "A loan"
+        },
+        {
+          "id": "B",
+          "text": "A piece of a company"
+        },
+        {
+          "id": "C",
+          "text": "A currency"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Stock = ownership; your value depends on the company and what investors are willing to pay."
+    },
+    {
+      "id": "q2",
+      "prompt": "A bond is mainly sensitive to:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "The weather"
+        },
+        {
+          "id": "B",
+          "text": "Interest rates and credit risk"
+        },
+        {
+          "id": "C",
+          "text": "Dividends"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Interest rates affect existing bond prices; credit risk affects the chance of default."
+    },
+    {
+      "id": "q3",
+      "prompt": "Cash's main risk is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Inflation (purchasing power)"
+        },
+        {
+          "id": "B",
+          "text": "A company going bankrupt"
+        },
+        {
+          "id": "C",
+          "text": "A government defaulting"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Cash can be nominally stable but lose purchasing power if prices rise."
+    },
+    {
+      "id": "q4",
+      "prompt": "Why mix stocks/bonds/cash?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "To reduce dependence on a single scenario"
+        },
+        {
+          "id": "B",
+          "text": "To increase fees"
+        },
+        {
+          "id": "C",
+          "text": "Because it's mandatory"
+        }
+      ],
+      "answer": "A",
+      "explanation": "The mix balances volatility, liquidity, and return potential based on your goal."
+    },
+    {
+      "id": "q5",
+      "prompt": "True/False: bonds never go down.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Bonds can drop (e.g. if rates rise), even though they're often less volatile than stocks."
+    }
+  ]
+}

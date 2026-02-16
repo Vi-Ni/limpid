@@ -1,0 +1,108 @@
+{
+  "id": "L0-02",
+  "title": "Temps, inflation, intérêts composés : pourquoi “long terme” change tout",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "L’inflation signifie :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Les marchés montent"
+        },
+        {
+          "id": "B",
+          "text": "Les prix montent et le pouvoir d’achat du cash baisse"
+        },
+        {
+          "id": "C",
+          "text": "Les frais augmentent toujours"
+        }
+      ],
+      "answer": "B",
+      "explanation": "L’inflation érode ce que ton argent peut acheter si son rendement net est trop faible."
+    },
+    {
+      "id": "q2",
+      "prompt": "L’intérêt composé, c’est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Des gains sur le capital seulement"
+        },
+        {
+          "id": "B",
+          "text": "Des gains sur le capital et sur les gains passés"
+        },
+        {
+          "id": "C",
+          "text": "Une taxe"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Les gains d’une année deviennent une base qui génère des gains les années suivantes."
+    },
+    {
+      "id": "q3",
+      "prompt": "Le CAGR est utile pour :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Comparer des performances sur des durées différentes"
+        },
+        {
+          "id": "B",
+          "text": "Prédire l’avenir"
+        },
+        {
+          "id": "C",
+          "text": "Éviter les frais"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Il donne un taux annuel ‘équivalent’ pour comparer plus proprement."
+    },
+    {
+      "id": "q4",
+      "prompt": "Pourquoi 1% de frais peut être ‘grave’ à long terme ?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Parce que c’est illégal"
+        },
+        {
+          "id": "B",
+          "text": "Parce que ça se répète chaque année et réduit l’effet composé"
+        },
+        {
+          "id": "C",
+          "text": "Parce que ça rend l’investissement impossible"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Un petit pourcentage répété annuellement grignote fortement le résultat final sur 10–20 ans."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : si ton solde augmente, tu t’enrichis forcément.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Si l’inflation et les frais dépassent ton rendement net, ton pouvoir d’achat peut stagner ou baisser."
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "L5-01",
+  "title": "Transparence radicale : holdings, look‑through ETF, doublons — et limites des données",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Le look-through sert à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Voir les expositions réelles derrière des ETF"
+        },
+        {
+          "id": "B",
+          "text": "Créer de la hype"
+        },
+        {
+          "id": "C",
+          "text": "Supprimer les frais"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Il transforme des lignes d’ETF en expositions pays/secteurs/holdings réellement détenues."
+    },
+    {
+      "id": "q2",
+      "prompt": "Les doublons sont fréquents parce que :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Les indices se chevauchent"
+        },
+        {
+          "id": "B",
+          "text": "Les ETF sont illégaux"
+        },
+        {
+          "id": "C",
+          "text": "Les obligations n’existent pas"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Beaucoup d’indices populaires partagent des entreprises majeures."
+    },
+    {
+      "id": "q3",
+      "prompt": "Transparence ‘honnête’ signifie :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Affirmer sans preuve"
+        },
+        {
+          "id": "B",
+          "text": "Afficher sources + dates + incertitudes"
+        },
+        {
+          "id": "C",
+          "text": "Donner un score unique"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Quand une donnée est estimée ou ancienne, il faut le dire explicitement."
+    },
+    {
+      "id": "q4",
+      "prompt": "Vrai/Faux : les holdings d’un ETF sont toujours publiés en temps réel.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Souvent, la publication est périodique et peut avoir un délai."
+    },
+    {
+      "id": "q5",
+      "prompt": "Pourquoi ‘Je ne sais pas’ peut être une bonne UX ?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Parce que ça évite de mentir"
+        },
+        {
+          "id": "B",
+          "text": "Parce que ça cache tout"
+        },
+        {
+          "id": "C",
+          "text": "Parce que ça augmente les frais"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Mieux vaut une transparence humble qu’une fausse précision."
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "L5-03",
+  "title": "Investir localement avec rendement : community bonds, coop, foncier agricole — et la stratégie ‘cœur + satellites’",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Un community bond ressemble surtout à :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Un prêt à une organisation/projet local"
+        },
+        {
+          "id": "B",
+          "text": "Une action tech"
+        },
+        {
+          "id": "C",
+          "text": "Un produit dérivé"
+        }
+      ],
+      "answer": "A",
+      "explanation": "C’est une forme de dette : durée/taux définis, risque de défaut, liquidité souvent limitée."
+    },
+    {
+      "id": "q2",
+      "prompt": "Le risque clé des investissements locaux est souvent :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Illiquidité (argent bloqué/revente difficile)"
+        },
+        {
+          "id": "B",
+          "text": "Aucun risque"
+        },
+        {
+          "id": "C",
+          "text": "Frais négatifs"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Beaucoup d’investissements locaux ont une liquidité plus faible que les ETF cotés."
+    },
+    {
+      "id": "q3",
+      "prompt": "Stratégie ‘cœur + satellites’ signifie :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Tout en local"
+        },
+        {
+          "id": "B",
+          "text": "Un cœur diversifié + petites poches d’impact local"
+        },
+        {
+          "id": "C",
+          "text": "100% crypto"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Elle concilie diversification (cœur) et impact/sens (satellites)."
+    },
+    {
+      "id": "q4",
+      "prompt": "Une question de due diligence essentielle :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "À quoi sert l’argent et comment le récupérer ?"
+        },
+        {
+          "id": "B",
+          "text": "Quel est le logo ?"
+        },
+        {
+          "id": "C",
+          "text": "Quel est le hashtag ?"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Impact local exige transparence sur l’usage des fonds et sur la liquidité."
+    },
+    {
+      "id": "q5",
+      "prompt": "Vrai/Faux : plus c’est local, moins il faut analyser.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Souvent, c’est l’inverse : moins standardisé = plus besoin de documents, gouvernance, sources."
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "L4-02",
+  "title": "Les enveloppes au Canada : CELI, REER… choisir selon ton objectif (pédagogique)",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Une enveloppe est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Un produit d’investissement"
+        },
+        {
+          "id": "B",
+          "text": "Un cadre fiscal/administratif qui contient des investissements"
+        },
+        {
+          "id": "C",
+          "text": "Un secteur économique"
+        }
+      ],
+      "answer": "B",
+      "explanation": "L’enveloppe n’est pas l’actif; elle change surtout les règles fiscales et parfois de retrait."
+    },
+    {
+      "id": "q2",
+      "prompt": "La bonne logique est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Choisir une enveloppe selon l’objectif"
+        },
+        {
+          "id": "B",
+          "text": "Choisir une enveloppe selon la mode"
+        },
+        {
+          "id": "C",
+          "text": "Toujours le même compte"
+        }
+      ],
+      "answer": "A",
+      "explanation": "On associe compte ↔ objectif (flexible, retraite, première propriété, éducation…)."
+    },
+    {
+      "id": "q3",
+      "prompt": "Vrai/Faux : CELI/REER définissent automatiquement le niveau de risque.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Vrai"
+        },
+        {
+          "id": "B",
+          "text": "Faux"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Le niveau de risque dépend des actifs choisis (ETF/actions/obligations), pas du compte seul."
+    },
+    {
+      "id": "q4",
+      "prompt": "Pourquoi Limpide reste ‘pédagogique’ ici ?",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Parce que c’est plus simple"
+        },
+        {
+          "id": "B",
+          "text": "Parce que la fiscalité dépend de la situation personnelle et évolue"
+        },
+        {
+          "id": "C",
+          "text": "Parce que l’impôt n’existe pas"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Limpide explique la logique, renvoie vers sources, et évite un conseil personnalisé."
+    },
+    {
+      "id": "q5",
+      "prompt": "Pour un objectif ‘éducation enfant’, une enveloppe typique à explorer est :",
+      "choices": [
+        {
+          "id": "A",
+          "text": "REEE/RESP"
+        },
+        {
+          "id": "B",
+          "text": "Compte cash only"
+        },
+        {
+          "id": "C",
+          "text": "Aucune"
+        }
+      ],
+      "answer": "A",
+      "explanation": "C’est une enveloppe pensée pour l’éducation (à vérifier selon règles et situation)."
+    }
+  ]
+}

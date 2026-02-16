@@ -1,0 +1,108 @@
+{
+  "id": "L5-03",
+  "title": "Investing locally with returns: community bonds, co-ops, farmland — and the 'core + satellites' strategy",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "A community bond is most like:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "A loan to a local organization/project"
+        },
+        {
+          "id": "B",
+          "text": "A tech stock"
+        },
+        {
+          "id": "C",
+          "text": "A derivative"
+        }
+      ],
+      "answer": "A",
+      "explanation": "It's a form of debt: defined term/rate, default risk, often limited liquidity."
+    },
+    {
+      "id": "q2",
+      "prompt": "The key risk of local investments is often:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Illiquidity (money locked up / hard to resell)"
+        },
+        {
+          "id": "B",
+          "text": "No risk"
+        },
+        {
+          "id": "C",
+          "text": "Negative fees"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Many local investments have lower liquidity than listed ETFs."
+    },
+    {
+      "id": "q3",
+      "prompt": "'Core + satellites' strategy means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Everything in local"
+        },
+        {
+          "id": "B",
+          "text": "A diversified core + small pockets of local impact"
+        },
+        {
+          "id": "C",
+          "text": "100% crypto"
+        }
+      ],
+      "answer": "B",
+      "explanation": "It balances diversification (core) and impact/purpose (satellites)."
+    },
+    {
+      "id": "q4",
+      "prompt": "An essential due diligence question:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "What's the money for and how do I get it back?"
+        },
+        {
+          "id": "B",
+          "text": "What's the logo?"
+        },
+        {
+          "id": "C",
+          "text": "What's the hashtag?"
+        }
+      ],
+      "answer": "A",
+      "explanation": "Local impact requires transparency on the use of funds and liquidity."
+    },
+    {
+      "id": "q5",
+      "prompt": "True/False: the more local it is, the less analysis is needed.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Often it's the opposite: less standardized = more need for documents, governance, and sources."
+    }
+  ]
+}

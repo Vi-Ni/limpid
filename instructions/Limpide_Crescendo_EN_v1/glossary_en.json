@@ -1,0 +1,50 @@
+[
+  {
+    "term": "Asset allocation",
+    "definition": "How you split your money across major categories (stocks, bonds, cash, etc.)."
+  },
+  {
+    "term": "Diversification",
+    "definition": "Reducing dependence on a single scenario (country/sector/company/currency)."
+  },
+  {
+    "term": "Return",
+    "definition": "Gain or loss over a period, expressed in % or dollars."
+  },
+  {
+    "term": "Risk",
+    "definition": "Uncertainty/variability of outcomes; includes the possibility of loss."
+  },
+  {
+    "term": "Time horizon",
+    "definition": "How long you can leave your money invested without touching it."
+  },
+  {
+    "term": "MER",
+    "definition": "Annual fund/ETF fees, expressed as a % and built into the fund's performance."
+  },
+  {
+    "term": "Look-through",
+    "definition": "Analyzing the real exposures behind ETFs (holdings/countries/sectors)."
+  },
+  {
+    "term": "Drawdown",
+    "definition": "Decline from a peak value."
+  },
+  {
+    "term": "DCA",
+    "definition": "Investing a fixed amount at regular intervals to smooth your entry over time."
+  },
+  {
+    "term": "TFSA (CELI)",
+    "definition": "Canadian tax-sheltered account; rules should be verified for the current year."
+  },
+  {
+    "term": "RRSP (REER)",
+    "definition": "Canadian account often associated with long-term/retirement savings; rules should be verified."
+  },
+  {
+    "term": "Impact investing",
+    "definition": "Investing with the intention of generating measurable positive impact alongside financial return."
+  }
+]

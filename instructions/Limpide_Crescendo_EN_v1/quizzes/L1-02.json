@@ -1,0 +1,108 @@
+{
+  "id": "L1-02",
+  "title": "ETFs and funds: 'one-click' diversification (and its limits)",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "An ETF is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "A basket of assets"
+        },
+        {
+          "id": "B",
+          "text": "A bank loan"
+        },
+        {
+          "id": "C",
+          "text": "An insurance policy"
+        }
+      ],
+      "answer": "A",
+      "explanation": "An ETF holds a set of assets (stocks, bonds…) according to a rule (often an index)."
+    },
+    {
+      "id": "q2",
+      "prompt": "MER stands for:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "The bid-ask spread"
+        },
+        {
+          "id": "B",
+          "text": "The fund's annual fees"
+        },
+        {
+          "id": "C",
+          "text": "The tax rate"
+        }
+      ],
+      "answer": "B",
+      "explanation": "MER is a recurring cost built into the fund, expressed as an annual %."
+    },
+    {
+      "id": "q3",
+      "prompt": "'Diversification' via ETF means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "No risk"
+        },
+        {
+          "id": "B",
+          "text": "Less company-specific risk"
+        },
+        {
+          "id": "C",
+          "text": "A guaranteed return"
+        }
+      ],
+      "answer": "B",
+      "explanation": "An ETF mainly reduces 'single company' risk, but not market-wide risk."
+    },
+    {
+      "id": "q4",
+      "prompt": "Look-through is used to:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Predict prices"
+        },
+        {
+          "id": "B",
+          "text": "See your real exposures behind your ETFs"
+        },
+        {
+          "id": "C",
+          "text": "Hide fees"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Look-through translates ETF lines into actual country/sector/holding exposures."
+    },
+    {
+      "id": "q5",
+      "prompt": "True/False: a thematic ETF is always diversified.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "A thematic ETF can be very concentrated (few holdings, same sector, same countries)."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "term": "Allocation d’actifs",
+    "definition": "Répartition entre grandes classes (actions, obligations, cash…)."
+  },
+  {
+    "term": "Diversification",
+    "definition": "Réduire la dépendance à un seul scénario (pays/secteur/entreprise/devise)."
+  },
+  {
+    "term": "Rendement",
+    "definition": "Gain ou perte sur une période, en % ou en dollars."
+  },
+  {
+    "term": "Risque",
+    "definition": "Incertitude/variabilité des résultats; inclut perte possible."
+  },
+  {
+    "term": "Horizon",
+    "definition": "Temps pendant lequel tu peux laisser l’argent investi sans y toucher."
+  },
+  {
+    "term": "MER",
+    "definition": "Frais annuels d’un fonds/ETF, exprimés en % et intégrés à la performance."
+  },
+  {
+    "term": "Look-through",
+    "definition": "Analyse des expositions réelles derrière des ETF (holdings/pays/secteurs)."
+  },
+  {
+    "term": "Drawdown",
+    "definition": "Baisse depuis un sommet de valeur."
+  },
+  {
+    "term": "DCA",
+    "definition": "Investir régulièrement la même somme pour lisser l’entrée dans le temps."
+  },
+  {
+    "term": "CELI (TFSA)",
+    "definition": "Enveloppe fiscale canadienne; règles à vérifier selon l’année."
+  },
+  {
+    "term": "REER (RRSP)",
+    "definition": "Enveloppe canadienne souvent associée au long terme/retraite; règles à vérifier."
+  },
+  {
+    "term": "Impact investing",
+    "definition": "Investir avec intention d’impact positif mesurable en plus du rendement."
+  }
+]

@@ -1,0 +1,108 @@
+{
+  "id": "L2-03",
+  "title": "Currencies, regular contributions, rebalancing: the simple 'steering' of a portfolio",
+  "version": 1,
+  "type": "mcq",
+  "passing": {
+    "min_correct": 0,
+    "unlock": []
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Currency risk means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Your result can shift because of exchange rates"
+        },
+        {
+          "id": "B",
+          "text": "You can't invest"
+        },
+        {
+          "id": "C",
+          "text": "You always gain"
+        }
+      ],
+      "answer": "A",
+      "explanation": "A USD position can rise or fall in CAD terms due to exchange rates, even if the USD price doesn't move."
+    },
+    {
+      "id": "q2",
+      "prompt": "DCA mainly serves to:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Guarantee a gain"
+        },
+        {
+          "id": "B",
+          "text": "Reduce the stress of 'the right moment' by investing regularly"
+        },
+        {
+          "id": "C",
+          "text": "Avoid fees"
+        }
+      ],
+      "answer": "B",
+      "explanation": "DCA is a behavioral strategy that smooths your entry over time."
+    },
+    {
+      "id": "q3",
+      "prompt": "Rebalancing means:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Changing your goal"
+        },
+        {
+          "id": "B",
+          "text": "Returning to the target allocation"
+        },
+        {
+          "id": "C",
+          "text": "Ignoring the portfolio"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Rebalancing maintains the intended risk level by bringing the split back to target."
+    },
+    {
+      "id": "q4",
+      "prompt": "A simple rebalancing method is:",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Sell everything"
+        },
+        {
+          "id": "B",
+          "text": "Direct new contributions to the lagging asset class"
+        },
+        {
+          "id": "C",
+          "text": "Switch currencies"
+        }
+      ],
+      "answer": "B",
+      "explanation": "Rebalancing through contributions avoids selling and reduces complexity."
+    },
+    {
+      "id": "q5",
+      "prompt": "True/False: FX is only a cost, never a risk.",
+      "choices": [
+        {
+          "id": "A",
+          "text": "True"
+        },
+        {
+          "id": "B",
+          "text": "False"
+        }
+      ],
+      "answer": "B",
+      "explanation": "FX is both a cost *and* a performance factor (exchange rate fluctuations)."
+    }
+  ]
+}
