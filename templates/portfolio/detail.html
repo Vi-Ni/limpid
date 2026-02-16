@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Limpide — {{ portfolio.name }}{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap items-center gap-3">
+  <h1 class="text-2xl font-bold text-text">{{ portfolio.name }}</h1>
+  {% if portfolio.is_sandbox %}
+    {% include "components/badge.html" with label=_("Sandbox") variant="neutral" %}
+  {% endif %}
+</div>
+
+<!-- Snapshot -->
+<div class="mt-4">
+  <p class="text-sm text-text-muted">{% trans "Total value" %}</p>
+  <p class="text-2xl font-bold text-text">${{ snapshot.total_value|floatformat:2 }}</p>
+</div>
+
+<!-- Holdings table + Allocation chart -->
+<div class="mt-6 grid gap-6 lg:grid-cols-3">
+  <!-- Holdings table (2 cols wide) -->
+  <div class="lg:col-span-2">
+    {% include "components/card_start.html" with title=_("Holdings") %}
+      <div class="-mx-5 overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="border-b border-border text-left text-xs font-medium uppercase tracking-wider text-text-muted">
+              <th class="px-5 py-2">{% trans "Ticker" %}</th>
+              <th class="px-5 py-2">{% trans "Name" %}</th>
+              <th class="px-5 py-2 text-right">{% trans "Qty" %}</th>
+              <th class="px-5 py-2 text-right">{% trans "Avg cost" %}</th>
+              <th class="px-5 py-2 text-right">{% trans "Price" %}</th>
+              <th class="px-5 py-2 text-right">{% trans "Market value" %}</th>
+              <th class="px-5 py-2 text-right">{% trans "Gain / Loss" %}</th>
+              <th class="px-5 py-2 text-right">{% trans "Weight" %}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {% for h in holdings %}
+            <tr>
+              <td class="px-5 py-2 font-medium text-text">{{ h.ticker }}</td>
+              <td class="px-5 py-2 text-text-muted">{{ h.name }}</td>
+              <td class="px-5 py-2 text-right text-text">{{ h.quantity|floatformat:2 }}</td>
+              <td class="px-5 py-2 text-right text-text">${{ h.avg_cost }}</td>
+              <td class="px-5 py-2 text-right text-text">${{ h.current_price }}</td>
+              <td class="px-5 py-2 text-right font-medium text-text">${{ h.market_value }}</td>
+              <td class="px-5 py-2 text-right {% if h.gain_loss >= 0 %}text-success-700{% else %}text-danger-700{% endif %}">
+                ${{ h.gain_loss }} ({{ h.gain_loss_pct }}%)
+              </td>
+              <td class="px-5 py-2 text-right text-text-muted">{{ h.weight }}%</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% include "components/card_end.html" %}
+  </div>
+
+  <!-- Allocation chart -->
+  <div>
+    {% include "components/card_start.html" with title=_("Allocation") %}
+      <canvas data-chart="allocation" data-chart-data='{{ allocation.chart_data }}'></canvas>
+    {% include "components/card_end.html" %}
+  </div>
+</div>
+
+<!-- Transactions -->
+<div class="mt-6">
+  {% include "components/card_start.html" with title=_("Recent transactions") %}
+    <div class="-mx-5 overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="border-b border-border text-left text-xs font-medium uppercase tracking-wider text-text-muted">
+            <th class="px-5 py-2">{% trans "Date" %}</th>
+            <th class="px-5 py-2">{% trans "Type" %}</th>
+            <th class="px-5 py-2">{% trans "Ticker" %}</th>
+            <th class="px-5 py-2 text-right">{% trans "Qty" %}</th>
+            <th class="px-5 py-2 text-right">{% trans "Price" %}</th>
+            <th class="px-5 py-2 text-right">{% trans "Fees" %}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          {% for tx in transactions %}
+          <tr>
+            <td class="px-5 py-2 text-text-muted">{{ tx.executed_at|date:"N j, Y" }}</td>
+            <td class="px-5 py-2">
+              {% if tx.transaction_type == "buy" %}
+                {% include "components/badge.html" with label=_("Buy") variant="success" %}
+              {% else %}
+                {% include "components/badge.html" with label=_("Sell") variant="danger" %}
+              {% endif %}
+            </td>
+            <td class="px-5 py-2 font-medium text-text">{{ tx.asset.ticker }}</td>
+            <td class="px-5 py-2 text-right text-text">{{ tx.quantity|floatformat:2 }}</td>
+            <td class="px-5 py-2 text-right text-text">${{ tx.price|floatformat:2 }}</td>
+            <td class="px-5 py-2 text-right text-text-muted">${{ tx.fees|floatformat:2 }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td class="px-5 py-4 text-center text-text-muted" colspan="6">{% trans "No transactions yet." %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% include "components/card_end.html" %}
+</div>
+{% endblock %}

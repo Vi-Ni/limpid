@@ -5,6 +5,8 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 
+from apps.portfolio.services import create_sandbox_portfolio
+
 from .forms import OnboardingStep1Form, OnboardingStep2Form, ProfileForm
 from .models import RiskQuizResponse, UserProfile
 from .services import (
@@ -16,7 +18,9 @@ from .services import (
 
 
 def home_view(request):
-    """Render the home page."""
+    """Render the home page, redirect authenticated users to dashboard."""
+    if request.user.is_authenticated:
+        return redirect("dashboard")
     return render(request, "pages/home.html")
 
 
@@ -41,7 +45,7 @@ def onboarding_view(request):
     """Render the onboarding shell with step 1 loaded."""
     profile, _created = UserProfile.objects.get_or_create(user=request.user)
     if profile.onboarding_completed:
-        return redirect("portfolio:list")
+        return redirect("dashboard")
     form = OnboardingStep1Form(instance=profile)
     return render(
         request,
@@ -95,7 +99,8 @@ def onboarding_step(request, step):
     if step == 3:
         profile.onboarding_completed = True
         profile.save()
-        return redirect("portfolio:list")
+        create_sandbox_portfolio(request.user)
+        return redirect("dashboard")
 
     return redirect("accounts:onboarding")
 

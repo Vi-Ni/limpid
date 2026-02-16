@@ -182,3 +182,21 @@ def get_user_progress_summary(user, language_code=None):
         "quiz_scores": quiz_scores,
         "by_level": by_level,
     }
+
+
+def get_next_lesson(user, language_code=None):
+    """Return the first uncompleted lesson as {id, title, level} or None."""
+    lang = language_code or _lang()
+    index = load_curriculum_index(lang)
+    completed_ids = set(LessonProgress.objects.filter(user=user).values_list("lesson_id", flat=True))
+    titles = get_lesson_titles(lang)
+
+    for level_data in index["levels"]:
+        for lid in level_data["lessons"]:
+            if lid not in completed_ids:
+                return {
+                    "id": lid,
+                    "title": titles.get(lid, lid),
+                    "level": level_data["level"],
+                }
+    return None

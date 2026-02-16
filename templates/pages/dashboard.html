@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Limpide — {% trans "Dashboard" %}{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold text-text">{% trans "Dashboard" %}</h1>
+<p class="mt-1 text-sm text-text-muted">{{ portfolio.name }}</p>
+
+<!-- Row 1: Snapshot -->
+<div class="mt-6">
+  {% include "components/card_start.html" with title="" %}
+    <div class="flex flex-wrap items-baseline gap-4">
+      <div>
+        <p class="text-sm text-text-muted">{% trans "Total value" %}</p>
+        <p class="text-3xl font-bold text-text">${{ snapshot.total_value }}</p>
+      </div>
+      <div>
+        {% if snapshot.daily_change >= 0 %}
+          {% include "components/badge.html" with label=snapshot.daily_change_display variant="success" %}
+        {% else %}
+          {% include "components/badge.html" with label=snapshot.daily_change_display variant="danger" %}
+        {% endif %}
+      </div>
+    </div>
+    <dl class="mt-4 divide-y divide-gray-100">
+      {% include "components/metric_row.html" with label=_("Total cost") value=snapshot.total_cost %}
+      {% include "components/metric_row.html" with label=_("Gain / Loss") value=snapshot.gain_loss_display %}
+    </dl>
+  {% include "components/card_end.html" %}
+</div>
+
+<!-- Row 2: Allocation + Exposures -->
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <!-- Allocation chart -->
+  {% include "components/card_start.html" with title=_("Allocation") %}
+    <div class="mx-auto max-w-xs">
+      <canvas data-chart="allocation" data-chart-data='{{ allocation.chart_data }}'></canvas>
+    </div>
+    <dl class="mt-4 divide-y divide-gray-100">
+      {% for item in allocation.breakdown %}
+        {% include "components/metric_row.html" with label=item.label value=item.display %}
+      {% endfor %}
+    </dl>
+  {% include "components/card_end.html" %}
+
+  <!-- Exposures -->
+  {% include "components/card_start.html" with title=_("Exposures") %}
+    {% if exposures.geography %}
+    <h4 class="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">{% trans "Geography" %}</h4>
+    <div class="space-y-2">
+      {% for item in exposures.geography %}
+      <div>
+        <div class="flex justify-between text-sm">
+          <span class="text-text">{{ item.label }}</span>
+          <span class="text-text-muted">{{ item.pct }}%</span>
+        </div>
+        <div class="mt-1 h-2 w-full rounded-full bg-gray-200">
+          <div class="h-2 rounded-full bg-primary-600" style="width: {{ item.pct }}%"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if exposures.sectors %}
+    <h4 class="mb-2 mt-4 text-xs font-semibold uppercase tracking-wider text-text-muted">{% trans "Sectors" %}</h4>
+    <div class="space-y-2">
+      {% for item in exposures.sectors %}
+      <div>
+        <div class="flex justify-between text-sm">
+          <span class="text-text">{{ item.label }}</span>
+          <span class="text-text-muted">{{ item.pct }}%</span>
+        </div>
+        <div class="mt-1 h-2 w-full rounded-full bg-gray-200">
+          <div class="h-2 rounded-full bg-primary-400" style="width: {{ item.pct }}%"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% include "components/card_end.html" %}
+</div>
+
+<!-- Row 3: Clarity Score + Next Lesson -->
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <!-- Clarity Score -->
+  {% include "components/card_start.html" with title=_("Clarity Score") %}
+    <div class="text-center">
+      <p class="text-4xl font-bold text-primary-600">{{ clarity.score }}%</p>
+      <p class="mt-1 text-sm text-text-muted">
+        {% blocktrans with learned=clarity.learned total=clarity.total %}{{ learned }} of {{ total }} asset types understood{% endblocktrans %}
+      </p>
+    </div>
+    <div class="mt-4">
+      <div class="h-2 w-full rounded-full bg-gray-200">
+        <div class="h-2 rounded-full bg-primary-600 transition-all" style="width: {{ clarity.score }}%"></div>
+      </div>
+    </div>
+    <div class="mt-4 text-center">
+      <a href="{% url 'education:path' %}" class="text-sm font-medium text-primary-600 hover:text-primary-700">
+        {% trans "Continue learning" %} &rarr;
+      </a>
+    </div>
+  {% include "components/card_end.html" %}
+
+  <!-- Next Lesson -->
+  {% include "components/card_start.html" with title=_("Next lesson") %}
+    {% if next_lesson %}
+    <div class="text-center">
+      <p class="text-sm text-text-muted">{% trans "Level" %} {{ next_lesson.level }}</p>
+      <p class="mt-1 text-lg font-semibold text-text">{{ next_lesson.title }}</p>
+      <a href="{% url 'education:lesson' next_lesson.id %}"
+         class="mt-4 inline-block rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
+        {% trans "Start lesson" %}
+      </a>
+    </div>
+    {% else %}
+    <div class="text-center">
+      <p class="text-lg font-semibold text-text">{% trans "All lessons completed!" %}</p>
+      <p class="mt-1 text-sm text-text-muted">{% trans "You've finished all available lessons." %}</p>
+    </div>
+    {% endif %}
+  {% include "components/card_end.html" %}
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Limpide — {% trans "Portfolios" %}{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold text-text">{% trans "Portfolios" %}</h1>
+
+<div class="mt-6 grid gap-4 sm:grid-cols-2">
+  {% for p in portfolios %}
+  <a href="{% url 'portfolio:detail' p.pk %}" class="block">
+    {% include "components/card_start.html" with title="" %}
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-base font-semibold text-text">{{ p.name }}</p>
+          <p class="mt-1 text-sm text-text-muted">{{ p.created_at|date:"N j, Y" }}</p>
+        </div>
+        {% if p.is_sandbox %}
+          {% include "components/badge.html" with label=_("Sandbox") variant="neutral" %}
+        {% endif %}
+      </div>
+    {% include "components/card_end.html" %}
+  </a>
+  {% empty %}
+  <p class="text-sm text-text-muted">{% trans "No portfolios yet." %}</p>
+  {% endfor %}
+</div>
+{% endblock %}
