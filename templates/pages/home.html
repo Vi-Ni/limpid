@@ -14,8 +14,8 @@
   </p>
   <div class="mt-8 flex items-center justify-center gap-4">
     {% if user.is_authenticated %}
-    <a href="{% url 'portfolio:list' %}" class="rounded-lg bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-700">
-      {% trans "My portfolios" %}
+    <a href="{% url 'dashboard' %}" class="rounded-lg bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-700">
+      {% trans "My dashboard" %}
     </a>
     {% else %}
     <a href="{% url 'account_signup' %}" class="rounded-lg bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-700">

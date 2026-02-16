@@ -1,7 +1,9 @@
 def nav_current(request):
     """Determine the current navigation section from the URL path."""
     path = request.path
-    if path.startswith("/portfolio"):
+    if path.startswith("/dashboard"):
+        section = "dashboard"
+    elif path.startswith("/portfolio"):
         section = "portfolios"
     elif path.startswith("/learn"):
         section = "learn"

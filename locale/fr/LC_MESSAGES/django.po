@@ -192,6 +192,12 @@ msgstr "Langue"
 msgid "Go to my portfolios"
 msgstr "Aller à mes portefeuilles"
 
+msgid "Go to my dashboard"
+msgstr "Aller à mon tableau de bord"
+
+msgid "My dashboard"
+msgstr "Mon tableau de bord"
+
 # ── Risk quiz ──
 
 msgid "Risk Tolerance Quiz"
@@ -506,3 +512,153 @@ msgstr "complétion de quiz"
 
 msgid "quiz completions"
 msgstr "complétions de quiz"
+
+# ── Market Data ──
+
+msgid "asset"
+msgstr "actif"
+
+msgid "assets"
+msgstr "actifs"
+
+msgid "ETF"
+msgstr "FNB"
+
+msgid "Stock"
+msgstr "Action"
+
+msgid "Bond"
+msgstr "Obligation"
+
+msgid "GIC"
+msgstr "CPG"
+
+msgid "Cash"
+msgstr "Liquidités"
+
+# ── Portfolio ──
+
+msgid "portfolio"
+msgstr "portefeuille"
+
+msgid "portfolios"
+msgstr "portefeuilles"
+
+msgid "holding"
+msgstr "position"
+
+msgid "holdings"
+msgstr "positions"
+
+msgid "transaction"
+msgstr "transaction"
+
+msgid "transactions"
+msgstr "transactions"
+
+msgid "Buy"
+msgstr "Achat"
+
+msgid "Sell"
+msgstr "Vente"
+
+msgid "My Sandbox Portfolio"
+msgstr "Mon portefeuille bac à sable"
+
+msgid "Sandbox"
+msgstr "Bac à sable"
+
+msgid "No portfolios yet."
+msgstr "Aucun portefeuille pour le moment."
+
+# ── Dashboard ──
+
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+msgid "Total value"
+msgstr "Valeur totale"
+
+msgid "Total cost"
+msgstr "Coût total"
+
+msgid "Gain / Loss"
+msgstr "Gain / Perte"
+
+msgid "Allocation"
+msgstr "Répartition"
+
+msgid "Exposures"
+msgstr "Expositions"
+
+msgid "Geography"
+msgstr "Géographie"
+
+msgid "Sectors"
+msgstr "Secteurs"
+
+msgid "Clarity Score"
+msgstr "Score de clarté"
+
+#: blocktrans
+msgid "%(learned)s of %(total)s asset types understood"
+msgstr "%(learned)s type(s) d'actif compris sur %(total)s"
+
+msgid "Continue learning"
+msgstr "Continuer à apprendre"
+
+msgid "Next lesson"
+msgstr "Prochaine leçon"
+
+msgid "Level"
+msgstr "Niveau"
+
+msgid "Start lesson"
+msgstr "Commencer la leçon"
+
+msgid "All lessons completed!"
+msgstr "Toutes les leçons sont terminées !"
+
+msgid "You've finished all available lessons."
+msgstr "Vous avez terminé toutes les leçons disponibles."
+
+# ── Portfolio Detail ──
+
+msgid "Holdings"
+msgstr "Positions"
+
+msgid "Ticker"
+msgstr "Symbole"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Qty"
+msgstr "Qté"
+
+msgid "Avg cost"
+msgstr "Coût moy."
+
+msgid "Price"
+msgstr "Prix"
+
+msgid "Market value"
+msgstr "Valeur marchande"
+
+msgid "Weight"
+msgstr "Poids"
+
+msgid "Recent transactions"
+msgstr "Transactions récentes"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Fees"
+msgstr "Frais"
+
+msgid "No transactions yet."
+msgstr "Aucune transaction pour le moment."
