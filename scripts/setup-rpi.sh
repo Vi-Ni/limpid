@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 # One-time Raspberry Pi setup for Limpid deployment
-# Usage: scp this script + deploy/compose.prod.yml to the RPi, then run it.
+# Usage: clone the repo on the RPi, then run this script.
 set -euo pipefail
 
 DEPLOY_DIR="/opt/limpid"
 
-echo "==> Installing Podman and podman-compose..."
-sudo apt update && sudo apt install -y podman podman-compose
+echo "==> Installing Docker..."
+if ! command -v docker &>/dev/null; then
+    curl -fsSL https://get.docker.com | sudo sh
+    sudo usermod -aG docker "$USER"
+    echo "    Docker installed. You may need to log out and back in for group changes."
+fi
+
+if ! command -v docker-compose &>/dev/null; then
+    sudo apt install -y python3-pip
+    sudo pip3 install docker-compose
+fi
 
 echo ""
 echo "==> Logging in to GitHub Container Registry..."
@@ -15,7 +24,7 @@ echo "    with 'read:packages' scope."
 read -rp "GitHub username: " GH_USER
 read -rsp "GitHub PAT: " GH_PAT
 echo ""
-echo "$GH_PAT" | podman login ghcr.io -u "$GH_USER" --password-stdin
+echo "$GH_PAT" | docker login ghcr.io -u "$GH_USER" --password-stdin
 
 echo ""
 echo "==> Creating deployment directory at ${DEPLOY_DIR}..."
@@ -63,26 +72,26 @@ fi
 echo ""
 echo "==> Starting all services..."
 cd "$DEPLOY_DIR"
-podman-compose -f compose.prod.yml up -d
+docker-compose -f compose.prod.yml up -d
 
 echo "==> Waiting for database to be ready..."
 sleep 10
 
 echo "==> Running migrations..."
-podman-compose -f compose.prod.yml exec web python manage.py migrate --noinput
+docker-compose -f compose.prod.yml exec web python manage.py migrate --noinput
 
 echo ""
 echo "==> Creating superuser..."
-podman-compose -f compose.prod.yml exec -it web python manage.py createsuperuser
+docker-compose -f compose.prod.yml exec web python manage.py createsuperuser
 
 echo ""
 echo "==> Seeding initial data..."
-podman-compose -f compose.prod.yml exec web python manage.py seed_securities || true
-podman-compose -f compose.prod.yml exec web python manage.py seed_education || true
-podman-compose -f compose.prod.yml exec web python manage.py seed_impact || true
+docker-compose -f compose.prod.yml exec web python manage.py seed_securities || true
+docker-compose -f compose.prod.yml exec web python manage.py seed_education || true
+docker-compose -f compose.prod.yml exec web python manage.py seed_impact || true
 
 echo ""
 echo "==> Setup complete!"
 echo "    Visit https://limpid.viniko.com to verify."
 echo ""
-podman-compose -f compose.prod.yml ps
+docker-compose -f compose.prod.yml ps

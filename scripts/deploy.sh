@@ -9,16 +9,16 @@ IMAGE="ghcr.io/vi-ni/limpid:latest"
 cd "$DEPLOY_DIR"
 
 echo "==> Pulling latest image..."
-podman pull "$IMAGE"
+docker pull "$IMAGE"
 
 echo "==> Restarting web service..."
-podman-compose -f compose.prod.yml up -d --force-recreate web
+docker-compose -f compose.prod.yml up -d --force-recreate web
 
 echo "==> Waiting for web container..."
 sleep 5
 
 echo "==> Running migrations..."
-podman-compose -f compose.prod.yml exec web python manage.py migrate --noinput
+docker-compose -f compose.prod.yml exec web python manage.py migrate --noinput
 
 echo "==> Deployment complete."
-podman-compose -f compose.prod.yml ps
+docker-compose -f compose.prod.yml ps
