@@ -1,27 +1,24 @@
 #!/usr/bin/env bash
-# RPi deployment helper
+# Deploy latest Limpid image to RPi
+# Run this on the RPi: /opt/limpid/deploy.sh
 set -euo pipefail
 
-IMAGE="ghcr.io/${GITHUB_USER:-user}/limpid:latest"
-CONTAINER_NAME="limpid-web"
-ENV_FILE="/opt/limpid/.env"
+DEPLOY_DIR="/opt/limpid"
+IMAGE="ghcr.io/vi-ni/limpid:latest"
 
-echo "Pulling latest image..."
+cd "$DEPLOY_DIR"
+
+echo "==> Pulling latest image..."
 podman pull "$IMAGE"
 
-echo "Stopping existing container..."
-podman stop "$CONTAINER_NAME" 2>/dev/null || true
-podman rm "$CONTAINER_NAME" 2>/dev/null || true
+echo "==> Restarting web service..."
+podman-compose -f compose.prod.yml up -d --force-recreate web
 
-echo "Starting new container..."
-podman run -d \
-  --name "$CONTAINER_NAME" \
-  --env-file "$ENV_FILE" \
-  -p 127.0.0.1:8000:8000 \
-  --restart unless-stopped \
-  "$IMAGE"
+echo "==> Waiting for web container..."
+sleep 5
 
-echo "Running migrations..."
-podman exec "$CONTAINER_NAME" python manage.py migrate --noinput
+echo "==> Running migrations..."
+podman-compose -f compose.prod.yml exec web python manage.py migrate --noinput
 
-echo "Deployment complete."
+echo "==> Deployment complete."
+podman-compose -f compose.prod.yml ps
