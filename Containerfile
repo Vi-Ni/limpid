@@ -7,6 +7,8 @@ RUN npm ci
 
 WORKDIR /build
 COPY frontend/ frontend/
+COPY templates/ templates/
+COPY apps/ apps/
 RUN cd frontend && npm run build
 
 # Stage 2: Python application
