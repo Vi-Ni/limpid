@@ -32,7 +32,7 @@ COPY --from=frontend /build/static/dist/ /app/static/dist/
 ENV DJANGO_SETTINGS_MODULE=config.settings.production \
     PATH="/app/.venv/bin:$PATH"
 
-RUN python manage.py collectstatic --noinput
+RUN SECRET_KEY=build-only python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
