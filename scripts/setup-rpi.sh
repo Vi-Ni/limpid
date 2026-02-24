@@ -12,11 +12,6 @@ if ! command -v docker &>/dev/null; then
     echo "    Docker installed. You may need to log out and back in for group changes."
 fi
 
-if ! command -v docker-compose &>/dev/null; then
-    sudo apt install -y python3-pip
-    sudo pip3 install docker-compose
-fi
-
 echo ""
 echo "==> Logging in to GitHub Container Registry..."
 echo "    Create a Personal Access Token at https://github.com/settings/tokens"
@@ -72,26 +67,26 @@ fi
 echo ""
 echo "==> Starting all services..."
 cd "$DEPLOY_DIR"
-docker-compose -f compose.prod.yml up -d
+docker compose -f compose.prod.yml up -d
 
 echo "==> Waiting for database to be ready..."
 sleep 10
 
 echo "==> Running migrations..."
-docker-compose -f compose.prod.yml exec web python manage.py migrate --noinput
+docker compose -f compose.prod.yml exec web python manage.py migrate --noinput
 
 echo ""
 echo "==> Creating superuser..."
-docker-compose -f compose.prod.yml exec web python manage.py createsuperuser
+docker compose -f compose.prod.yml exec web python manage.py createsuperuser
 
 echo ""
 echo "==> Seeding initial data..."
-docker-compose -f compose.prod.yml exec web python manage.py seed_securities || true
-docker-compose -f compose.prod.yml exec web python manage.py seed_education || true
-docker-compose -f compose.prod.yml exec web python manage.py seed_impact || true
+docker compose -f compose.prod.yml exec web python manage.py seed_securities || true
+docker compose -f compose.prod.yml exec web python manage.py seed_education || true
+docker compose -f compose.prod.yml exec web python manage.py seed_impact || true
 
 echo ""
 echo "==> Setup complete!"
 echo "    Visit https://limpid.viniko.com to verify."
 echo ""
-docker-compose -f compose.prod.yml ps
+docker compose -f compose.prod.yml ps
