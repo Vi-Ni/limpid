@@ -48,8 +48,8 @@ DJANGO_SETTINGS_MODULE=config.settings.production
 DATABASE_URL=postgres://limpid:${DB_PASS}@db:5432/limpid
 
 # Production
-ALLOWED_HOSTS=limpid.viniko.com,localhost
-CSRF_TRUSTED_ORIGINS=https://limpid.viniko.com
+ALLOWED_HOSTS=limpid.viniqo.com,localhost
+CSRF_TRUSTED_ORIGINS=https://limpid.viniqo.com
 
 # PostgreSQL container
 POSTGRES_DB=limpid
@@ -87,6 +87,6 @@ docker compose -f compose.prod.yml exec web python manage.py seed_impact || true
 
 echo ""
 echo "==> Setup complete!"
-echo "    Visit https://limpid.viniko.com to verify."
+echo "    Visit https://limpid.viniqo.com to verify."
 echo ""
 docker compose -f compose.prod.yml ps
