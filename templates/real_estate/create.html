@@ -69,24 +69,18 @@
             {% if form.co_owner_down_payment.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_down_payment.errors.0 }}</p>{% endif %}
           </div>
 
-          <div class="grid gap-4 sm:grid-cols-2 max-w-sm sm:max-w-md">
-            <div>
-              <label for="{{ form.co_owner_share.id_for_label }}" class="block text-sm font-medium text-text mb-1">
-                {{ form.co_owner_share.label }}
-                {% if form.co_owner_share.help_text %}
-                  {% include "components/tooltip.html" with id="co_owner_share" text=form.co_owner_share.help_text %}
-                {% endif %}
-              </label>
-              {{ form.co_owner_share }}
-              {% if form.co_owner_share.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_share.errors.0 }}</p>{% endif %}
-            </div>
-
-            <div>
-              <span class="block text-sm font-medium text-text mb-1">{% trans "Your share" %}</span>
-              <div class="flex h-[38px] items-center rounded-lg border border-border bg-white px-3 text-sm text-text-muted" id="your-share-display">
-                —
-              </div>
-            </div>
+          <div class="max-w-sm">
+            <label for="{{ form.co_owner_share.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+              {{ form.co_owner_share.label }}
+              {% if form.co_owner_share.help_text %}
+                {% include "components/tooltip.html" with id="co_owner_share" text=form.co_owner_share.help_text %}
+              {% endif %}
+            </label>
+            {{ form.co_owner_share }}
+            {% if form.co_owner_share.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_share.errors.0 }}</p>{% endif %}
+            <p class="mt-2 text-sm text-text-muted">
+              {% trans "Your share" %}: <span id="your-share-display" class="font-semibold text-text">—</span>
+            </p>
           </div>
         </div>
       </div>
