@@ -1,0 +1,37 @@
+{% load i18n %}
+
+<div class="space-y-2">
+  {% include "components/metric_row.html" with label=_("Sale price") value=estimate.sale_price|floatformat:0 %}
+  {% include "components/metric_row.html" with label=_("Mortgage balance") value=estimate.mortgage_balance|floatformat:0 %}
+  {% include "components/metric_row.html" with label=_("Gross equity") value=estimate.gross_equity|floatformat:0 %}
+  <div class="border-t border-border pt-2 mt-2">
+    {% include "components/metric_row.html" with label=_("Agent commission (incl. tax)") value=estimate.agent_commission|floatformat:2 %}
+    {% include "components/metric_row.html" with label=_("Notary fees") value=estimate.notary_fees|floatformat:2 %}
+    {% if estimate.capital_gains_tax > 0 %}
+    {% include "components/metric_row.html" with label=_("Capital gains tax (est.)") value=estimate.capital_gains_tax|floatformat:2 %}
+    {% endif %}
+    {% include "components/metric_row.html" with label=_("Total costs") value=estimate.total_costs|floatformat:2 %}
+  </div>
+  <div class="border-t border-border pt-2 mt-2">
+    <div class="flex items-baseline justify-between">
+      <span class="text-sm font-semibold text-text">{% trans "Net proceeds" %}</span>
+      <span class="text-lg font-bold {% if estimate.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}">
+        ${{ estimate.net_proceeds|floatformat:0 }}
+      </span>
+    </div>
+  </div>
+
+  {% if estimate.per_owner|length > 1 %}
+  <div class="border-t border-border pt-3 mt-3">
+    <p class="text-sm font-medium text-text mb-2">{% trans "Per owner" %}</p>
+    {% for owner in estimate.per_owner %}
+    <div class="flex items-center justify-between py-1">
+      <span class="text-sm text-text-muted">{{ owner.user.get_full_name|default:owner.user.email }} ({{ owner.share_pct|floatformat:0 }}%)</span>
+      <span class="text-sm font-semibold {% if owner.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}">
+        ${{ owner.net_proceeds|floatformat:0 }}
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>

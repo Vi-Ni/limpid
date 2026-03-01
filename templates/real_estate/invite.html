@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-6 space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold text-text">{% trans "Invite a co-owner" %}</h1>
+    <p class="text-text-muted">{{ property.name }}</p>
+  </div>
+
+  {% include "components/card_start.html" with title=_("Invitation") %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="space-y-4 max-w-md">
+        {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text mb-1">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="mt-1 text-xs text-text-muted">{{ field.help_text }}</p>{% endif %}
+          {% if field.errors %}<p class="mt-1 text-xs text-danger-600">{{ field.errors.0 }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="mt-6 flex gap-3">
+        <button type="submit" class="rounded-lg bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700">
+          {% trans "Send invitation" %}
+        </button>
+        <a href="{% url 'real_estate:detail' property.pk %}" class="rounded-lg border border-border px-6 py-2 text-sm font-medium text-text-muted hover:bg-gray-50">
+          {% trans "Cancel" %}
+        </a>
+      </div>
+    </form>
+  {% include "components/card_end.html" %}
+</div>
+{% endblock %}

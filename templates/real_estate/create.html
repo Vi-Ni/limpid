@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-6 space-y-6">
+  <h1 class="text-2xl font-bold text-text">{% trans "Add a property" %}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% include "components/card_start.html" with title=_("Property details") %}
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% for field in form %}
+          {% if field.name != "down_payment" and field.name != "co_owner_email" and field.name != "co_owner_down_payment" and field.name != "co_owner_share" %}
+          <div {% if field.name == "address" %}class="sm:col-span-2"{% endif %}>
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+              {{ field.label }}{% if field.field.required %}<span class="text-danger-600 ml-0.5">*</span>{% endif %}
+              {% if field.help_text %}
+                {% include "components/tooltip.html" with id=field.html_name text=field.help_text %}
+              {% endif %}
+            </label>
+            {{ field }}
+            {% if field.errors %}<p class="mt-1 text-xs text-danger-600">{{ field.errors.0 }}</p>{% endif %}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% include "components/card_end.html" %}
+
+    {% include "components/card_start.html" with title=_("Ownership") %}
+      <div x-data="{ hasCoOwner: {% if form.co_owner_email.value %}true{% else %}false{% endif %} }" class="space-y-4">
+        <div class="max-w-sm">
+          <label for="{{ form.down_payment.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+            {{ form.down_payment.label }}
+            {% if form.down_payment.help_text %}
+              {% include "components/tooltip.html" with id="down_payment" text=form.down_payment.help_text %}
+            {% endif %}
+          </label>
+          {{ form.down_payment }}
+          {% if form.down_payment.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.down_payment.errors.0 }}</p>{% endif %}
+        </div>
+
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" x-model="hasCoOwner"
+                 class="rounded border-border text-primary-600 focus:ring-primary-500">
+          <span class="text-sm font-medium text-text">{% trans "I have a co-owner" %}</span>
+        </label>
+
+        <div x-show="hasCoOwner" x-transition class="rounded-lg border border-border bg-gray-50 p-4 space-y-4">
+          <div class="max-w-sm">
+            <label for="{{ form.co_owner_email.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+              {{ form.co_owner_email.label }}
+              {% if form.co_owner_email.help_text %}
+                {% include "components/tooltip.html" with id="co_owner_email" text=form.co_owner_email.help_text %}
+              {% endif %}
+            </label>
+            {{ form.co_owner_email }}
+            {% if form.co_owner_email.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_email.errors.0 }}</p>{% endif %}
+          </div>
+
+          <div class="max-w-sm">
+            <label for="{{ form.co_owner_down_payment.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+              {{ form.co_owner_down_payment.label }}
+              {% if form.co_owner_down_payment.help_text %}
+                {% include "components/tooltip.html" with id="co_owner_down_payment" text=form.co_owner_down_payment.help_text %}
+              {% endif %}
+            </label>
+            {{ form.co_owner_down_payment }}
+            {% if form.co_owner_down_payment.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_down_payment.errors.0 }}</p>{% endif %}
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2 max-w-sm sm:max-w-md">
+            <div>
+              <label for="{{ form.co_owner_share.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+                {{ form.co_owner_share.label }}
+                {% if form.co_owner_share.help_text %}
+                  {% include "components/tooltip.html" with id="co_owner_share" text=form.co_owner_share.help_text %}
+                {% endif %}
+              </label>
+              {{ form.co_owner_share }}
+              {% if form.co_owner_share.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_share.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div>
+              <span class="block text-sm font-medium text-text mb-1">{% trans "Your share" %}</span>
+              <div class="flex h-[38px] items-center rounded-lg border border-border bg-white px-3 text-sm text-text-muted" id="your-share-display">
+                —
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% include "components/card_end.html" %}
+
+    {% include "components/card_start.html" with title=_("Mortgage (optional)") %}
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% for field in mortgage_form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+            {{ field.label }}
+            {% if field.help_text %}
+              {% include "components/tooltip.html" with id=field.html_name text=field.help_text %}
+            {% endif %}
+          </label>
+          {{ field }}
+          {% if field.errors %}<p class="mt-1 text-xs text-danger-600">{{ field.errors.0 }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    {% include "components/card_end.html" %}
+
+    <div class="flex gap-3">
+      <button type="submit" class="rounded-lg bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700">
+        {% trans "Create property" %}
+      </button>
+      <a href="{% url 'real_estate:list' %}" class="rounded-lg border border-border px-6 py-2 text-sm font-medium text-text-muted hover:bg-gray-50">
+        {% trans "Cancel" %}
+      </a>
+    </div>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const purchaseDate = document.getElementById('id_purchase_date');
+  const mortgageStartDate = document.getElementById('id_mortgage-start_date');
+  const purchasePrice = document.getElementById('id_purchase_price');
+  const downPayment = document.getElementById('id_down_payment');
+  const coOwnerDownPayment = document.getElementById('id_co_owner_down_payment');
+  const coOwnerShare = document.getElementById('id_co_owner_share');
+  const principal = document.getElementById('id_mortgage-principal');
+  const insurancePremium = document.getElementById('id_mortgage-insurance_premium');
+  const yourShareDisplay = document.getElementById('your-share-display');
+
+  let principalDirty = false;
+  let insuranceDirty = false;
+
+  if (principal) {
+    principal.addEventListener('input', function () { principalDirty = true; });
+  }
+  if (insurancePremium) {
+    insurancePremium.addEventListener('input', function () { insuranceDirty = true; });
+  }
+
+  // Sync purchase date → mortgage start date
+  if (purchaseDate && mortgageStartDate) {
+    purchaseDate.addEventListener('change', function () {
+      if (!mortgageStartDate.value) {
+        mortgageStartDate.value = purchaseDate.value;
+      }
+    });
+  }
+
+  function getTotalDown() {
+    const yourDown = parseFloat(downPayment?.value) || 0;
+    const coDown = parseFloat(coOwnerDownPayment?.value) || 0;
+    return yourDown + coDown;
+  }
+
+  // CMHC tier rates
+  function getCmhcRate(downPct) {
+    if (downPct >= 20) return 0;
+    if (downPct >= 15) return 0.028;
+    if (downPct >= 10) return 0.031;
+    if (downPct >= 5) return 0.04;
+    return 0; // Below 5% — not insurable
+  }
+
+  function updatePrincipal() {
+    if (principalDirty || !principal) return;
+    const price = parseFloat(purchasePrice?.value) || 0;
+    const totalDown = getTotalDown();
+    if (price > 0 && price > totalDown) {
+      principal.value = (price - totalDown).toFixed(2);
+    }
+  }
+
+  function updateInsurance() {
+    if (insuranceDirty || !insurancePremium) return;
+    const price = parseFloat(purchasePrice?.value) || 0;
+    if (price <= 0) return;
+    const totalDown = getTotalDown();
+    const downPct = (totalDown / price) * 100;
+    const rate = getCmhcRate(downPct);
+    const mortgagePrincipal = price - totalDown;
+    insurancePremium.value = (mortgagePrincipal * rate).toFixed(2);
+  }
+
+  function updateYourShare() {
+    if (!yourShareDisplay) return;
+    const coShare = parseFloat(coOwnerShare?.value) || 0;
+    if (coShare > 0 && coShare < 100) {
+      yourShareDisplay.textContent = (100 - coShare).toFixed(2) + ' %';
+    } else {
+      yourShareDisplay.textContent = '—';
+    }
+  }
+
+  function updateAll() {
+    updatePrincipal();
+    updateInsurance();
+  }
+
+  if (purchasePrice) purchasePrice.addEventListener('input', updateAll);
+  if (downPayment) downPayment.addEventListener('input', updateAll);
+  if (coOwnerDownPayment) coOwnerDownPayment.addEventListener('input', updateAll);
+  if (coOwnerShare) coOwnerShare.addEventListener('input', updateYourShare);
+});
+</script>
+{% endblock %}

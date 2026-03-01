@@ -11,6 +11,8 @@ def nav_current(request):
         section = "scenarios"
     elif path.startswith("/impact"):
         section = "impact"
+    elif path.startswith("/real-estate"):
+        section = "real_estate"
     elif path.startswith("/accounts/profile") or path.startswith("/accounts/onboarding"):
         section = "profile"
     elif path == "/":

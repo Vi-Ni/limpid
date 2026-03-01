@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<form method="post" action="{% url 'real_estate:add_valuation' property.pk %}"
+      hx-post="{% url 'real_estate:add_valuation' property.pk %}"
+      hx-target="#valuation-list"
+      hx-swap="innerHTML"
+      class="mt-4 p-4 rounded-lg border border-border bg-gray-50">
+  {% csrf_token %}
+  <div class="grid gap-3 sm:grid-cols-2">
+    {% for field in form %}
+    <div>
+      <label for="{{ field.id_for_label }}" class="block text-xs font-medium text-text mb-1">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<p class="mt-1 text-xs text-danger-600">{{ field.errors.0 }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  <div class="mt-3">
+    <button type="submit" class="rounded-lg bg-primary-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-700">
+      {% trans "Add" %}
+    </button>
+  </div>
+</form>

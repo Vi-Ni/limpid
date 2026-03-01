@@ -1,0 +1,17 @@
+{% load i18n %}
+
+{% if valuations %}
+<div class="space-y-2">
+  {% for val in valuations %}
+  <div class="flex items-center justify-between py-1">
+    <div>
+      <span class="text-sm text-text">{{ val.date }}</span>
+      {% include "components/badge.html" with label=val.get_source_display variant="neutral" %}
+    </div>
+    <span class="text-sm font-semibold text-text">${{ val.value|floatformat:0 }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-sm text-text-muted py-2">{% trans "No valuation history." %}</p>
+{% endif %}

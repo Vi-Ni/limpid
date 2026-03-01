@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-6 space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-text">{{ property.name }}</h1>
+      <p class="text-text-muted">{{ property.address }}, {{ property.city }}</p>
+    </div>
+    <div class="flex items-center gap-2">
+      {% include "components/badge.html" with label=property.get_usage_display variant="info" %}
+      {% if ownership.is_admin %}
+        <a href="{% url 'real_estate:edit' property.pk %}" class="text-sm text-primary-600 hover:text-primary-700">{% trans "Edit" %}</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Row 1: Property Value + Your Share #}
+  <div class="grid gap-6 md:grid-cols-2">
+    {% include "components/card_start.html" with title=_("Property Value") %}
+      <p class="text-3xl font-bold text-text">${{ snapshot.current_valuation|floatformat:0 }}</p>
+      <div class="mt-4 space-y-2">
+        {% include "components/metric_row.html" with label=_("Purchase price") value=snapshot.purchase_price|floatformat:0 %}
+        {% with pct=snapshot.appreciation_pct|floatformat:1 %}
+        {% include "components/metric_row.html" with label=_("Appreciation") value=snapshot.appreciation|floatformat:0 annotation=pct %}
+        {% endwith %}
+        {% include "components/metric_row.html" with label=_("Mortgage balance") value=snapshot.mortgage_balance|floatformat:0 %}
+        {% with pct=snapshot.equity_pct|floatformat:1 %}
+        {% include "components/metric_row.html" with label=_("Equity") value=snapshot.equity|floatformat:0 annotation=pct %}
+        {% endwith %}
+      </div>
+    {% include "components/card_end.html" %}
+
+    {% include "components/card_start.html" with title=_("Your Share") %}
+      <p class="text-lg font-semibold text-primary-600">{{ owner_snapshot.share_pct|floatformat:0 }}%</p>
+      <div class="mt-4 space-y-2">
+        {% include "components/metric_row.html" with label=_("Your equity") value=owner_snapshot.your_equity|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Your valuation share") value=owner_snapshot.your_valuation|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Your mortgage share") value=owner_snapshot.your_mortgage_share|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Down payment") value=owner_snapshot.your_contributions.down_payment|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Principal paid") value=owner_snapshot.your_contributions.principal_paid|floatformat:0 %}
+      </div>
+    {% include "components/card_end.html" %}
+  </div>
+
+  {# Row 2: Ownership + Mortgage #}
+  <div class="grid gap-6 md:grid-cols-2">
+    {% include "components/card_start.html" with title=_("Ownership") %}
+      <div class="space-y-3">
+        {% for own, share in shares.items %}
+        <div class="flex items-center justify-between">
+          <span class="text-text">{{ own.user.get_full_name|default:own.user.email }}</span>
+          <span class="font-semibold text-primary-600">{{ share|floatformat:0 }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% if ownership.is_admin %}
+      <div class="mt-4 pt-4 border-t border-border">
+        <a href="{% url 'real_estate:invite' property.pk %}" class="text-sm text-primary-600 hover:text-primary-700">
+          {% trans "Invite co-owner" %}
+        </a>
+      </div>
+      {% endif %}
+    {% include "components/card_end.html" %}
+
+    {% if mortgage %}
+    {% include "components/card_start.html" with title=_("Mortgage") %}
+      <div class="space-y-2">
+        {% include "components/metric_row.html" with label=_("Lender") value=mortgage.lender %}
+        {% with rate=mortgage.annual_rate|floatformat:2 rtype=mortgage.get_rate_type_display %}
+        {% include "components/metric_row.html" with label=_("Rate") value=rate annotation=rtype %}
+        {% endwith %}
+        {% include "components/metric_row.html" with label=_("Monthly payment") value=snapshot.monthly_payment|floatformat:2 %}
+        {% include "components/metric_row.html" with label=_("Remaining balance") value=snapshot.mortgage_balance|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Amortization") value=mortgage.amortization_years annotation=_("years") %}
+      </div>
+      <div class="mt-4 pt-4 border-t border-border">
+        <a href="{% url 'real_estate:amortization' property.pk mortgage.pk %}" class="text-sm text-primary-600 hover:text-primary-700">
+          {% trans "View full amortization schedule" %} →
+        </a>
+      </div>
+    {% include "components/card_end.html" %}
+    {% endif %}
+  </div>
+
+  {# Row 3: Sale simulator #}
+  {% include "components/card_start.html" with title=_("If I sell today...") %}
+    <div class="flex flex-col gap-4 sm:flex-row sm:gap-6 mb-4">
+      <div class="flex-1">
+        <label class="block text-sm text-text-muted mb-1">{% trans "Sale price" %}</label>
+        <input type="number" value="{{ property.current_valuation|floatformat:0 }}"
+               class="w-full rounded-md border border-border px-3 py-2 text-sm"
+               hx-get="{% url 'real_estate:sale_simulator' property.pk %}"
+               hx-trigger="input changed delay:500ms"
+               hx-target="#sale-results"
+               hx-include="[name='commission']"
+               name="sale_price" />
+      </div>
+      <div class="w-32">
+        <label class="block text-sm text-text-muted mb-1">{% trans "Commission (%)" %}</label>
+        <input type="number" value="5" step="0.5" min="0" max="10"
+               class="w-full rounded-md border border-border px-3 py-2 text-sm"
+               name="commission" />
+      </div>
+    </div>
+    <div id="sale-results">
+      {% include "real_estate/partials/sale_estimate.html" %}
+    </div>
+  {% include "components/card_end.html" %}
+
+  {# Row 4: Expenses #}
+  {% include "components/card_start.html" with title=_("Expenses & Renovations") %}
+    <div id="expense-list">
+      {% include "real_estate/partials/expense_list.html" %}
+    </div>
+    <div class="mt-4 pt-4 border-t border-border">
+      <button hx-get="{% url 'real_estate:add_expense' property.pk %}"
+              hx-target="#expense-form-container"
+              hx-swap="innerHTML"
+              class="text-sm text-primary-600 hover:text-primary-700">
+        {% trans "+ Add expense" %}
+      </button>
+      <div id="expense-form-container"></div>
+    </div>
+  {% include "components/card_end.html" %}
+
+  {# Row 5: Valuation history #}
+  {% include "components/card_start.html" with title=_("Valuation History") %}
+    <div id="valuation-list">
+      {% include "real_estate/partials/valuation_history.html" %}
+    </div>
+    <div class="mt-4 pt-4 border-t border-border">
+      <button hx-get="{% url 'real_estate:add_valuation' property.pk %}"
+              hx-target="#valuation-form-container"
+              hx-swap="innerHTML"
+              class="text-sm text-primary-600 hover:text-primary-700">
+        {% trans "+ Add valuation" %}
+      </button>
+      <div id="valuation-form-container"></div>
+    </div>
+  {% include "components/card_end.html" %}
+</div>
+{% endblock %}

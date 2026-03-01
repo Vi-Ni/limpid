@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-8 space-y-8">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-text">{% trans "Real Estate" %}</h1>
+    <a href="{% url 'real_estate:create' %}"
+       class="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
+      {% trans "+ Add property" %}
+    </a>
+  </div>
+
+  {% if summaries %}
+  <div class="grid gap-6 sm:grid-cols-2">
+    {% for item in summaries %}
+    <a href="{% url 'real_estate:detail' item.property.pk %}" class="block">
+      {% include "components/card_start.html" with title=item.property.name %}
+        <p class="text-sm text-text-muted mb-4">{{ item.property.address }}, {{ item.property.city }}</p>
+        <div class="space-y-3">
+          <div class="flex items-baseline justify-between">
+            <span class="text-sm text-text-muted">{% trans "Value" %}</span>
+            <span class="text-lg font-bold text-text">${{ item.snapshot.current_valuation|floatformat:0 }}</span>
+          </div>
+          <div class="flex items-baseline justify-between">
+            <span class="text-sm text-text-muted">{% trans "Your equity" %}</span>
+            <span class="font-semibold text-primary-600">${{ item.snapshot.your_equity|floatformat:0 }}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 mt-5">
+          {% include "components/badge.html" with label=item.property.get_property_type_display variant="info" %}
+          {% include "components/badge.html" with label=item.property.get_usage_display variant="neutral" %}
+          {% if item.snapshot.share_pct != 100 %}
+            {% include "components/badge.html" with label=item.snapshot.share_pct|floatformat:0|add:"%" variant="warning" %}
+          {% endif %}
+        </div>
+      {% include "components/card_end.html" %}
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  {% include "components/card_start.html" %}
+    <div class="py-12 text-center">
+      <p class="text-text-muted mb-6">{% trans "No properties yet." %}</p>
+      <a href="{% url 'real_estate:create' %}"
+         class="inline-block rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
+        {% trans "Add your first property" %}
+      </a>
+    </div>
+  {% include "components/card_end.html" %}
+  {% endif %}
+</div>
+{% endblock %}

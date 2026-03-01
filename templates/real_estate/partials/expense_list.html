@@ -1,0 +1,30 @@
+{% load i18n %}
+
+{% if expenses %}
+<div class="overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead>
+      <tr class="border-b border-border">
+        <th class="px-3 py-2 text-left text-text-muted">{% trans "Date" %}</th>
+        <th class="px-3 py-2 text-left text-text-muted">{% trans "Type" %}</th>
+        <th class="px-3 py-2 text-left text-text-muted">{% trans "Description" %}</th>
+        <th class="px-3 py-2 text-right text-text-muted">{% trans "Amount" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for expense in expenses %}
+      <tr class="border-b border-gray-100">
+        <td class="px-3 py-2 text-text-muted">{{ expense.date }}</td>
+        <td class="px-3 py-2">
+          {% include "components/badge.html" with label=expense.get_expense_type_display variant="neutral" %}
+        </td>
+        <td class="px-3 py-2 text-text">{{ expense.description }}</td>
+        <td class="px-3 py-2 text-right text-text">${{ expense.amount|floatformat:2 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="text-sm text-text-muted py-2">{% trans "No expenses recorded." %}</p>
+{% endif %}

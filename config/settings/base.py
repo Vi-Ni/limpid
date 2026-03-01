@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "apps.education",
     "apps.scenarios",
     "apps.impact",
+    "apps.real_estate",
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-6 space-y-6">
+  <h1 class="text-2xl font-bold text-text">{% trans "Edit property" %}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {% include "components/card_start.html" with title=_("Property details") %}
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% for field in form %}
+          {% if field.name != "down_payment" %}
+          <div {% if field.name == "address" %}class="sm:col-span-2"{% endif %}>
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+              {{ field.label }}{% if field.field.required %}<span class="text-danger-600 ml-0.5">*</span>{% endif %}
+              {% if field.help_text %}
+                {% include "components/tooltip.html" with id=field.html_name text=field.help_text %}
+              {% endif %}
+            </label>
+            {{ field }}
+            {% if field.errors %}<p class="mt-1 text-xs text-danger-600">{{ field.errors.0 }}</p>{% endif %}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% include "components/card_end.html" %}
+
+    <div class="flex gap-3">
+      <button type="submit" class="rounded-lg bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700">
+        {% trans "Save changes" %}
+      </button>
+      <a href="{% url 'real_estate:detail' property.pk %}" class="rounded-lg border border-border px-6 py-2 text-sm font-medium text-text-muted hover:bg-gray-50">
+        {% trans "Cancel" %}
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

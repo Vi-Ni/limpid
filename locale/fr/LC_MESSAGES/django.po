@@ -2,227 +2,86 @@
 # Copyright (C) 2025 Limpid
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-01 14:33-0500\n"
 "Language: fr\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "This tool is for educational purposes only. It does not constitute financial advice."
-msgstr "Cet outil est à des fins éducatives seulement. Il ne constitue pas un conseil financier."
+# ── Province names ──
+msgid "Alberta"
+msgstr "Alberta"
 
-msgid "Dismiss"
-msgstr "Fermer"
+msgid "British Columbia"
+msgstr "Colombie-Britannique"
 
-msgid "Educational investment dashboard for beginners"
-msgstr "Tableau de bord éducatif d'investissement pour débutants"
+msgid "Manitoba"
+msgstr "Manitoba"
 
-msgid "Understand your investments"
-msgstr "Comprenez vos investissements"
+msgid "New Brunswick"
+msgstr "Nouveau-Brunswick"
 
-msgid "Understand before you invest"
-msgstr "Comprendre avant d'investir"
+msgid "Newfoundland and Labrador"
+msgstr "Terre-Neuve-et-Labrador"
 
-msgid "Radical transparency and a progressive learning path — so you always know what you hold, what it costs, and what you need to learn."
-msgstr "Transparence radicale et parcours pédagogique progressif — pour toujours savoir ce que vous détenez, ce que ça coûte et ce que vous devez apprendre."
+msgid "Nova Scotia"
+msgstr "Nouvelle-Écosse"
 
-msgid "How it works"
-msgstr "Comment ça marche"
+msgid "Northwest Territories"
+msgstr "Territoires du Nord-Ouest"
 
-msgid "Define your profile"
-msgstr "Définissez votre profil"
+msgid "Nunavut"
+msgstr "Nunavut"
 
-msgid "Answer a few questions about your goals and risk tolerance."
-msgstr "Répondez à quelques questions sur vos objectifs et votre tolérance au risque."
+msgid "Ontario"
+msgstr "Ontario"
 
-msgid "Explore a portfolio"
-msgstr "Explorez un portefeuille"
+msgid "Prince Edward Island"
+msgstr "Île-du-Prince-Édouard"
 
-msgid "Import or build a sandbox portfolio to explore."
-msgstr "Importez ou créez un portefeuille bac à sable à explorer."
+msgid "Quebec"
+msgstr "Québec"
 
-msgid "Understand everything"
-msgstr "Comprenez tout"
+msgid "Saskatchewan"
+msgstr "Saskatchewan"
 
-msgid "Holdings, fees, risks, impact — understand what you own."
-msgstr "Titres, frais, risques, impact — comprenez ce que vous détenez."
+msgid "Yukon"
+msgstr "Yukon"
 
-msgid "A free, educational dashboard that shows you exactly what you hold, what it costs, and what you need to learn — without ever telling you what to buy."
-msgstr "Un tableau de bord éducatif et gratuit qui montre exactement ce que vous détenez, ce que ça coûte et ce que vous devez apprendre — sans jamais vous dire quoi acheter."
+# ── Language names ──
+msgid "French"
+msgstr "Français"
 
-msgid "Portfolios"
-msgstr "Portefeuilles"
+msgid "English"
+msgstr "Anglais"
 
-msgid "Learn"
-msgstr "Apprendre"
+msgid "Risk score from 1 (conservative) to 10 (aggressive)."
+msgstr "Score de risque de 1 (conservateur) à 10 (agressif)."
 
-msgid "Scenarios"
-msgstr "Scénarios"
+# ── Model fields ──
+msgid "user profile"
+msgstr "profil utilisateur"
 
-msgid "Impact"
-msgstr "Impact"
+msgid "user profiles"
+msgstr "profils utilisateurs"
 
-msgid "Profile"
-msgstr "Profil"
+# ── Risk profile labels ──
+msgid "Conservative"
+msgstr "Conservateur"
 
-msgid "Login"
-msgstr "Connexion"
+msgid "Moderate"
+msgstr "Modéré"
 
-msgid "Logout"
-msgstr "Déconnexion"
+msgid "Growth"
+msgstr "Croissance"
 
-msgid "Sign up"
-msgstr "S'inscrire"
+msgid "risk quiz response"
+msgstr "réponse au questionnaire de risque"
 
-msgid "Toggle menu"
-msgstr "Ouvrir le menu"
-
-msgid "My portfolios"
-msgstr "Mes portefeuilles"
-
-msgid "Get started"
-msgstr "Commencer"
-
-msgid "Start learning"
-msgstr "Commencer à apprendre"
-
-msgid "Total transparency"
-msgstr "Transparence totale"
-
-msgid "See every fee, every holding, every risk — nothing hidden."
-msgstr "Voyez chaque frais, chaque titre, chaque risque — rien de caché."
-
-msgid "Learn at your pace"
-msgstr "Apprenez à votre rythme"
-
-msgid "A progressive learning path that grows with your understanding."
-msgstr "Un parcours d'apprentissage progressif qui grandit avec votre compréhension."
-
-msgid "No advice, ever"
-msgstr "Aucun conseil, jamais"
-
-msgid "We help you understand — we never tell you what to do with your money."
-msgstr "Nous vous aidons à comprendre — nous ne vous disons jamais quoi faire avec votre argent."
-
-msgid "Educational tool, not financial advice."
-msgstr "Outil éducatif, pas un conseil financier."
-
-msgid "About"
-msgstr "À propos"
-
-msgid "Page not found"
-msgstr "Page introuvable"
-
-msgid "The page you are looking for does not exist."
-msgstr "La page que vous cherchez n'existe pas."
-
-msgid "Back to home"
-msgstr "Retour à l'accueil"
-
-msgid "Server error"
-msgstr "Erreur serveur"
-
-msgid "Something went wrong. Please try again later."
-msgstr "Quelque chose s'est mal passé. Veuillez réessayer plus tard."
-
-# ── Auth templates ──
-
-msgid "Don't have an account?"
-msgstr "Vous n'avez pas de compte ?"
-
-msgid "Already have an account?"
-msgstr "Vous avez déjà un compte ?"
-
-msgid "Are you sure you want to log out?"
-msgstr "Êtes-vous sûr de vouloir vous déconnecter ?"
-
-# ── Profile ──
-
-msgid "Account information"
-msgstr "Informations du compte"
-
-msgid "Email"
-msgstr "Courriel"
-
-msgid "Risk profile"
-msgstr "Profil de risque"
-
-msgid "Take the risk quiz"
-msgstr "Répondre au questionnaire de risque"
-
-msgid "Preferences"
-msgstr "Préférences"
-
-msgid "Save"
-msgstr "Enregistrer"
-
-msgid "Profile updated successfully."
-msgstr "Profil mis à jour avec succès."
-
-# ── Onboarding ──
-
-msgid "Onboarding"
-msgstr "Configuration initiale"
-
-msgid "Welcome to Limpid!"
-msgstr "Bienvenue sur Limpid !"
-
-msgid "Let's set up your account. First, select your province."
-msgstr "Configurons votre compte. D'abord, sélectionnez votre province."
-
-msgid "Next"
-msgstr "Suivant"
-
-msgid "Language preference"
-msgstr "Préférence de langue"
-
-msgid "Choose your preferred language for the dashboard."
-msgstr "Choisissez votre langue préférée pour le tableau de bord."
-
-msgid "You're all set!"
-msgstr "Vous êtes prêt !"
-
-msgid "Here's a summary of your preferences:"
-msgstr "Voici un résumé de vos préférences :"
-
-msgid "Province"
-msgstr "Province"
-
-msgid "Language"
-msgstr "Langue"
-
-msgid "Go to my portfolios"
-msgstr "Aller à mes portefeuilles"
-
-msgid "Go to my dashboard"
-msgstr "Aller à mon tableau de bord"
-
-msgid "My dashboard"
-msgstr "Mon tableau de bord"
-
-# ── Risk quiz ──
-
-msgid "Risk Tolerance Quiz"
-msgstr "Questionnaire de tolérance au risque"
-
-msgid "Your Risk Profile"
-msgstr "Votre profil de risque"
-
-msgid "What does this mean?"
-msgstr "Qu'est-ce que cela signifie ?"
-
-msgid "This is for educational purposes only and does not constitute financial advice."
-msgstr "Ceci est à des fins éducatives seulement et ne constitue pas un conseil financier."
-
-msgid "Back to profile"
-msgstr "Retour au profil"
-
-msgid "Retake the quiz"
-msgstr "Refaire le questionnaire"
-
-msgid "See results"
-msgstr "Voir les résultats"
+msgid "risk quiz responses"
+msgstr "réponses au questionnaire de risque"
 
 # ── Risk quiz questions ──
-
 msgid "How would you describe your investment knowledge?"
 msgstr "Comment décririez-vous vos connaissances en investissement ?"
 
@@ -236,7 +95,8 @@ msgid "I have intermediate knowledge and some experience"
 msgstr "J'ai des connaissances intermédiaires et un peu d'expérience"
 
 msgid "I'm experienced and understand most financial products"
-msgstr "J'ai de l'expérience et je comprends la plupart des produits financiers"
+msgstr ""
+"J'ai de l'expérience et je comprends la plupart des produits financiers"
 
 msgid "What is your investment time horizon?"
 msgstr "Quel est votre horizon de placement ?"
@@ -253,8 +113,10 @@ msgstr "5 à 10 ans"
 msgid "More than 10 years"
 msgstr "Plus de 10 ans"
 
+#, python-format
 msgid "If your portfolio lost 20% of its value in a month, what would you do?"
-msgstr "Si votre portefeuille perdait 20 % de sa valeur en un mois, que feriez-vous ?"
+msgstr ""
+"Si votre portefeuille perdait 20 % de sa valeur en un mois, que feriez-vous ?"
 
 msgid "Sell everything immediately"
 msgstr "Tout vendre immédiatement"
@@ -268,8 +130,12 @@ msgstr "Ne rien faire et attendre la reprise"
 msgid "Buy more at the lower price"
 msgstr "Acheter plus au prix réduit"
 
-msgid "How much of your portfolio could you afford to lose without impacting your lifestyle?"
-msgstr "Quelle part de votre portefeuille pourriez-vous perdre sans affecter votre mode de vie ?"
+msgid ""
+"How much of your portfolio could you afford to lose without impacting your "
+"lifestyle?"
+msgstr ""
+"Quelle part de votre portefeuille pourriez-vous perdre sans affecter votre "
+"mode de vie ?"
 
 msgid "None — I need all of it"
 msgstr "Rien — j'en ai besoin en totalité"
@@ -311,193 +177,129 @@ msgid "I want a balance of growth and stability"
 msgstr "Je veux un équilibre entre croissance et stabilité"
 
 msgid "I want maximum growth, even if it means high volatility"
-msgstr "Je veux une croissance maximale, même si cela implique une forte volatilité"
-
-# ── Risk profile labels ──
-
-msgid "Conservative"
-msgstr "Conservateur"
-
-msgid "Moderate"
-msgstr "Modéré"
-
-msgid "Growth"
-msgstr "Croissance"
+msgstr ""
+"Je veux une croissance maximale, même si cela implique une forte volatilité"
 
 # ── Risk profile descriptions ──
+msgid ""
+"You prefer stability and capital preservation. A conservative portfolio "
+"typically holds more bonds and GICs, with limited exposure to stocks. "
+"Returns may be lower, but so is the risk of losing money."
+msgstr ""
+"Vous préférez la stabilité et la préservation du capital. Un portefeuille "
+"conservateur détient généralement plus d'obligations et de CPG, avec une "
+"exposition limitée aux actions. Les rendements peuvent être plus faibles, "
+"mais le risque de perte l'est aussi."
 
-msgid "You prefer stability and capital preservation. A conservative portfolio typically holds more bonds and GICs, with limited exposure to stocks. Returns may be lower, but so is the risk of losing money."
-msgstr "Vous préférez la stabilité et la préservation du capital. Un portefeuille conservateur détient généralement plus d'obligations et de CPG, avec une exposition limitée aux actions. Les rendements peuvent être plus faibles, mais le risque de perte l'est aussi."
+msgid ""
+"You seek a balance between growth and safety. A moderate portfolio typically "
+"includes a mix of stocks and bonds, offering reasonable growth potential "
+"while managing downside risk."
+msgstr ""
+"Vous recherchez un équilibre entre croissance et sécurité. Un portefeuille "
+"modéré comprend généralement un mélange d'actions et d'obligations, offrant "
+"un potentiel de croissance raisonnable tout en gérant le risque de perte."
 
-msgid "You seek a balance between growth and safety. A moderate portfolio typically includes a mix of stocks and bonds, offering reasonable growth potential while managing downside risk."
-msgstr "Vous recherchez un équilibre entre croissance et sécurité. Un portefeuille modéré comprend généralement un mélange d'actions et d'obligations, offrant un potentiel de croissance raisonnable tout en gérant le risque de perte."
+msgid ""
+"You are comfortable with higher volatility in exchange for potentially "
+"higher returns. A growth portfolio is typically stock-heavy, which means "
+"larger swings but historically better long-term performance."
+msgstr ""
+"Vous êtes à l'aise avec une volatilité plus élevée en échange de rendements "
+"potentiellement supérieurs. Un portefeuille de croissance est généralement "
+"fortement composé d'actions, ce qui signifie des fluctuations plus "
+"importantes mais historiquement de meilleures performances à long terme."
 
-msgid "You are comfortable with higher volatility in exchange for potentially higher returns. A growth portfolio is typically stock-heavy, which means larger swings but historically better long-term performance."
-msgstr "Vous êtes à l'aise avec une volatilité plus élevée en échange de rendements potentiellement supérieurs. Un portefeuille de croissance est généralement fortement composé d'actions, ce qui signifie des fluctuations plus importantes mais historiquement de meilleures performances à long terme."
+# ── Onboarding ──
+msgid "Onboarding"
+msgstr "Configuration initiale"
 
-# ── Model fields ──
+msgid "Welcome to Limpid!"
+msgstr "Bienvenue sur Limpid !"
 
-msgid "user profile"
-msgstr "profil utilisateur"
+msgid "Let's set up your account. First, select your province."
+msgstr "Configurons votre compte. D'abord, sélectionnez votre province."
 
-msgid "user profiles"
-msgstr "profils utilisateurs"
+msgid "Next"
+msgstr "Suivant"
 
-msgid "Risk score from 1 (conservative) to 10 (aggressive)."
-msgstr "Score de risque de 1 (conservateur) à 10 (agressif)."
+msgid "Language preference"
+msgstr "Préférence de langue"
 
-msgid "risk quiz response"
-msgstr "réponse au questionnaire de risque"
+msgid "Choose your preferred language for the dashboard."
+msgstr "Choisissez votre langue préférée pour le tableau de bord."
 
-msgid "risk quiz responses"
-msgstr "réponses au questionnaire de risque"
+msgid "You're all set!"
+msgstr "Vous êtes prêt !"
 
-# ── Province names ──
+msgid "Here's a summary of your preferences:"
+msgstr "Voici un résumé de vos préférences :"
 
-msgid "Alberta"
-msgstr "Alberta"
+msgid "Province"
+msgstr "Province"
 
-msgid "British Columbia"
-msgstr "Colombie-Britannique"
+msgid "Language"
+msgstr "Langue"
 
-msgid "Manitoba"
-msgstr "Manitoba"
+msgid "Go to my dashboard"
+msgstr "Aller à mon tableau de bord"
 
-msgid "New Brunswick"
-msgstr "Nouveau-Brunswick"
+msgid "Your Risk Profile"
+msgstr "Votre profil de risque"
 
-msgid "Newfoundland and Labrador"
-msgstr "Terre-Neuve-et-Labrador"
+msgid "What does this mean?"
+msgstr "Qu'est-ce que cela signifie ?"
 
-msgid "Nova Scotia"
-msgstr "Nouvelle-Écosse"
+msgid ""
+"This is for educational purposes only and does not constitute financial "
+"advice."
+msgstr ""
+"Ceci est à des fins éducatives seulement et ne constitue pas un conseil "
+"financier."
 
-msgid "Northwest Territories"
-msgstr "Territoires du Nord-Ouest"
+msgid "Back to profile"
+msgstr "Retour au profil"
 
-msgid "Nunavut"
-msgstr "Nunavut"
+msgid "Retake the quiz"
+msgstr "Refaire le questionnaire"
 
-msgid "Ontario"
-msgstr "Ontario"
-
-msgid "Prince Edward Island"
-msgstr "Île-du-Prince-Édouard"
-
-msgid "Quebec"
-msgstr "Québec"
-
-msgid "Saskatchewan"
-msgstr "Saskatchewan"
-
-msgid "Yukon"
-msgstr "Yukon"
-
-# ── Language names ──
-
-msgid "French"
-msgstr "Français"
-
-msgid "English"
-msgstr "Anglais"
-
-#: blocktrans
+#, python-format
 msgid "Question %(current)s of %(total)s"
 msgstr "Question %(current)s de %(total)s"
 
-#: blocktrans
-msgid "Step %(current)s of %(total)s"
-msgstr "Étape %(current)s de %(total)s"
+msgid "See results"
+msgstr "Voir les résultats"
 
-# ── Navigation ──
+msgid "Profile"
+msgstr "Profil"
 
-msgid "Home"
-msgstr "Accueil"
+# ── Profile ──
+msgid "Account information"
+msgstr "Informations du compte"
 
-msgid "Main navigation"
-msgstr "Navigation principale"
+msgid "Email"
+msgstr "Courriel"
 
-msgid "Mobile navigation"
-msgstr "Navigation mobile"
+msgid "Risk profile"
+msgstr "Profil de risque"
 
-# ── Tooltip ──
+msgid "Take the risk quiz"
+msgstr "Répondre au questionnaire de risque"
 
-msgid "Got it"
-msgstr "Compris"
+msgid "Preferences"
+msgstr "Préférences"
 
-# ── Styleguide ──
+msgid "Save"
+msgstr "Enregistrer"
 
-msgid "Design System Styleguide"
-msgstr "Guide de style du design system"
+# ── Risk quiz ──
+msgid "Risk Tolerance Quiz"
+msgstr "Questionnaire de tolérance au risque"
 
-# ── Education / Learning Path ──
-
-msgid "Learning Path"
-msgstr "Parcours d'apprentissage"
-
-msgid "A progressive curriculum to understand your investments."
-msgstr "Un programme progressif pour comprendre vos investissements."
-
-#: blocktrans
-msgid "%(completed)s of %(total)s lessons completed"
-msgstr "%(completed)s leçons sur %(total)s complétées"
-
-msgid "Key terms"
-msgstr "Termes clés"
-
-msgid "Mark as complete"
-msgstr "Marquer comme terminé"
-
-msgid "Completed"
-msgstr "Terminé"
-
-msgid "Start quiz"
-msgstr "Commencer le quiz"
-
-msgid "Retake quiz"
-msgstr "Refaire le quiz"
-
-msgid "Back to lesson"
-msgstr "Retour à la leçon"
-
-msgid "Back to learning path"
-msgstr "Retour au parcours"
-
-msgid "Quiz"
-msgstr "Quiz"
-
-msgid "Submit answer"
-msgstr "Soumettre la réponse"
-
-msgid "Next question"
-msgstr "Question suivante"
-
-msgid "Explanation"
-msgstr "Explication"
-
-msgid "Quiz Complete!"
-msgstr "Quiz terminé !"
-
-msgid "Excellent!"
-msgstr "Excellent !"
-
-msgid "You have a strong understanding of this lesson."
-msgstr "Vous avez une bonne compréhension de cette leçon."
-
-msgid "Good effort!"
-msgstr "Bon effort !"
-
-msgid "You got the basics. Review the lesson to strengthen your understanding."
-msgstr "Vous avez les bases. Révisez la leçon pour renforcer votre compréhension."
-
-msgid "Keep learning!"
-msgstr "Continuez à apprendre !"
-
-msgid "Re-read the lesson and try again — progress comes from practice."
-msgstr "Relisez la leçon et réessayez — on progresse en pratiquant."
+msgid "Profile updated successfully."
+msgstr "Profil mis à jour avec succès."
 
 # ── Education models ──
-
 msgid "lesson progress"
 msgstr "progression de leçon"
 
@@ -513,13 +315,77 @@ msgstr "complétion de quiz"
 msgid "quiz completions"
 msgstr "complétions de quiz"
 
-# ── Market Data ──
+# ── Education / Learning Path ──
+msgid "Learning Path"
+msgstr "Parcours d'apprentissage"
 
-msgid "asset"
-msgstr "actif"
+msgid "Key terms"
+msgstr "Termes clés"
 
-msgid "assets"
-msgstr "actifs"
+msgid "Retake quiz"
+msgstr "Refaire le quiz"
+
+msgid "Start quiz"
+msgstr "Commencer le quiz"
+
+msgid "Back to learning path"
+msgstr "Retour au parcours"
+
+msgid "Completed"
+msgstr "Terminé"
+
+msgid "Mark as complete"
+msgstr "Marquer comme terminé"
+
+msgid "Explanation"
+msgstr "Explication"
+
+msgid "Next question"
+msgstr "Question suivante"
+
+msgid "Submit answer"
+msgstr "Soumettre la réponse"
+
+msgid "Quiz Complete!"
+msgstr "Quiz terminé !"
+
+msgid "Excellent!"
+msgstr "Excellent !"
+
+msgid "You have a strong understanding of this lesson."
+msgstr "Vous avez une bonne compréhension de cette leçon."
+
+msgid "Good effort!"
+msgstr "Bon effort !"
+
+msgid "You got the basics. Review the lesson to strengthen your understanding."
+msgstr ""
+"Vous avez les bases. Révisez la leçon pour renforcer votre compréhension."
+
+msgid "Keep learning!"
+msgstr "Continuez à apprendre !"
+
+msgid "Re-read the lesson and try again — progress comes from practice."
+msgstr "Relisez la leçon et réessayez — on progresse en pratiquant."
+
+msgid "Back to lesson"
+msgstr "Retour à la leçon"
+
+msgid "A progressive curriculum to understand your investments."
+msgstr "Un programme progressif pour comprendre vos investissements."
+
+#, python-format
+msgid "%(completed)s of %(total)s lessons completed"
+msgstr "%(completed)s leçons sur %(total)s complétées"
+
+msgid "Quiz"
+msgstr "Quiz"
+
+msgid "Impact"
+msgstr "Impact"
+
+msgid "Impact directory coming soon."
+msgstr "Répertoire d'impact bientôt disponible."
 
 msgid "ETF"
 msgstr "FNB"
@@ -536,8 +402,14 @@ msgstr "CPG"
 msgid "Cash"
 msgstr "Liquidités"
 
-# ── Portfolio ──
+# ── Market Data ──
+msgid "asset"
+msgstr "actif"
 
+msgid "assets"
+msgstr "actifs"
+
+# ── Portfolio ──
 msgid "portfolio"
 msgstr "portefeuille"
 
@@ -550,31 +422,356 @@ msgstr "position"
 msgid "holdings"
 msgstr "positions"
 
-msgid "transaction"
-msgstr "transaction"
-
-msgid "transactions"
-msgstr "transactions"
-
 msgid "Buy"
 msgstr "Achat"
 
 msgid "Sell"
 msgstr "Vente"
 
+msgid "transaction"
+msgstr "transaction"
+
+msgid "transactions"
+msgstr "transactions"
+
 msgid "My Sandbox Portfolio"
 msgstr "Mon portefeuille bac à sable"
 
-msgid "Sandbox"
-msgstr "Bac à sable"
+msgid "Portfolios"
+msgstr "Portefeuilles"
 
-msgid "No portfolios yet."
-msgstr "Aucun portefeuille pour le moment."
+msgid "Portfolio management coming soon."
+msgstr "Gestion de portefeuille bientôt disponible."
+
+# ── Real Estate ──
+msgid "Real Estate"
+msgstr "Immobilier"
+
+msgid "Your down payment"
+msgstr "Votre mise de fonds"
+
+msgid "House"
+msgstr "Maison"
+
+msgid "Condo (divided co-ownership)"
+msgstr "Condo (copropriété divise)"
+
+msgid "Condo (undivided co-ownership)"
+msgstr "Condo (copropriété indivise)"
+
+msgid "Duplex"
+msgstr "Duplex"
+
+msgid "Triplex"
+msgstr "Triplex"
+
+msgid "Vacant land"
+msgstr "Terrain vacant"
+
+msgid "Cottage / Secondary residence"
+msgstr "Chalet / Résidence secondaire"
+
+msgid "Commercial property"
+msgstr "Propriété commerciale"
+
+msgid "Primary residence"
+msgstr "Résidence principale"
+
+msgid "Secondary residence"
+msgstr "Résidence secondaire"
+
+msgid "Rental property"
+msgstr "Propriété locative"
+
+msgid "Commercial"
+msgstr "Commercial"
+
+msgid "name"
+msgstr "nom"
+
+msgid "property type"
+msgstr "type de propriété"
+
+msgid "usage"
+msgstr "usage"
+
+msgid "address"
+msgstr "adresse"
+
+msgid "city"
+msgstr "ville"
+
+msgid "province"
+msgstr "province"
+
+msgid "postal code"
+msgstr "code postal"
+
+msgid "purchase price"
+msgstr "prix d'achat"
+
+msgid "purchase date"
+msgstr "date d'achat"
+
+msgid "welcome tax paid"
+msgstr "taxe de bienvenue payée"
+
+msgid "notary fees at purchase"
+msgstr "frais de notaire à l'achat"
+
+msgid "current valuation"
+msgstr "évaluation actuelle"
+
+msgid "valuation date"
+msgstr "date d'évaluation"
+
+msgid "municipal assessment"
+msgstr "évaluation municipale"
+
+msgid "property"
+msgstr "propriété"
+
+msgid "properties"
+msgstr "propriétés"
+
+msgid "can edit property"
+msgstr "peut modifier la propriété"
+
+msgid "Can this owner edit property details?"
+msgstr "Ce propriétaire peut-il modifier les détails de la propriété ?"
+
+msgid "down payment contributed"
+msgstr "mise de fonds contribuée"
+
+msgid "property ownership"
+msgstr "propriété foncière"
+
+msgid "start date"
+msgstr "date de début"
+
+msgid "end date"
+msgstr "date de fin"
+
+msgid "note"
+msgstr "note"
+
+msgid "ownership share (%)"
+msgstr "part de propriété (%)"
+
+msgid "Fixed"
+msgstr "Fixe"
+
+msgid "Variable"
+msgstr "Variable"
+
+msgid "Monthly"
+msgstr "Mensuel"
+
+msgid "Bi-weekly"
+msgstr "Aux deux semaines"
+
+msgid "Accelerated bi-weekly"
+msgstr "Aux deux semaines accéléré"
+
+msgid "lender"
+msgstr "prêteur"
+
+msgid "original principal"
+msgstr "capital initial"
+
+msgid "annual interest rate (%)"
+msgstr "taux d'intérêt annuel (%)"
+
+msgid "rate type"
+msgstr "type de taux"
+
+msgid "amortization (years)"
+msgstr "amortissement (années)"
+
+msgid "term (years)"
+msgstr "terme (années)"
+
+msgid "payment frequency"
+msgstr "fréquence de paiement"
+
+msgid "active"
+msgstr "actif"
+
+msgid "mortgage insurance premium"
+msgstr "prime d'assurance hypothécaire"
+
+msgid "payment number"
+msgstr "numéro de paiement"
+
+msgid "payment date"
+msgstr "date de paiement"
+
+msgid "total payment"
+msgstr "paiement total"
+
+msgid "principal portion"
+msgstr "portion du capital"
+
+msgid "interest portion"
+msgstr "portion des intérêts"
+
+msgid "balance after payment"
+msgstr "solde après paiement"
+
+msgid "Renovation / Improvement"
+msgstr "Rénovation / Amélioration"
+
+msgid "Repair / Maintenance"
+msgstr "Réparation / Entretien"
+
+msgid "Property tax"
+msgstr "Taxe foncière"
+
+msgid "Insurance"
+msgstr "Assurance"
+
+msgid "Condo fees"
+msgstr "Frais de condo"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "type"
+msgstr "type"
+
+msgid "description"
+msgstr "description"
+
+msgid "amount"
+msgstr "montant"
+
+msgid "date"
+msgstr "date"
+
+msgid "increases cost base"
+msgstr "augmente le coût de base"
+
+msgid "Capital improvements increase the adjusted cost base for tax purposes."
+msgstr "Les améliorations augmentent le prix de base rajusté à des fins fiscales."
+
+msgid "Manual estimate"
+msgstr "Estimation manuelle"
+
+msgid "Professional appraisal"
+msgstr "Évaluation professionnelle"
+
+msgid "Municipal assessment"
+msgstr "Évaluation municipale"
+
+msgid "Comparable sales"
+msgstr "Ventes comparables"
+
+msgid "value"
+msgstr "valeur"
+
+msgid "source"
+msgstr "source"
+
+msgid "invitee email"
+msgstr "courriel de l'invité"
+
+msgid "down payment"
+msgstr "mise de fonds"
+
+#, python-format
+msgid "Invitation sent to %(email)s."
+msgstr "Invitation envoyée à %(email)s."
+
+msgid "This invitation is for a different email address."
+msgstr "Cette invitation est destinée à une autre adresse courriel."
+
+#, python-format
+msgid "You are now a co-owner of %(name)s."
+msgstr "Vous êtes maintenant copropriétaire de %(name)s."
+
+msgid "Scenarios"
+msgstr "Scénarios"
+
+msgid "Scenario lab coming soon."
+msgstr "Laboratoire de scénarios bientôt disponible."
+
+msgid "Login"
+msgstr "Connexion"
+
+# ── Auth templates ──
+msgid "Don't have an account?"
+msgstr "Vous n'avez pas de compte ?"
+
+msgid "Sign up"
+msgstr "S'inscrire"
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "Are you sure you want to log out?"
+msgstr "Êtes-vous sûr de vouloir vous déconnecter ?"
+
+msgid "Back to home"
+msgstr "Retour à l'accueil"
+
+msgid "Already have an account?"
+msgstr "Vous avez déjà un compte ?"
+
+msgid "Educational investment dashboard for beginners"
+msgstr "Tableau de bord éducatif d'investissement pour débutants"
+
+msgid "Mobile navigation"
+msgstr "Navigation mobile"
+
+# ── Navigation ──
+msgid "Home"
+msgstr "Accueil"
 
 # ── Dashboard ──
-
 msgid "Dashboard"
 msgstr "Tableau de bord"
+
+msgid "Learn"
+msgstr "Apprendre"
+
+msgid ""
+"This tool is for educational purposes only. It does not constitute financial "
+"advice."
+msgstr ""
+"Cet outil est à des fins éducatives seulement. Il ne constitue pas un "
+"conseil financier."
+
+msgid "Dismiss"
+msgstr "Fermer"
+
+msgid "Educational tool, not financial advice."
+msgstr "Outil éducatif, pas un conseil financier."
+
+msgid "About"
+msgstr "À propos"
+
+msgid "Main navigation"
+msgstr "Navigation principale"
+
+#, python-format
+msgid "Step %(current)s of %(total)s"
+msgstr "Étape %(current)s de %(total)s"
+
+# ── Tooltip ──
+msgid "Got it"
+msgstr "Compris"
+
+msgid "Page not found"
+msgstr "Page introuvable"
+
+msgid "The page you are looking for does not exist."
+msgstr "La page que vous cherchez n'existe pas."
+
+msgid "Server error"
+msgstr "Erreur serveur"
+
+msgid "Something went wrong. Please try again later."
+msgstr "Quelque chose s'est mal passé. Veuillez réessayer plus tard."
 
 msgid "Total value"
 msgstr "Valeur totale"
@@ -600,7 +797,7 @@ msgstr "Secteurs"
 msgid "Clarity Score"
 msgstr "Score de clarté"
 
-#: blocktrans
+#, python-format
 msgid "%(learned)s of %(total)s asset types understood"
 msgstr "%(learned)s type(s) d'actif compris sur %(total)s"
 
@@ -622,8 +819,76 @@ msgstr "Toutes les leçons sont terminées !"
 msgid "You've finished all available lessons."
 msgstr "Vous avez terminé toutes les leçons disponibles."
 
-# ── Portfolio Detail ──
+msgid "Understand before you invest"
+msgstr "Comprendre avant d'investir"
 
+msgid ""
+"Radical transparency and a progressive learning path — so you always know "
+"what you hold, what it costs, and what you need to learn."
+msgstr ""
+"Transparence radicale et parcours pédagogique progressif — pour toujours "
+"savoir ce que vous détenez, ce que ça coûte et ce que vous devez apprendre."
+
+msgid "My dashboard"
+msgstr "Mon tableau de bord"
+
+msgid "Get started"
+msgstr "Commencer"
+
+msgid "Start learning"
+msgstr "Commencer à apprendre"
+
+msgid "Total transparency"
+msgstr "Transparence totale"
+
+msgid "See every fee, every holding, every risk — nothing hidden."
+msgstr "Voyez chaque frais, chaque titre, chaque risque — rien de caché."
+
+msgid "Learn at your pace"
+msgstr "Apprenez à votre rythme"
+
+msgid "A progressive learning path that grows with your understanding."
+msgstr ""
+"Un parcours d'apprentissage progressif qui grandit avec votre compréhension."
+
+msgid "No advice, ever"
+msgstr "Aucun conseil, jamais"
+
+msgid "We help you understand — we never tell you what to do with your money."
+msgstr ""
+"Nous vous aidons à comprendre — nous ne vous disons jamais quoi faire avec "
+"votre argent."
+
+msgid "How it works"
+msgstr "Comment ça marche"
+
+msgid "Define your profile"
+msgstr "Définissez votre profil"
+
+msgid "Answer a few questions about your goals and risk tolerance."
+msgstr ""
+"Répondez à quelques questions sur vos objectifs et votre tolérance au risque."
+
+msgid "Explore a portfolio"
+msgstr "Explorez un portefeuille"
+
+msgid "Import or build a sandbox portfolio to explore."
+msgstr "Importez ou créez un portefeuille bac à sable à explorer."
+
+msgid "Understand everything"
+msgstr "Comprenez tout"
+
+msgid "Holdings, fees, risks, impact — understand what you own."
+msgstr "Titres, frais, risques, impact — comprenez ce que vous détenez."
+
+# ── Styleguide ──
+msgid "Design System Styleguide"
+msgstr "Guide de style du design system"
+
+msgid "Sandbox"
+msgstr "Bac à sable"
+
+# ── Portfolio Detail ──
 msgid "Holdings"
 msgstr "Positions"
 
@@ -662,3 +927,332 @@ msgstr "Frais"
 
 msgid "No transactions yet."
 msgstr "Aucune transaction pour le moment."
+
+msgid "No portfolios yet."
+msgstr "Aucun portefeuille pour le moment."
+
+# ── Real Estate Templates ──
+msgid "Amortization Schedule"
+msgstr "Tableau d'amortissement"
+
+msgid "Back to property"
+msgstr "Retour à la propriété"
+
+msgid "Summary"
+msgstr "Résumé"
+
+msgid "Monthly payment"
+msgstr "Paiement mensuel"
+
+msgid "Total interest paid"
+msgstr "Intérêts totaux payés"
+
+msgid "Total paid to date"
+msgstr "Total payé à ce jour"
+
+msgid "Original principal"
+msgstr "Capital initial"
+
+msgid "Annual rate"
+msgstr "Taux annuel"
+
+msgid "Amortization"
+msgstr "Amortissement"
+
+msgid "years"
+msgstr "ans"
+
+msgid "Payment Schedule"
+msgstr "Calendrier de paiements"
+
+msgid "Payment"
+msgstr "Paiement"
+
+msgid "Principal"
+msgstr "Capital"
+
+msgid "Interest"
+msgstr "Intérêts"
+
+msgid "Balance"
+msgstr "Solde"
+
+msgid "Add a property"
+msgstr "Ajouter une propriété"
+
+msgid "Property details"
+msgstr "Détails de la propriété"
+
+msgid "Your contribution"
+msgstr "Votre contribution"
+
+msgid "I have a co-owner"
+msgstr "J'ai un copropriétaire"
+
+msgid "Co-owner email"
+msgstr "Courriel du copropriétaire"
+
+msgid "Co-owner down payment"
+msgstr "Mise de fonds du copropriétaire"
+
+msgid "Co-owner ownership share (%)"
+msgstr "Part de propriété du copropriétaire (%)"
+
+msgid "Your share"
+msgstr "Votre part"
+
+msgid "The email address your co-owner uses to log in to Limpid."
+msgstr "L'adresse courriel que votre copropriétaire utilise pour se connecter à Limpid."
+
+msgid "The cash amount your co-owner contributed toward the purchase."
+msgstr "Le montant en argent que votre copropriétaire a contribué à l'achat."
+
+msgid ""
+"The percentage of the property your co-owner will own. Your share will be "
+"the remainder."
+msgstr ""
+"Le pourcentage de la propriété que votre copropriétaire détiendra. Votre "
+"part sera le reste."
+
+msgid "Mortgage (optional)"
+msgstr "Hypothèque (optionnel)"
+
+msgid "Create property"
+msgstr "Créer la propriété"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Edit"
+msgstr "Modifier"
+
+msgid "Property Value"
+msgstr "Valeur de la propriété"
+
+msgid "Purchase price"
+msgstr "Prix d'achat"
+
+msgid "Appreciation"
+msgstr "Plus-value"
+
+msgid "Mortgage balance"
+msgstr "Solde hypothécaire"
+
+msgid "Equity"
+msgstr "Équité"
+
+msgid "Your Share"
+msgstr "Votre part"
+
+msgid "Your equity"
+msgstr "Votre équité"
+
+msgid "Your valuation share"
+msgstr "Votre part de la valeur"
+
+msgid "Your mortgage share"
+msgstr "Votre part de l'hypothèque"
+
+msgid "Down payment"
+msgstr "Mise de fonds"
+
+msgid "Principal paid"
+msgstr "Capital remboursé"
+
+msgid "Ownership"
+msgstr "Propriétaires"
+
+msgid "Invite co-owner"
+msgstr "Inviter un copropriétaire"
+
+msgid "Mortgage"
+msgstr "Hypothèque"
+
+msgid "Lender"
+msgstr "Prêteur"
+
+msgid "Rate"
+msgstr "Taux"
+
+msgid "Remaining balance"
+msgstr "Solde restant"
+
+msgid "View full amortization schedule"
+msgstr "Voir le tableau d'amortissement complet"
+
+msgid "If I sell today..."
+msgstr "Si je vends aujourd'hui..."
+
+msgid "Sale price"
+msgstr "Prix de vente"
+
+#, python-format
+msgid "Commission (%%)"
+msgstr "Commission (%%)"
+
+msgid "Expenses & Renovations"
+msgstr "Dépenses et rénovations"
+
+msgid "+ Add expense"
+msgstr "+ Ajouter une dépense"
+
+msgid "Valuation History"
+msgstr "Historique d'évaluation"
+
+msgid "+ Add valuation"
+msgstr "+ Ajouter une évaluation"
+
+msgid "Edit property"
+msgstr "Modifier la propriété"
+
+msgid "Save changes"
+msgstr "Enregistrer les modifications"
+
+msgid "Invite a co-owner"
+msgstr "Inviter un copropriétaire"
+
+msgid "Invitation"
+msgstr "Invitation"
+
+msgid "Send invitation"
+msgstr "Envoyer l'invitation"
+
+msgid "+ Add property"
+msgstr "+ Ajouter une propriété"
+
+msgid "Value"
+msgstr "Valeur"
+
+msgid "No properties yet."
+msgstr "Aucune propriété pour le moment."
+
+msgid "Add your first property"
+msgstr "Ajoutez votre première propriété"
+
+msgid "Ownership Periods"
+msgstr "Périodes de propriété"
+
+msgid "No ownership periods defined. Equal split is assumed."
+msgstr "Aucune période de propriété définie. Un partage égal est présumé."
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Amount"
+msgstr "Montant"
+
+msgid "No expenses recorded."
+msgstr "Aucune dépense enregistrée."
+
+msgid "Gross equity"
+msgstr "Équité brute"
+
+msgid "Agent commission (incl. tax)"
+msgstr "Commission de l'agent (taxes incl.)"
+
+msgid "Notary fees"
+msgstr "Frais de notaire"
+
+msgid "Capital gains tax (est.)"
+msgstr "Impôt sur le gain en capital (est.)"
+
+msgid "Total costs"
+msgstr "Coûts totaux"
+
+msgid "Net proceeds"
+msgstr "Produit net"
+
+msgid "Per owner"
+msgstr "Par propriétaire"
+
+msgid "No valuation history."
+msgstr "Aucun historique d'évaluation."
+
+# ── Real Estate Field Tooltips ──
+msgid "The total price you paid for the property, before taxes and fees."
+msgstr "Le prix total payé pour la propriété, avant taxes et frais."
+
+msgid "The date the sale was finalized at the notary."
+msgstr "La date à laquelle la vente a été finalisée chez le notaire."
+
+msgid ""
+"Also called 'mutation tax'. A one-time tax paid to the municipality when you "
+"buy a property. Your notary should have the exact amount."
+msgstr ""
+"Aussi appelée « taxe de mutation ». Une taxe unique payée à la municipalité "
+"lors de l'achat d'une propriété. Votre notaire devrait avoir le montant exact."
+
+msgid "Legal fees paid to the notary for the purchase transaction."
+msgstr "Frais juridiques payés au notaire pour la transaction d'achat."
+
+msgid "Your best estimate of what the property is worth today."
+msgstr "Votre meilleure estimation de la valeur actuelle de la propriété."
+
+msgid "The date this valuation estimate was made."
+msgstr "La date à laquelle cette estimation a été faite."
+
+msgid ""
+"The value assigned by your municipality for property tax purposes. Found on "
+"your municipal tax bill."
+msgstr ""
+"La valeur assignée par votre municipalité à des fins de taxe foncière. Se "
+"trouve sur votre compte de taxes municipales."
+
+msgid ""
+"The cash amount you contributed toward the purchase. Used to calculate your "
+"ownership share if there are co-owners."
+msgstr ""
+"Le montant en argent que vous avez contribué à l'achat. Utilisé pour "
+"calculer votre part de propriété s'il y a des copropriétaires."
+
+msgid ""
+"The total amount borrowed from the lender. Usually the purchase price minus "
+"your down payment."
+msgstr ""
+"Le montant total emprunté au prêteur. Habituellement le prix d'achat moins "
+"votre mise de fonds."
+
+msgid ""
+"The yearly interest rate on your mortgage, as stated in your contract (e.g. "
+"5.5)."
+msgstr ""
+"Le taux d'intérêt annuel de votre hypothèque, tel qu'indiqué dans votre "
+"contrat (ex. 5,5)."
+
+msgid ""
+"Fixed: rate stays the same for the term. Variable: rate can change with the "
+"market."
+msgstr ""
+"Fixe : le taux reste le même pendant le terme. Variable : le taux peut "
+"changer selon le marché."
+
+msgid ""
+"Total number of years to fully pay off the mortgage. Most common in Canada: "
+"25 years."
+msgstr ""
+"Nombre total d'années pour rembourser complètement l'hypothèque. Le plus "
+"courant au Canada : 25 ans."
+
+msgid ""
+"The length of your current mortgage contract before renewal. Most common in "
+"Canada: 5 years."
+msgstr ""
+"La durée de votre contrat hypothécaire actuel avant le renouvellement. Le "
+"plus courant au Canada : 5 ans."
+
+msgid "How often you make mortgage payments."
+msgstr "La fréquence à laquelle vous effectuez vos paiements hypothécaires."
+
+msgid "The date your first mortgage payment was due."
+msgstr "La date à laquelle votre premier paiement hypothécaire était dû."
+
+msgid ""
+"If your down payment was less than 20%, you likely paid CMHC/Sagen/Canada "
+"Guaranty insurance. This premium is usually added to the mortgage principal."
+msgstr ""
+"Si votre mise de fonds était inférieure à 20 %, vous avez probablement payé "
+"une assurance SCHL/Sagen/Canada Guaranty. Cette prime est habituellement "
+"ajoutée au capital hypothécaire."

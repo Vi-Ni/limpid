@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-6 space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-text">{% trans "Ownership Periods" %}</h1>
+      <p class="text-text-muted">{{ property.name }}</p>
+    </div>
+    <a href="{% url 'real_estate:detail' property.pk %}" class="text-sm text-primary-600 hover:text-primary-700">
+      ← {% trans "Back to property" %}
+    </a>
+  </div>
+
+  {% for period in periods %}
+  {% include "components/card_start.html" with title=period %}
+    <div class="space-y-2">
+      {% for share in period.shares.all %}
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-text">{{ share.owner.user.get_full_name|default:share.owner.user.email }}</span>
+        <span class="text-sm font-semibold text-primary-600">{{ share.share_pct|floatformat:0 }}%</span>
+      </div>
+      {% endfor %}
+    </div>
+  {% include "components/card_end.html" %}
+  {% empty %}
+  <p class="text-sm text-text-muted">{% trans "No ownership periods defined. Equal split is assumed." %}</p>
+  {% endfor %}
+</div>
+{% endblock %}
