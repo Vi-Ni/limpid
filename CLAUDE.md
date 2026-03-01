@@ -4,11 +4,12 @@
 Educational investment dashboard for Canadian beginners. Shows what you hold, what it costs, and what you need to learn — without ever giving financial advice.
 
 ## Tech Stack
-- **Backend**: Django 5.x, Python 3.14
+- **Backend**: Django 5.x, Python 3.12
 - **Frontend**: Tailwind CSS v4 (via Vite), HTMX, Alpine.js
 - **Build**: Vite (django-vite integration), uv for Python deps
 - **DB**: SQLite (dev), PostgreSQL (prod)
 - **i18n**: Django i18n, bilingual EN/FR
+- **Hosting**: Raspberry Pi 4 via Cloudflare Tunnel at https://limpid.viniqo.com
 
 ## Project Structure
 ```
@@ -32,9 +33,50 @@ templates/
 frontend/
   src/styles/main.css    # Tailwind v4 theme (@theme block)
   src/main.js            # Vite entry point
+deploy/
+  compose.prod.yml       # Production stack: PostgreSQL + App + Cloudflare Tunnel
+scripts/
+  setup-rpi.sh           # One-time RPi provisioning
+  deploy.sh              # Redeploy latest image on RPi
 locale/fr/LC_MESSAGES/   # French translations
 instructions/            # Design docs & implementation plans
+.claude/plans/           # Claude Code plan files
 ```
+
+## Deployment
+
+### Architecture
+```
+User → Cloudflare (HTTPS) → Tunnel → cloudflared → web:8000
+                                         ↕
+                                     db (PostgreSQL)
+```
+
+### Production stack (`deploy/compose.prod.yml`)
+Three Docker containers on RPi (`vini@pich.local`):
+- **db**: PostgreSQL 16-alpine
+- **web**: `ghcr.io/vi-ni/limpid:latest` (Gunicorn, port 8000)
+- **tunnel**: cloudflared (Cloudflare Tunnel to `limpid.viniqo.com`)
+
+### CI/CD (`.github/workflows/ci.yml`)
+On push to main: lint → test → build ARM64 image → push to GHCR.
+Deployment is manual via SSH to RPi.
+
+### Deploy a new version
+```bash
+ssh vini@pich.local
+/opt/limpid/deploy.sh
+```
+
+### RPi environment
+- Config: `/opt/limpid/.env` (SECRET_KEY, DATABASE_URL, TUNNEL_TOKEN, etc.)
+- Compose: `/opt/limpid/compose.prod.yml`
+
+### Containerfile notes
+- Multi-stage: Node (frontend build) → Python (app)
+- Templates + apps are copied into the frontend stage so Tailwind v4 `@source` directives can scan them
+- `collectstatic` uses a dummy SECRET_KEY at build time
+- WhiteNoise serves static files with `CompressedStaticFilesStorage` (not Manifest variant — Vite already handles cache busting)
 
 ## Design System ("Clair & calme")
 - **Direction**: Off-white background, indigo primary, calm & trustworthy
@@ -74,8 +116,8 @@ Components use start/end pattern for slotted content:
 - **Vite**: `npm run dev` (from `frontend/`)
 - **Tests**: `uv run pytest`
 - **Lint**: `uv run ruff check . && uv run ruff format --check .`
-- **Translations**: `uv run python manage.py compilemessages`
 - **Format**: `uv run ruff format .`
+- **Translations**: `uv run python manage.py compilemessages`
 
 ## Conventions
 - Code and comments in English
@@ -87,6 +129,7 @@ Components use start/end pattern for slotted content:
 ## Completed Milestones
 - **M1**: Accounts & onboarding (user profiles, 3-step onboarding wizard, 6-question risk quiz)
 - **Design System**: Tailwind theme, sidebar/bottom nav, reusable components, restyled all pages
+- **Deployment**: RPi + Cloudflare Tunnel, CI/CD building ARM64 images to GHCR
 
 ## URL Patterns
 | Prefix | App |
