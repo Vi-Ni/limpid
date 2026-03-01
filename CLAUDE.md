@@ -20,6 +20,7 @@ config/                  # Django project config
 apps/
   accounts/              # User profiles, onboarding, risk quiz
   portfolio/             # Portfolio management
+  real_estate/           # Real estate patrimony management
   market_data/           # Market data integration
   transparency/          # Fee/risk transparency reports
   education/             # Learning path & lessons
@@ -64,13 +65,48 @@ Deployment is manual via SSH to RPi.
 
 ### Deploy a new version
 ```bash
-ssh vini@pich.local
-/opt/limpid/deploy.sh
+ssh rpi "/opt/limpid/deploy.sh"
+```
+
+### RPi remote management
+The agent has SSH access to the RPi via Cloudflare Tunnel (`ssh rpi`). This uses `cloudflared access ssh` as ProxyCommand (configured in `~/.ssh/config`), secured by Cloudflare Access (email OTP). Works regardless of network or WARP.
+
+Common operations:
+```bash
+# Full deploy (pull image, recreate, migrate)
+ssh rpi "/opt/limpid/deploy.sh"
+
+# Check running containers
+ssh rpi "cd /opt/limpid && docker compose -f compose.prod.yml ps"
+
+# View logs (last 100 lines, all services)
+ssh rpi "cd /opt/limpid && docker compose -f compose.prod.yml logs --tail=100"
+
+# View logs for a specific service (web, db, tunnel)
+ssh rpi "cd /opt/limpid && docker compose -f compose.prod.yml logs --tail=50 web"
+
+# Restart a service
+ssh rpi "cd /opt/limpid && docker compose -f compose.prod.yml restart web"
+
+# Run Django management commands
+ssh rpi "cd /opt/limpid && docker compose -f compose.prod.yml exec web python manage.py migrate --noinput"
+ssh rpi "cd /opt/limpid && docker compose -f compose.prod.yml exec web python manage.py shell -c 'from django.contrib.auth.models import User; print(User.objects.count())'"
+
+# Pull latest image without full deploy
+ssh rpi "docker pull ghcr.io/vi-ni/limpid:latest"
+
+# Check disk space
+ssh rpi "df -h"
+
+# Prune old Docker images
+ssh rpi "docker image prune -f"
 ```
 
 ### RPi environment
+- Host: `rpi` (SSH alias → `ssh.viniqo.com` via Cloudflare Tunnel → Raspberry Pi 4)
 - Config: `/opt/limpid/.env` (SECRET_KEY, DATABASE_URL, TUNNEL_TOKEN, etc.)
 - Compose: `/opt/limpid/compose.prod.yml`
+- Deploy script: `/opt/limpid/deploy.sh`
 
 ### Containerfile notes
 - Multi-stage: Node (frontend build) → Python (app)
@@ -130,6 +166,7 @@ Components use start/end pattern for slotted content:
 - **M1**: Accounts & onboarding (user profiles, 3-step onboarding wizard, 6-question risk quiz)
 - **Design System**: Tailwind theme, sidebar/bottom nav, reusable components, restyled all pages
 - **Deployment**: RPi + Cloudflare Tunnel, CI/CD building ARM64 images to GHCR
+- **Real Estate**: Full patrimony management — 9 models, co-ownership with evolving splits, Canadian mortgage amortization (semi-annual compounding), sale simulation with GST/QST/capital gains, HTMX expense/valuation tracking, 54 tests, full FR translations
 
 ## URL Patterns
 | Prefix | App |
@@ -142,4 +179,15 @@ Components use start/end pattern for slotted content:
 | `/impact/` | Impact directory |
 | `/transparency/` | Transparency reports |
 | `/market/` | Market data |
+| `/real-estate/` | Real estate patrimony management |
 | `/styleguide/` | Design system reference (DEBUG only) |
+
+## Gotchas & Lessons Learned
+- **Containerfile — Tailwind scanning**: Templates and `apps/` must be copied into the frontend build stage so Tailwind v4 `@source` directives can scan HTML classes. Without this, Tailwind purges all utility classes used in templates.
+- **Containerfile — collectstatic**: `collectstatic` needs `SECRET_KEY=build-only` env var at build time since production settings require it.
+- **WhiteNoise storage**: Use `CompressedStaticFilesStorage`, NOT `CompressedManifestStaticFilesStorage` — Vite already hashes filenames, double-hashing breaks the manifest lookup.
+- **GHCR image name**: `github.repository` may contain uppercase (`Vi-Ni/limpid`), must lowercase it for Docker tags — use `${IMAGE_NAME,,}` in CI.
+- **ALLOWED_HOSTS / CSRF_TRUSTED_ORIGINS**: Must match the exact domain in Cloudflare (`viniqo.com`, not `viniko.com`).
+- **Docker Compose v2**: Use `docker compose` (no hyphen) on modern Docker — the old `docker-compose` pip package is deprecated.
+- **RPi SSH**: Use `ssh rpi` (Cloudflare Tunnel via `ssh.viniqo.com`), not `ssh vini@pich.local` — WARP blocks local network from IDE terminals. The tunnel is secured by Cloudflare Access (email OTP). `host.docker.internal` doesn't work on Linux RPi; the tunnel target is `ssh://172.17.0.1:22` (Docker bridge IP).
+- **Django FK named `property`**: Never name a ForeignKey field `property` — it shadows Python's `@property` decorator, causing `TypeError: 'ForeignKey' object is not callable` on any model property. The `Mortgage` model uses `real_estate` as the FK name instead.

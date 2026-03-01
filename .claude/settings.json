@@ -1,3 +1,16 @@
 {
-  "planDirectory": ".claude/plans"
+  "planDirectory": ".claude/plans",
+  "permissions": {
+    "allow": [
+      "Bash(ssh rpi *)"
+    ]
+  },
+  "hooks": {
+    "PreCommit": [
+      {
+        "command": "uv run ruff check --fix . && uv run ruff format .",
+        "description": "Auto-fix lint issues and format code"
+      }
+    ]
+  }
 }
