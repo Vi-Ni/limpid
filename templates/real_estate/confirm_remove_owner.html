@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-6">
+  <div class="mx-auto max-w-md">
+    {% include "components/card_start.html" with title=_("Remove Co-owner") variant="warning" %}
+      <p class="text-sm text-text mb-4">
+        {% blocktrans with name=target_ownership.user.get_full_name|default:target_ownership.user.email property=property.name %}
+        Are you sure you want to remove <strong>{{ name }}</strong> from <strong>{{ property }}</strong>?
+        {% endblocktrans %}
+      </p>
+      <p class="text-sm text-text-muted mb-6">
+        {% trans "Their ownership share will be redistributed among remaining owners. This action cannot be undone." %}
+      </p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="flex gap-3">
+          <button type="submit"
+                  class="rounded-lg bg-danger-600 px-4 py-2 text-sm font-medium text-white hover:bg-danger-700">
+            {% trans "Remove" %}
+          </button>
+          <a href="{% url 'real_estate:detail' property.pk %}"
+             class="rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:bg-gray-50">
+            {% trans "Cancel" %}
+          </a>
+        </div>
+      </form>
+    {% include "components/card_end.html" %}
+  </div>
+</div>
+{% endblock %}

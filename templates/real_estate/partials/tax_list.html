@@ -8,16 +8,34 @@
         <th class="px-3 py-2 text-left text-text-muted">{% trans "Year" %}</th>
         <th class="px-3 py-2 text-left text-text-muted">{% trans "Type" %}</th>
         <th class="px-3 py-2 text-right text-text-muted">{% trans "Amount" %}</th>
+        <th class="px-3 py-2 text-right text-text-muted"></th>
       </tr>
     </thead>
     <tbody>
       {% for tax in taxes %}
-      <tr class="border-b border-gray-100">
+      <tr class="border-b border-gray-100 group">
         <td class="px-3 py-2 text-text-muted">{{ tax.year }}</td>
         <td class="px-3 py-2">
           {% include "components/badge.html" with label=tax.get_tax_type_display variant="neutral" %}
         </td>
         <td class="px-3 py-2 text-right text-text">{{ tax.amount|cad }}</td>
+        <td class="px-3 py-2 text-right">
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 justify-end">
+            <button hx-get="{% url 'real_estate:edit_tax' property.pk tax.pk %}"
+                    hx-target="#tax-form-container"
+                    hx-swap="innerHTML"
+                    class="text-xs text-primary-600 hover:text-primary-700">
+              {% trans "Edit" %}
+            </button>
+            <button hx-delete="{% url 'real_estate:delete_tax' property.pk tax.pk %}"
+                    hx-target="#tax-list"
+                    hx-swap="innerHTML"
+                    hx-confirm="{% trans 'Delete this tax entry?' %}"
+                    class="text-xs text-danger-600 hover:text-danger-700">
+              {% trans "Delete" %}
+            </button>
+          </span>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

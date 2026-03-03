@@ -1319,3 +1319,149 @@ msgstr "En attente"
 
 msgid "Co-owners"
 msgstr "Copropriétaires"
+
+# ── Notifications ──
+msgid "Notifications"
+msgstr "Notifications"
+
+msgid "Mark all as read"
+msgstr "Tout marquer comme lu"
+
+msgid "No notifications yet."
+msgstr "Aucune notification."
+
+msgid "ago"
+msgstr ""
+
+msgid "action"
+msgstr "action"
+
+# ── Notification verb labels ──
+msgid "Invitation sent"
+msgstr "Invitation envoyée"
+
+msgid "Invitation accepted"
+msgstr "Invitation acceptée"
+
+msgid "Co-owner removed"
+msgstr "Copropriétaire retiré"
+
+msgid "Expense added"
+msgstr "Dépense ajoutée"
+
+msgid "Expense updated"
+msgstr "Dépense modifiée"
+
+msgid "Expense deleted"
+msgstr "Dépense supprimée"
+
+msgid "Tax added"
+msgstr "Taxe ajoutée"
+
+msgid "Tax updated"
+msgstr "Taxe modifiée"
+
+msgid "Tax deleted"
+msgstr "Taxe supprimée"
+
+msgid "Valuation added"
+msgstr "Évaluation ajoutée"
+
+msgid "Valuation updated"
+msgstr "Évaluation modifiée"
+
+msgid "Valuation deleted"
+msgstr "Évaluation supprimée"
+
+msgid "Property updated"
+msgstr "Propriété mise à jour"
+
+# ── CRUD actions ──
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Remove"
+msgstr "Retirer"
+
+msgid "Delete this expense?"
+msgstr "Supprimer cette dépense ?"
+
+msgid "Delete this tax entry?"
+msgstr "Supprimer cette taxe ?"
+
+msgid "Delete this valuation?"
+msgstr "Supprimer cette évaluation ?"
+
+# ── Remove co-owner ──
+msgid "Remove Co-owner"
+msgstr "Retirer le copropriétaire"
+
+msgid "You cannot remove yourself."
+msgstr "Vous ne pouvez pas vous retirer vous-même."
+
+msgid "Their ownership share will be redistributed among remaining owners. This action cannot be undone."
+msgstr "Sa part de propriété sera redistribuée entre les propriétaires restants. Cette action est irréversible."
+
+# ── Notification description templates ──
+#, python-format
+msgid "added expense \"%(desc)s\" (%(amount)s)"
+msgstr "a ajouté la dépense « %(desc)s » (%(amount)s)"
+
+#, python-format
+msgid "updated expense \"%(desc)s\" (%(amount)s)"
+msgstr "a modifié la dépense « %(desc)s » (%(amount)s)"
+
+#, python-format
+msgid "deleted expense \"%(desc)s\" (%(amount)s)"
+msgstr "a supprimé la dépense « %(desc)s » (%(amount)s)"
+
+#, python-format
+msgid "added %(type)s tax for %(year)s (%(amount)s)"
+msgstr "a ajouté la taxe %(type)s pour %(year)s (%(amount)s)"
+
+#, python-format
+msgid "updated %(type)s tax for %(year)s"
+msgstr "a modifié la taxe %(type)s pour %(year)s"
+
+#, python-format
+msgid "deleted %(type)s tax for %(year)s (%(amount)s)"
+msgstr "a supprimé la taxe %(type)s pour %(year)s (%(amount)s)"
+
+#, python-format
+msgid "added valuation of %(value)s"
+msgstr "a ajouté une évaluation de %(value)s"
+
+#, python-format
+msgid "updated valuation to %(value)s on %(date)s"
+msgstr "a modifié l'évaluation à %(value)s le %(date)s"
+
+#, python-format
+msgid "deleted valuation of %(value)s on %(date)s"
+msgstr "a supprimé l'évaluation de %(value)s le %(date)s"
+
+#, python-format
+msgid "invited %(email)s as co-owner"
+msgstr "a invité %(email)s comme copropriétaire"
+
+msgid "accepted co-ownership invitation"
+msgstr "a accepté l'invitation de copropriété"
+
+#, python-format
+msgid "removed you from %(name)s"
+msgstr "vous a retiré de %(name)s"
+
+#, python-format
+msgid "removed %(name)s from this property"
+msgstr "a retiré %(name)s de cette propriété"
+
+msgid "updated property details"
+msgstr "a mis à jour les détails de la propriété"
+
+# ── Remove co-owner success messages ──
+#, python-format
+msgid "%(name)s has been removed from %(property)s."
+msgstr "%(name)s a été retiré de %(property)s."
+
+#, python-format
+msgid "%(name)s removed"
+msgstr "%(name)s retiré"

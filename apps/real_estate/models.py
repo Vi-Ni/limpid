@@ -277,3 +277,50 @@ class PropertyInvitation(models.Model):
 
     def __str__(self):
         return f"Invitation for {self.email} → {self.property}"
+
+
+class PropertyNotification(models.Model):
+    VERB_CHOICES = [
+        ("invitation_sent", _("Invitation sent")),
+        ("invitation_accepted", _("Invitation accepted")),
+        ("co_owner_removed", _("Co-owner removed")),
+        ("expense_added", _("Expense added")),
+        ("expense_updated", _("Expense updated")),
+        ("expense_deleted", _("Expense deleted")),
+        ("tax_added", _("Tax added")),
+        ("tax_updated", _("Tax updated")),
+        ("tax_deleted", _("Tax deleted")),
+        ("valuation_added", _("Valuation added")),
+        ("valuation_updated", _("Valuation updated")),
+        ("valuation_deleted", _("Valuation deleted")),
+        ("property_updated", _("Property updated")),
+    ]
+
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="property_notifications",
+    )
+    property = models.ForeignKey(
+        Property,
+        on_delete=models.CASCADE,
+        related_name="notifications",
+    )
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+    verb = models.CharField(_("action"), max_length=30, choices=VERB_CHOICES)
+    description = models.CharField(_("description"), max_length=300)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["recipient", "is_read", "-created_at"]),
+        ]
+
+    def __str__(self):
+        return f"{self.actor} → {self.recipient}: {self.verb}"

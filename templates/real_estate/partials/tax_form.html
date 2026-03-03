@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form hx-post="{% url 'real_estate:add_tax' property.pk %}"
+<form hx-post="{% if editing %}{% url 'real_estate:edit_tax' property.pk tax.pk %}{% else %}{% url 'real_estate:add_tax' property.pk %}{% endif %}"
       hx-target="#tax-list"
       hx-swap="innerHTML"
       class="mt-4 space-y-3">
@@ -14,7 +14,17 @@
     </div>
     {% endfor %}
   </div>
-  <button type="submit" class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
-    {% trans "Save" %}
-  </button>
+  {% if form.non_field_errors %}
+  <p class="text-sm text-danger-600">{{ form.non_field_errors.0 }}</p>
+  {% endif %}
+  <div class="flex gap-2">
+    <button type="submit" class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
+      {% if editing %}{% trans "Save" %}{% else %}{% trans "Save" %}{% endif %}
+    </button>
+    <button type="button"
+            onclick="this.closest('form').remove()"
+            class="rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:bg-gray-50">
+      {% trans "Cancel" %}
+    </button>
+  </div>
 </form>

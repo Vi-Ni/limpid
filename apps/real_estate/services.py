@@ -244,3 +244,23 @@ def get_owner_snapshot(prop, user):
         "your_contributions": contributions,
         **snapshot,
     }
+
+
+# ── Notifications ────────────────────────────────────────────
+
+
+def notify_co_owners(prop, actor, verb, description):
+    from .models import PropertyNotification
+
+    co_owners = prop.ownerships.exclude(user=actor).select_related("user")
+    notifications = [
+        PropertyNotification(
+            recipient=ownership.user,
+            property=prop,
+            actor=actor,
+            verb=verb,
+            description=description,
+        )
+        for ownership in co_owners
+    ]
+    PropertyNotification.objects.bulk_create(notifications)

@@ -65,6 +65,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.i18n",
                 "config.context_processors.nav_current",
+                "config.context_processors.unread_notifications",
             ],
         },
     },

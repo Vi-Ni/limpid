@@ -3,12 +3,29 @@
 {% if valuations %}
 <div class="space-y-2">
   {% for val in valuations %}
-  <div class="flex items-center justify-between py-1">
+  <div class="flex items-center justify-between py-1 group">
     <div>
       <span class="text-sm text-text">{{ val.date }}</span>
       {% include "components/badge.html" with label=val.get_source_display variant="neutral" %}
     </div>
-    <span class="text-sm font-semibold text-text">{{ val.value|cad }}</span>
+    <div class="flex items-center gap-3">
+      <span class="text-sm font-semibold text-text">{{ val.value|cad }}</span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+        <button hx-get="{% url 'real_estate:edit_valuation' property.pk val.pk %}"
+                hx-target="#valuation-form-container"
+                hx-swap="innerHTML"
+                class="text-xs text-primary-600 hover:text-primary-700">
+          {% trans "Edit" %}
+        </button>
+        <button hx-delete="{% url 'real_estate:delete_valuation' property.pk val.pk %}"
+                hx-target="#valuation-list"
+                hx-swap="innerHTML"
+                hx-confirm="{% trans 'Delete this valuation?' %}"
+                class="text-xs text-danger-600 hover:text-danger-700">
+          {% trans "Delete" %}
+        </button>
+      </span>
+    </div>
   </div>
   {% endfor %}
 </div>

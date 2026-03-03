@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext as _
@@ -14,9 +15,12 @@ from .models import (
     OwnershipPeriod,
     OwnershipPeriodShare,
     Property,
+    PropertyExpense,
     PropertyInvitation,
+    PropertyNotification,
     PropertyOwnership,
     PropertyTax,
+    PropertyValuation,
 )
 from .services import (
     estimate_sale_proceeds,
@@ -25,6 +29,7 @@ from .services import (
     get_owner_snapshot,
     get_property_snapshot,
     get_total_paid,
+    notify_co_owners,
 )
 
 
@@ -175,6 +180,7 @@ def property_edit(request, pk):
             form.save()
             if mortgage_form:
                 mortgage_form.save()
+            notify_co_owners(prop, request.user, "property_updated", _("updated property details"))
             return redirect("real_estate:detail", pk=prop.pk)
     else:
         form = PropertyForm(instance=prop)
@@ -203,8 +209,14 @@ def add_expense(request, pk):
             expense.property = prop
             expense.paid_by = ownership
             expense.save()
+            notify_co_owners(
+                prop,
+                request.user,
+                "expense_added",
+                _('added expense "%(desc)s" (%(amount)s)') % {"desc": expense.description, "amount": expense.amount},
+            )
             expenses = prop.expenses.all()[:20]
-            return render(request, "real_estate/partials/expense_list.html", {"expenses": expenses})
+            return render(request, "real_estate/partials/expense_list.html", {"expenses": expenses, "property": prop})
     form = ExpenseForm()
     return render(request, "real_estate/partials/expense_form.html", {"form": form, "property": prop})
 
@@ -221,6 +233,12 @@ def add_valuation(request, pk):
             prop.current_valuation = valuation.value
             prop.valuation_date = valuation.date
             prop.save(update_fields=["current_valuation", "valuation_date"])
+            notify_co_owners(
+                prop,
+                request.user,
+                "valuation_added",
+                _("added valuation of %(value)s") % {"value": valuation.value},
+            )
             valuations = prop.valuations.all()[:10]
             return render(
                 request,
@@ -268,8 +286,15 @@ def add_tax(request, pk):
                 form.add_error(None, _("A tax entry for this type and year already exists."))
                 return render(request, "real_estate/partials/tax_form.html", {"form": form, "property": prop})
             tax.save()
+            notify_co_owners(
+                prop,
+                request.user,
+                "tax_added",
+                _("added %(type)s tax for %(year)s (%(amount)s)")
+                % {"type": tax.get_tax_type_display(), "year": tax.year, "amount": tax.amount},
+            )
             taxes = prop.taxes.all()
-            return render(request, "real_estate/partials/tax_list.html", {"taxes": taxes})
+            return render(request, "real_estate/partials/tax_list.html", {"taxes": taxes, "property": prop})
     else:
         form = PropertyTaxForm()
     return render(request, "real_estate/partials/tax_form.html", {"form": form, "property": prop})
@@ -305,6 +330,12 @@ def invite_co_owner(request, property_id=None, pk=None):
             invitation.invited_by = request.user
             invitation.token = get_random_string(64)
             invitation.save()
+            notify_co_owners(
+                prop,
+                request.user,
+                "invitation_sent",
+                _("invited %(email)s as co-owner") % {"email": invitation.email},
+            )
             messages.success(request, _("Invitation sent to %(email)s.") % {"email": invitation.email})
             return redirect("real_estate:detail", pk=prop.pk)
     else:
@@ -337,6 +368,12 @@ def accept_invitation(request, token):
         OwnershipPeriodShare.objects.create(period=current_period, owner=creator_ownership, share_pct=creator_share)
         OwnershipPeriodShare.objects.create(period=current_period, owner=ownership, share_pct=invitation.share_pct)
 
+    notify_co_owners(
+        prop,
+        request.user,
+        "invitation_accepted",
+        _("accepted co-ownership invitation"),
+    )
     messages.success(request, _("You are now a co-owner of %(name)s.") % {"name": prop.name})
     return redirect("real_estate:detail", pk=prop.pk)
 
@@ -347,3 +384,237 @@ def manage_ownership_periods(request, pk):
     get_object_or_404(PropertyOwnership, property=prop, user=request.user, is_admin=True)
     periods = prop.ownership_periods.prefetch_related("shares__owner__user").all()
     return render(request, "real_estate/ownership_periods.html", {"property": prop, "periods": periods})
+
+
+@login_required
+def notification_list(request):
+    notifications = PropertyNotification.objects.filter(recipient=request.user).select_related("property", "actor")[:50]
+    return render(request, "real_estate/notifications.html", {"notifications": notifications})
+
+
+@login_required
+def mark_notifications_read(request):
+    PropertyNotification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+    return render(request, "real_estate/partials/notification_badge.html")
+
+
+@login_required
+def edit_expense(request, pk, expense_id):
+    prop = get_object_or_404(Property, pk=pk, owners=request.user)
+    expense = get_object_or_404(PropertyExpense, pk=expense_id, property=prop)
+    if request.method == "POST":
+        form = ExpenseForm(request.POST, instance=expense)
+        if form.is_valid():
+            form.save()
+            notify_co_owners(
+                prop,
+                request.user,
+                "expense_updated",
+                _('updated expense "%(desc)s" (%(amount)s)') % {"desc": expense.description, "amount": expense.amount},
+            )
+            expenses = prop.expenses.all()[:20]
+            return render(request, "real_estate/partials/expense_list.html", {"expenses": expenses, "property": prop})
+    else:
+        form = ExpenseForm(instance=expense)
+    return render(
+        request,
+        "real_estate/partials/expense_form.html",
+        {"form": form, "property": prop, "editing": True, "expense": expense},
+    )
+
+
+@login_required
+def delete_expense(request, pk, expense_id):
+    prop = get_object_or_404(Property, pk=pk, owners=request.user)
+    expense = get_object_or_404(PropertyExpense, pk=expense_id, property=prop)
+    if request.method == "DELETE":
+        description = _('deleted expense "%(desc)s" (%(amount)s)') % {
+            "desc": expense.description,
+            "amount": expense.amount,
+        }
+        expense.delete()
+        notify_co_owners(prop, request.user, "expense_deleted", description)
+        expenses = prop.expenses.all()[:20]
+        return render(request, "real_estate/partials/expense_list.html", {"expenses": expenses, "property": prop})
+    return HttpResponseNotAllowed(["DELETE"])
+
+
+@login_required
+def edit_tax(request, pk, tax_id):
+    prop = get_object_or_404(Property, pk=pk, owners=request.user)
+    tax = get_object_or_404(PropertyTax, pk=tax_id, property=prop)
+    if request.method == "POST":
+        form = PropertyTaxForm(request.POST, instance=tax)
+        if form.is_valid():
+            updated = form.save(commit=False)
+            updated.property = prop
+            if (
+                PropertyTax.objects.filter(property=prop, tax_type=updated.tax_type, year=updated.year)
+                .exclude(pk=tax.pk)
+                .exists()
+            ):
+                form.add_error(None, _("A tax entry for this type and year already exists."))
+                return render(
+                    request,
+                    "real_estate/partials/tax_form.html",
+                    {"form": form, "property": prop, "editing": True, "tax": tax},
+                )
+            updated.save()
+            notify_co_owners(
+                prop,
+                request.user,
+                "tax_updated",
+                _("updated %(type)s tax for %(year)s") % {"type": tax.get_tax_type_display(), "year": tax.year},
+            )
+            taxes = prop.taxes.all()
+            return render(request, "real_estate/partials/tax_list.html", {"taxes": taxes, "property": prop})
+    else:
+        form = PropertyTaxForm(instance=tax)
+    return render(
+        request,
+        "real_estate/partials/tax_form.html",
+        {"form": form, "property": prop, "editing": True, "tax": tax},
+    )
+
+
+@login_required
+def delete_tax(request, pk, tax_id):
+    prop = get_object_or_404(Property, pk=pk, owners=request.user)
+    tax = get_object_or_404(PropertyTax, pk=tax_id, property=prop)
+    if request.method == "DELETE":
+        description = _("deleted %(type)s tax for %(year)s (%(amount)s)") % {
+            "type": tax.get_tax_type_display(),
+            "year": tax.year,
+            "amount": tax.amount,
+        }
+        tax.delete()
+        notify_co_owners(prop, request.user, "tax_deleted", description)
+        taxes = prop.taxes.all()
+        return render(request, "real_estate/partials/tax_list.html", {"taxes": taxes, "property": prop})
+    return HttpResponseNotAllowed(["DELETE"])
+
+
+@login_required
+def edit_valuation(request, pk, valuation_id):
+    prop = get_object_or_404(Property, pk=pk, owners=request.user)
+    valuation = get_object_or_404(PropertyValuation, pk=valuation_id, property=prop)
+    if request.method == "POST":
+        form = ValuationForm(request.POST, instance=valuation)
+        if form.is_valid():
+            valuation = form.save()
+            latest = prop.valuations.first()
+            if latest and latest.pk == valuation.pk:
+                prop.current_valuation = valuation.value
+                prop.valuation_date = valuation.date
+                prop.save(update_fields=["current_valuation", "valuation_date"])
+            notify_co_owners(
+                prop,
+                request.user,
+                "valuation_updated",
+                _("updated valuation to %(value)s on %(date)s") % {"value": valuation.value, "date": valuation.date},
+            )
+            valuations = prop.valuations.all()[:10]
+            return render(
+                request,
+                "real_estate/partials/valuation_history.html",
+                {"valuations": valuations, "oob_update": True, "property": prop},
+            )
+    else:
+        form = ValuationForm(instance=valuation)
+    return render(
+        request,
+        "real_estate/partials/valuation_form.html",
+        {"form": form, "property": prop, "editing": True, "valuation": valuation},
+    )
+
+
+@login_required
+def delete_valuation(request, pk, valuation_id):
+    prop = get_object_or_404(Property, pk=pk, owners=request.user)
+    valuation = get_object_or_404(PropertyValuation, pk=valuation_id, property=prop)
+    if request.method == "DELETE":
+        description = _("deleted valuation of %(value)s on %(date)s") % {
+            "value": valuation.value,
+            "date": valuation.date,
+        }
+        valuation.delete()
+        latest = prop.valuations.first()
+        if latest:
+            prop.current_valuation = latest.value
+            prop.valuation_date = latest.date
+        else:
+            prop.current_valuation = prop.purchase_price
+            prop.valuation_date = prop.purchase_date
+        prop.save(update_fields=["current_valuation", "valuation_date"])
+        notify_co_owners(prop, request.user, "valuation_deleted", description)
+        valuations = prop.valuations.all()[:10]
+        return render(
+            request,
+            "real_estate/partials/valuation_history.html",
+            {"valuations": valuations, "oob_update": True, "property": prop},
+        )
+    return HttpResponseNotAllowed(["DELETE"])
+
+
+@login_required
+def remove_co_owner(request, pk, ownership_id):
+    prop = get_object_or_404(Property, pk=pk, owners=request.user)
+    get_object_or_404(PropertyOwnership, property=prop, user=request.user, is_admin=True)
+    target_ownership = get_object_or_404(PropertyOwnership, pk=ownership_id, property=prop)
+
+    if target_ownership.user == request.user:
+        messages.error(request, _("You cannot remove yourself."))
+        return redirect("real_estate:detail", pk=prop.pk)
+
+    if request.method == "POST":
+        removed_user = target_ownership.user
+        removed_name = removed_user.get_full_name() or removed_user.email
+
+        current_period = prop.ownership_periods.filter(end_date__isnull=True).order_by("-start_date").first()
+        today = date.today()
+
+        if current_period:
+            current_period.end_date = today
+            current_period.save(update_fields=["end_date"])
+
+        new_period = OwnershipPeriod.objects.create(
+            property=prop,
+            start_date=today,
+            note=_("%(name)s removed") % {"name": removed_name},
+        )
+
+        target_ownership.delete()
+
+        remaining = prop.ownerships.all()
+        if remaining.count() == 1:
+            OwnershipPeriodShare.objects.create(period=new_period, owner=remaining.first(), share_pct=Decimal("100"))
+        else:
+            share = (Decimal("100") / remaining.count()).quantize(Decimal("0.01"))
+            for own in remaining:
+                OwnershipPeriodShare.objects.create(period=new_period, owner=own, share_pct=share)
+
+        PropertyNotification.objects.create(
+            recipient=removed_user,
+            property=prop,
+            actor=request.user,
+            verb="co_owner_removed",
+            description=_("removed you from %(name)s") % {"name": prop.name},
+        )
+        notify_co_owners(
+            prop,
+            request.user,
+            "co_owner_removed",
+            _("removed %(name)s from this property") % {"name": removed_name},
+        )
+
+        messages.success(
+            request,
+            _("%(name)s has been removed from %(property)s.") % {"name": removed_name, "property": prop.name},
+        )
+        return redirect("real_estate:detail", pk=prop.pk)
+
+    return render(
+        request,
+        "real_estate/confirm_remove_owner.html",
+        {"property": prop, "target_ownership": target_ownership},
+    )

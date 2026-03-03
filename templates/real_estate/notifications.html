@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-6 space-y-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-text">{% trans "Notifications" %}</h1>
+    {% if notifications %}
+    <button hx-post="{% url 'real_estate:mark_all_read' %}"
+            hx-target="#notification-badge"
+            hx-swap="outerHTML"
+            class="text-sm text-primary-600 hover:text-primary-700">
+      {% trans "Mark all as read" %}
+    </button>
+    {% endif %}
+  </div>
+
+  {% if notifications %}
+  <div class="space-y-2">
+    {% for notif in notifications %}
+    <a href="{% url 'real_estate:detail' notif.property.pk %}"
+       class="block rounded-lg border p-4 transition hover:bg-gray-50
+       {% if not notif.is_read %}bg-primary-50/50 border-primary-200{% else %}border-border bg-bg-card{% endif %}">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm text-text">
+            <span class="font-semibold">{{ notif.actor.get_full_name|default:notif.actor.email }}</span>
+            {{ notif.description }}
+          </p>
+          <p class="mt-1 text-xs text-text-muted">
+            {{ notif.property.name }} &middot; {{ notif.created_at|timesince }} {% trans "ago" %}
+          </p>
+        </div>
+        {% if not notif.is_read %}
+        <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary-500"></span>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="rounded-lg border border-border bg-bg-card p-8 text-center">
+    <p class="text-text-muted">{% trans "No notifications yet." %}</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

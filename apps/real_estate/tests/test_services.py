@@ -10,6 +10,7 @@ from apps.real_estate.models import (
     OwnershipPeriodShare,
     Property,
     PropertyExpense,
+    PropertyNotification,
     PropertyOwnership,
 )
 from apps.real_estate.services import (
@@ -24,6 +25,7 @@ from apps.real_estate.services import (
     get_property_snapshot,
     get_remaining_balance,
     get_total_paid,
+    notify_co_owners,
 )
 
 User = get_user_model()
@@ -318,3 +320,27 @@ class TestACB:
     def test_acb_without_improvements(self, prop):
         acb = _calculate_acb(prop)
         assert acb == Decimal("500000") + Decimal("7500") + Decimal("2000")
+
+
+# ── Notification service ─────────────────────────────────────
+
+
+class TestNotifyCoOwners:
+    def test_excludes_actor(self, prop, user, user2):
+        PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        notify_co_owners(prop, user, "expense_added", "added expense")
+        assert PropertyNotification.objects.filter(recipient=user2).count() == 1
+        assert PropertyNotification.objects.filter(recipient=user).count() == 0
+
+    def test_notification_created_unread(self, prop, user, user2):
+        PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        notify_co_owners(prop, user, "tax_added", "added tax")
+        notif = PropertyNotification.objects.first()
+        assert notif.is_read is False
+        assert notif.actor == user
+        assert notif.recipient == user2
+        assert notif.verb == "tax_added"
+
+    def test_no_co_owners(self, prop, user):
+        notify_co_owners(prop, user, "expense_added", "added expense")
+        assert PropertyNotification.objects.count() == 0
