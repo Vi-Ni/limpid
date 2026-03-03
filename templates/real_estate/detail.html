@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n real_estate_filters %}
 
 {% block content %}
 <div class="container-limpid py-6 space-y-6">
@@ -19,15 +19,15 @@
   {# Row 1: Property Value + Your Share #}
   <div class="grid gap-6 md:grid-cols-2">
     {% include "components/card_start.html" with title=_("Property Value") %}
-      <p class="text-3xl font-bold text-text">${{ snapshot.current_valuation|floatformat:0 }}</p>
+      <p class="text-3xl font-bold text-text"><span id="property-value-display">{{ snapshot.current_valuation|cad }}</span></p>
       <div class="mt-4 space-y-2">
-        {% include "components/metric_row.html" with label=_("Purchase price") value=snapshot.purchase_price|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Purchase price") value=snapshot.purchase_price|cad %}
         {% with pct=snapshot.appreciation_pct|floatformat:1 %}
-        {% include "components/metric_row.html" with label=_("Appreciation") value=snapshot.appreciation|floatformat:0 annotation=pct %}
+        {% include "components/metric_row.html" with label=_("Appreciation") value=snapshot.appreciation|cad annotation=pct %}
         {% endwith %}
-        {% include "components/metric_row.html" with label=_("Mortgage balance") value=snapshot.mortgage_balance|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Mortgage balance") value=snapshot.mortgage_balance|cad %}
         {% with pct=snapshot.equity_pct|floatformat:1 %}
-        {% include "components/metric_row.html" with label=_("Equity") value=snapshot.equity|floatformat:0 annotation=pct %}
+        {% include "components/metric_row.html" with label=_("Equity") value=snapshot.equity|cad annotation=pct %}
         {% endwith %}
       </div>
     {% include "components/card_end.html" %}
@@ -35,11 +35,11 @@
     {% include "components/card_start.html" with title=_("Your Share") %}
       <p class="text-lg font-semibold text-primary-600">{{ owner_snapshot.share_pct|floatformat:0 }}%</p>
       <div class="mt-4 space-y-2">
-        {% include "components/metric_row.html" with label=_("Your equity") value=owner_snapshot.your_equity|floatformat:0 %}
-        {% include "components/metric_row.html" with label=_("Your valuation share") value=owner_snapshot.your_valuation|floatformat:0 %}
-        {% include "components/metric_row.html" with label=_("Your mortgage share") value=owner_snapshot.your_mortgage_share|floatformat:0 %}
-        {% include "components/metric_row.html" with label=_("Down payment") value=owner_snapshot.your_contributions.down_payment|floatformat:0 %}
-        {% include "components/metric_row.html" with label=_("Principal paid") value=owner_snapshot.your_contributions.principal_paid|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Your equity") value=owner_snapshot.your_equity|cad %}
+        {% include "components/metric_row.html" with label=_("Your valuation share") value=owner_snapshot.your_valuation|cad %}
+        {% include "components/metric_row.html" with label=_("Your mortgage share") value=owner_snapshot.your_mortgage_share|cad %}
+        {% include "components/metric_row.html" with label=_("Down payment") value=owner_snapshot.your_contributions.down_payment|cad %}
+        {% include "components/metric_row.html" with label=_("Principal paid") value=owner_snapshot.your_contributions.principal_paid|cad %}
       </div>
     {% include "components/card_end.html" %}
   </div>
@@ -52,6 +52,15 @@
         <div class="flex items-center justify-between">
           <span class="text-text">{{ own.user.get_full_name|default:own.user.email }}</span>
           <span class="font-semibold text-primary-600">{{ share|floatformat:0 }}%</span>
+        </div>
+        {% endfor %}
+        {% for inv in pending_invitations %}
+        <div class="flex items-center justify-between opacity-60">
+          <div class="flex items-center gap-2">
+            <span class="text-text">{{ inv.email }}</span>
+            {% include "components/badge.html" with label=_("Pending") variant="warning" %}
+          </div>
+          <span class="font-semibold text-text-muted">{{ inv.share_pct|floatformat:0 }}%</span>
         </div>
         {% endfor %}
       </div>
@@ -71,8 +80,8 @@
         {% with rate=mortgage.annual_rate|floatformat:2 rtype=mortgage.get_rate_type_display %}
         {% include "components/metric_row.html" with label=_("Rate") value=rate annotation=rtype %}
         {% endwith %}
-        {% include "components/metric_row.html" with label=_("Monthly payment") value=snapshot.monthly_payment|floatformat:2 %}
-        {% include "components/metric_row.html" with label=_("Remaining balance") value=snapshot.mortgage_balance|floatformat:0 %}
+        {% include "components/metric_row.html" with label=_("Monthly payment") value=snapshot.monthly_payment|cad %}
+        {% include "components/metric_row.html" with label=_("Remaining balance") value=snapshot.mortgage_balance|cad %}
         {% include "components/metric_row.html" with label=_("Amortization") value=mortgage.amortization_years annotation=_("years") %}
       </div>
       <div class="mt-4 pt-4 border-t border-border">
@@ -84,7 +93,22 @@
     {% endif %}
   </div>
 
-  {# Row 3: Sale simulator #}
+  {# Row 3: Charts #}
+  <div class="grid gap-6 md:grid-cols-3">
+    {% include "components/card_start.html" with title=_("Equity Breakdown") %}
+      <canvas data-chart="allocation" data-chart-data='{{ equity_chart }}'></canvas>
+    {% include "components/card_end.html" %}
+
+    {% include "components/card_start.html" with title=_("Payment Breakdown") %}
+      <canvas data-chart="allocation" data-chart-data='{{ payment_chart }}'></canvas>
+    {% include "components/card_end.html" %}
+
+    {% include "components/card_start.html" with title=_("Expenses by Type") %}
+      <canvas data-chart="allocation" data-chart-data='{{ expense_chart }}'></canvas>
+    {% include "components/card_end.html" %}
+  </div>
+
+  {# Row 4: Sale simulator #}
   {% include "components/card_start.html" with title=_("If I sell today...") %}
     <div class="flex flex-col gap-4 sm:flex-row sm:gap-6 mb-4">
       <div class="flex-1">
@@ -105,11 +129,27 @@
       </div>
     </div>
     <div id="sale-results">
-      {% include "real_estate/partials/sale_estimate.html" %}
+      {% include "real_estate/partials/sale_estimate.html" with estimate=sale_estimate %}
     </div>
   {% include "components/card_end.html" %}
 
-  {# Row 4: Expenses #}
+  {# Row 4: Property Taxes #}
+  {% include "components/card_start.html" with title=_("Property Taxes") %}
+    <div id="tax-list">
+      {% include "real_estate/partials/tax_list.html" %}
+    </div>
+    <div class="mt-4 pt-4 border-t border-border">
+      <button hx-get="{% url 'real_estate:add_tax' property.pk %}"
+              hx-target="#tax-form-container"
+              hx-swap="innerHTML"
+              class="text-sm text-primary-600 hover:text-primary-700">
+        {% trans "+ Add tax" %}
+      </button>
+      <div id="tax-form-container"></div>
+    </div>
+  {% include "components/card_end.html" %}
+
+  {# Row 5: Expenses #}
   {% include "components/card_start.html" with title=_("Expenses & Renovations") %}
     <div id="expense-list">
       {% include "real_estate/partials/expense_list.html" %}

@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n real_estate_filters %}
 
 {% if expenses %}
 <div class="overflow-x-auto">
@@ -19,7 +19,7 @@
           {% include "components/badge.html" with label=expense.get_expense_type_display variant="neutral" %}
         </td>
         <td class="px-3 py-2 text-text">{{ expense.description }}</td>
-        <td class="px-3 py-2 text-right text-text">${{ expense.amount|floatformat:2 }}</td>
+        <td class="px-3 py-2 text-right text-text">{{ expense.amount|cad }}</td>
       </tr>
       {% endfor %}
     </tbody>

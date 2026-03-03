@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n real_estate_filters %}
 
 {% block content %}
 <div class="container-limpid py-6 space-y-6">
@@ -17,21 +17,21 @@
     <div class="grid gap-4 sm:grid-cols-3">
       <div>
         <p class="text-xs text-text-muted">{% trans "Monthly payment" %}</p>
-        <p class="text-lg font-semibold text-text">${{ mortgage.monthly_payment|floatformat:2 }}</p>
+        <p class="text-lg font-semibold text-text">{{ mortgage.monthly_payment|cad }}</p>
       </div>
       <div>
         <p class="text-xs text-text-muted">{% trans "Total interest paid" %}</p>
-        <p class="text-lg font-semibold text-text">${{ paid.total_interest_paid|floatformat:0 }}</p>
+        <p class="text-lg font-semibold text-text">{{ paid.total_interest_paid|cad }}</p>
       </div>
       <div>
         <p class="text-xs text-text-muted">{% trans "Total paid to date" %}</p>
-        <p class="text-lg font-semibold text-text">${{ paid.total_paid|floatformat:0 }}</p>
+        <p class="text-lg font-semibold text-text">{{ paid.total_paid|cad }}</p>
       </div>
     </div>
     <div class="mt-4 grid gap-4 sm:grid-cols-3">
       <div>
         <p class="text-xs text-text-muted">{% trans "Original principal" %}</p>
-        <p class="text-sm font-medium text-text">${{ mortgage.effective_principal|floatformat:0 }}</p>
+        <p class="text-sm font-medium text-text">{{ mortgage.effective_principal|cad }}</p>
       </div>
       <div>
         <p class="text-xs text-text-muted">{% trans "Annual rate" %}</p>
@@ -59,13 +59,13 @@
         </thead>
         <tbody>
           {% for entry in schedule %}
-          <tr class="border-b border-gray-100 {% if entry.is_current %}bg-primary-50{% endif %}">
+          <tr class="border-b border-gray-100 {% if entry.is_current %}bg-primary-50 font-semibold{% endif %}" {% if entry.is_current %}id="current-payment"{% endif %}>
             <td class="px-3 py-2 text-text-muted">{{ entry.payment_number }}</td>
             <td class="px-3 py-2 text-text-muted">{{ entry.date }}</td>
-            <td class="px-3 py-2 text-right text-text">${{ entry.total_payment|floatformat:2 }}</td>
-            <td class="px-3 py-2 text-right text-success-600">${{ entry.principal|floatformat:2 }}</td>
-            <td class="px-3 py-2 text-right text-danger-600">${{ entry.interest|floatformat:2 }}</td>
-            <td class="px-3 py-2 text-right font-medium text-text">${{ entry.balance|floatformat:2 }}</td>
+            <td class="px-3 py-2 text-right text-text">{{ entry.total_payment|cad }}</td>
+            <td class="px-3 py-2 text-right text-success-600">{{ entry.principal|cad }}</td>
+            <td class="px-3 py-2 text-right text-danger-600">{{ entry.interest|cad }}</td>
+            <td class="px-3 py-2 text-right font-medium text-text">{{ entry.balance|cad }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -73,4 +73,10 @@
     </div>
   {% include "components/card_end.html" %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('current-payment')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+</script>
 {% endblock %}

@@ -1256,3 +1256,66 @@ msgstr ""
 "Si votre mise de fonds était inférieure à 20 %, vous avez probablement payé "
 "une assurance SCHL/Sagen/Canada Guaranty. Cette prime est habituellement "
 "ajoutée au capital hypothécaire."
+
+# ── Real Estate — Property Taxes ──
+msgid "Municipal tax"
+msgstr "Taxe municipale"
+
+msgid "School tax"
+msgstr "Taxe scolaire"
+
+msgid "tax type"
+msgstr "type de taxe"
+
+msgid "year"
+msgstr "année"
+
+msgid "property tax"
+msgstr "taxe foncière"
+
+msgid "property taxes"
+msgstr "taxes foncières"
+
+msgid "Property Taxes"
+msgstr "Taxes foncières"
+
+msgid "+ Add tax"
+msgstr "+ Ajouter une taxe"
+
+msgid "No taxes recorded."
+msgstr "Aucune taxe enregistrée."
+
+msgid "A tax entry for this type and year already exists."
+msgstr "Une entrée de taxe pour ce type et cette année existe déjà."
+
+msgid "Year"
+msgstr "Année"
+
+# ── Real Estate — Charts ──
+msgid "Equity Breakdown"
+msgstr "Répartition de l'équité"
+
+msgid "Payment Breakdown"
+msgstr "Répartition des paiements"
+
+msgid "Expenses by Type"
+msgstr "Dépenses par type"
+
+msgid "Remaining mortgage"
+msgstr "Hypothèque restante"
+
+msgid "Interest paid"
+msgstr "Intérêts payés"
+
+msgid "Remaining principal"
+msgstr "Capital restant"
+
+msgid "No expenses"
+msgstr "Aucune dépense"
+
+# ── Real Estate — Co-owners & Invitations ──
+msgid "Pending"
+msgstr "En attente"
+
+msgid "Co-owners"
+msgstr "Copropriétaires"

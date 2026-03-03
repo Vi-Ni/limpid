@@ -237,6 +237,14 @@ class TestOwnerSnapshot:
         assert snap["share_pct"] == Decimal("100")
         assert snap["your_equity"] == snap["equity"].quantize(TWO_PLACES)
 
+    def test_principal_paid_from_schedule(self, prop, user, mortgage):
+        """Principal paid should come from amortization schedule, not MortgagePayment records."""
+        period = OwnershipPeriod.objects.create(property=prop, start_date=date(2020, 1, 1))
+        ownership = prop.ownerships.get(user=user)
+        OwnershipPeriodShare.objects.create(period=period, owner=ownership, share_pct=Decimal("100"))
+        snap = get_owner_snapshot(prop, user)
+        assert snap["your_contributions"]["principal_paid"] > Decimal("0")
+
 
 # ── Sale Simulation ───────────────────────────────────────────
 

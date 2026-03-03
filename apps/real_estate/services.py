@@ -225,6 +225,17 @@ def get_owner_snapshot(prop, user):
     share_pct = shares.get(ownership, Decimal("0"))
     snapshot = get_property_snapshot(prop)
     contributions = get_owner_contributions(ownership)
+
+    # Override principal_paid from amortization schedule (MortgagePayment records are rarely created)
+    total_principal_paid = Decimal("0")
+    for mortgage in prop.mortgages.filter(is_active=True):
+        paid = get_total_paid(mortgage)
+        total_principal_paid += paid["total_principal_paid"]
+    contributions["principal_paid"] = (total_principal_paid * share_pct / 100).quantize(TWO_PLACES)
+    contributions["total"] = (
+        contributions["down_payment"] + contributions["principal_paid"] + contributions["expenses_paid"]
+    )
+
     return {
         "share_pct": share_pct,
         "your_equity": (snapshot["equity"] * share_pct / 100).quantize(TWO_PLACES),

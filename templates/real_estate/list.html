@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n real_estate_filters %}
 
 {% block content %}
 <div class="container-limpid py-8 space-y-8">
@@ -20,11 +20,11 @@
         <div class="space-y-3">
           <div class="flex items-baseline justify-between">
             <span class="text-sm text-text-muted">{% trans "Value" %}</span>
-            <span class="text-lg font-bold text-text">${{ item.snapshot.current_valuation|floatformat:0 }}</span>
+            <span class="text-lg font-bold text-text">{{ item.snapshot.current_valuation|cad }}</span>
           </div>
           <div class="flex items-baseline justify-between">
             <span class="text-sm text-text-muted">{% trans "Your equity" %}</span>
-            <span class="font-semibold text-primary-600">${{ item.snapshot.your_equity|floatformat:0 }}</span>
+            <span class="font-semibold text-primary-600">{{ item.snapshot.your_equity|cad }}</span>
           </div>
         </div>
         <div class="flex items-center gap-2 mt-5">

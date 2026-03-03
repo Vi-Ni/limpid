@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.forms import TAILWIND_SELECT_CLASS
 
-from .models import Mortgage, Property, PropertyExpense, PropertyInvitation, PropertyValuation
+from .models import Mortgage, Property, PropertyExpense, PropertyInvitation, PropertyTax, PropertyValuation
 
 TAILWIND_INPUT_CLASS = (
     "w-full rounded-lg border border-border px-3 py-2 text-sm"
@@ -23,32 +23,17 @@ FIELD_TOOLTIPS = {
     "current_valuation": _("Your best estimate of what the property is worth today."),
     "valuation_date": _("The date this valuation estimate was made."),
     "municipal_assessment": _(
-        "The value assigned by your municipality for property tax purposes. "
-        "Found on your municipal tax bill."
+        "The value assigned by your municipality for property tax purposes. Found on your municipal tax bill."
     ),
     "down_payment": _(
         "The cash amount you contributed toward the purchase. "
         "Used to calculate your ownership share if there are co-owners."
     ),
-    "principal": _(
-        "The total amount borrowed from the lender. "
-        "Usually the purchase price minus your down payment."
-    ),
-    "annual_rate": _(
-        "The yearly interest rate on your mortgage, as stated in your contract (e.g. 5.5)."
-    ),
-    "rate_type": _(
-        "Fixed: rate stays the same for the term. "
-        "Variable: rate can change with the market."
-    ),
-    "amortization_years": _(
-        "Total number of years to fully pay off the mortgage. "
-        "Most common in Canada: 25 years."
-    ),
-    "term_years": _(
-        "The length of your current mortgage contract before renewal. "
-        "Most common in Canada: 5 years."
-    ),
+    "principal": _("The total amount borrowed from the lender. Usually the purchase price minus your down payment."),
+    "annual_rate": _("The yearly interest rate on your mortgage, as stated in your contract (e.g. 5.5)."),
+    "rate_type": _("Fixed: rate stays the same for the term. Variable: rate can change with the market."),
+    "amortization_years": _("Total number of years to fully pay off the mortgage. Most common in Canada: 25 years."),
+    "term_years": _("The length of your current mortgage contract before renewal. Most common in Canada: 5 years."),
     "payment_frequency": _("How often you make mortgage payments."),
     "start_date": _("The date your first mortgage payment was due."),
     "insurance_premium": _(
@@ -56,12 +41,8 @@ FIELD_TOOLTIPS = {
         "insurance. This premium is usually added to the mortgage principal."
     ),
     "co_owner_email": _("The email address your co-owner uses to log in to Limpid."),
-    "co_owner_down_payment": _(
-        "The cash amount your co-owner contributed toward the purchase."
-    ),
-    "co_owner_share": _(
-        "The percentage of the property your co-owner will own. Your share will be the remainder."
-    ),
+    "co_owner_down_payment": _("The cash amount your co-owner contributed toward the purchase."),
+    "co_owner_share": _("The percentage of the property your co-owner will own. Your share will be the remainder."),
 }
 
 
@@ -129,15 +110,11 @@ class PropertyForm(forms.ModelForm):
             "province": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "postal_code": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "purchase_price": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
-            "purchase_date": forms.DateInput(
-                format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}
-            ),
+            "purchase_date": forms.DateInput(format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}),
             "welcome_tax_paid": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
             "notary_fees_purchase": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
             "current_valuation": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
-            "valuation_date": forms.DateInput(
-                format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}
-            ),
+            "valuation_date": forms.DateInput(format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}),
             "municipal_assessment": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
         }
 
@@ -170,9 +147,7 @@ class MortgageForm(forms.ModelForm):
             "amortization_years": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "term_years": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "payment_frequency": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
-            "start_date": forms.DateInput(
-                format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}
-            ),
+            "start_date": forms.DateInput(format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}),
             "insurance_premium": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
         }
 
@@ -192,9 +167,7 @@ class ExpenseForm(forms.ModelForm):
             "expense_type": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
             "description": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "amount": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
-            "date": forms.DateInput(
-                format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}
-            ),
+            "date": forms.DateInput(format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}),
             "increases_acb": forms.CheckboxInput(attrs={"class": TAILWIND_CHECKBOX_CLASS}),
         }
 
@@ -209,9 +182,7 @@ class ValuationForm(forms.ModelForm):
         fields = ["value", "date", "source", "note"]
         widgets = {
             "value": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
-            "date": forms.DateInput(
-                format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}
-            ),
+            "date": forms.DateInput(format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}),
             "source": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
             "note": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
         }
@@ -219,6 +190,17 @@ class ValuationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["date"].localize = False
+
+
+class PropertyTaxForm(forms.ModelForm):
+    class Meta:
+        model = PropertyTax
+        fields = ["tax_type", "year", "amount"]
+        widgets = {
+            "tax_type": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "year": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+            "amount": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
+        }
 
 
 class InviteCoOwnerForm(forms.ModelForm):

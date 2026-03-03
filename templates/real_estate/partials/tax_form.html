@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<form hx-post="{% url 'real_estate:add_tax' property.pk %}"
+      hx-target="#tax-list"
+      hx-swap="innerHTML"
+      class="mt-4 space-y-3">
+  {% csrf_token %}
+  <div class="grid gap-3 sm:grid-cols-3">
+    {% for field in form %}
+    <div>
+      <label for="{{ field.id_for_label }}" class="block text-xs text-text-muted mb-1">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<p class="mt-1 text-xs text-danger-600">{{ field.errors.0 }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  <button type="submit" class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
+    {% trans "Save" %}
+  </button>
+</form>

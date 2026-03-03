@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n real_estate_filters %}
 
 {% if valuations %}
 <div class="space-y-2">
@@ -8,10 +8,14 @@
       <span class="text-sm text-text">{{ val.date }}</span>
       {% include "components/badge.html" with label=val.get_source_display variant="neutral" %}
     </div>
-    <span class="text-sm font-semibold text-text">${{ val.value|floatformat:0 }}</span>
+    <span class="text-sm font-semibold text-text">{{ val.value|cad }}</span>
   </div>
   {% endfor %}
 </div>
 {% else %}
 <p class="text-sm text-text-muted py-2">{% trans "No valuation history." %}</p>
+{% endif %}
+
+{% if oob_update %}
+<span id="property-value-display" hx-swap-oob="innerHTML">{{ property.current_valuation|cad }}</span>
 {% endif %}

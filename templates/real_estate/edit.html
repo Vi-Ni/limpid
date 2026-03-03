@@ -10,7 +10,7 @@
     {% include "components/card_start.html" with title=_("Property details") %}
       <div class="grid gap-4 sm:grid-cols-2">
         {% for field in form %}
-          {% if field.name != "down_payment" %}
+          {% if field.name != "down_payment" and field.name != "co_owner_email" and field.name != "co_owner_down_payment" and field.name != "co_owner_share" %}
           <div {% if field.name == "address" %}class="sm:col-span-2"{% endif %}>
             <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text mb-1">
               {{ field.label }}{% if field.field.required %}<span class="text-danger-600 ml-0.5">*</span>{% endif %}
@@ -25,6 +25,41 @@
         {% endfor %}
       </div>
     {% include "components/card_end.html" %}
+
+    {% if mortgage_form %}
+    {% include "components/card_start.html" with title=_("Mortgage") %}
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% for field in mortgage_form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text mb-1">
+            {{ field.label }}
+            {% if field.help_text %}
+              {% include "components/tooltip.html" with id=field.html_name text=field.help_text %}
+            {% endif %}
+          </label>
+          {{ field }}
+          {% if field.errors %}<p class="mt-1 text-xs text-danger-600">{{ field.errors.0 }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    {% include "components/card_end.html" %}
+    {% endif %}
+
+    {% if pending_invitations %}
+    {% include "components/card_start.html" with title=_("Co-owners") %}
+      <div class="space-y-3">
+        {% for inv in pending_invitations %}
+        <div class="flex items-center justify-between opacity-60">
+          <div>
+            <span class="text-sm text-text">{{ inv.email }}</span>
+            <span class="text-sm text-text-muted ml-2">({{ inv.share_pct|floatformat:0 }}%)</span>
+          </div>
+          {% include "components/badge.html" with label=_("Pending") variant="warning" %}
+        </div>
+        {% endfor %}
+      </div>
+    {% include "components/card_end.html" %}
+    {% endif %}
 
     <div class="flex gap-3">
       <button type="submit" class="rounded-lg bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700">

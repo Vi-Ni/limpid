@@ -12,6 +12,7 @@ from apps.real_estate.models import (
     Property,
     PropertyInvitation,
     PropertyOwnership,
+    PropertyTax,
 )
 
 User = get_user_model()
@@ -302,6 +303,56 @@ class TestCreateWithCoOwner:
         assert not PropertyInvitation.objects.filter(property=prop).exists()
         period = prop.ownership_periods.first()
         assert period.shares.first().share_pct == Decimal("100")
+
+
+class TestAddTax:
+    def test_add_tax(self, client, prop):
+        response = client.post(
+            f"/real-estate/{prop.pk}/tax/",
+            {
+                "tax_type": "municipal",
+                "year": "2025",
+                "amount": "3500",
+            },
+        )
+        assert response.status_code == 200
+        assert prop.taxes.count() == 1
+        tax = prop.taxes.first()
+        assert tax.tax_type == "municipal"
+        assert tax.year == 2025
+        assert tax.amount == Decimal("3500")
+
+    def test_get_tax_form(self, client, prop):
+        response = client.get(f"/real-estate/{prop.pk}/tax/")
+        assert response.status_code == 200
+
+    def test_unique_constraint(self, client, prop):
+        PropertyTax.objects.create(property=prop, tax_type="municipal", year=2025, amount=Decimal("3000"))
+        response = client.post(
+            f"/real-estate/{prop.pk}/tax/",
+            {
+                "tax_type": "municipal",
+                "year": "2025",
+                "amount": "3500",
+            },
+        )
+        # Should return the form with errors (not crash), and not create a duplicate
+        assert response.status_code == 200
+        assert prop.taxes.count() == 1
+
+
+class TestPropertyDetailCharts:
+    def test_charts_in_context(self, client, prop, mortgage):
+        response = client.get(f"/real-estate/{prop.pk}/")
+        assert response.status_code == 200
+        assert b"data-chart" in response.content
+
+
+class TestAmortizationAutoScroll:
+    def test_current_payment_marked(self, client, prop, mortgage):
+        response = client.get(f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/amortization/")
+        assert response.status_code == 200
+        assert b"current-payment" in response.content
 
 
 class TestAcceptInvitationShareUpdate:

@@ -244,6 +244,27 @@ class PropertyValuation(models.Model):
         return f"{self.property.name}: ${self.value} ({self.date})"
 
 
+class PropertyTax(models.Model):
+    TAX_TYPE_CHOICES = [
+        ("municipal", _("Municipal tax")),
+        ("school", _("School tax")),
+    ]
+
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="taxes")
+    tax_type = models.CharField(_("tax type"), max_length=20, choices=TAX_TYPE_CHOICES)
+    year = models.PositiveIntegerField(_("year"))
+    amount = models.DecimalField(_("amount"), max_digits=10, decimal_places=2)
+
+    class Meta:
+        unique_together = [("property", "tax_type", "year")]
+        ordering = ["-year", "tax_type"]
+        verbose_name = _("property tax")
+        verbose_name_plural = _("property taxes")
+
+    def __str__(self):
+        return f"{self.get_tax_type_display()} {self.year} — ${self.amount}"
+
+
 class PropertyInvitation(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="invitations")
     invited_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

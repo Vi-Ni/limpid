@@ -1,3 +1,5 @@
+import json
+from datetime import date
 from decimal import Decimal, InvalidOperation
 
 from django.contrib import messages
@@ -6,8 +8,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext as _
 
-from .forms import ExpenseForm, InviteCoOwnerForm, MortgageForm, PropertyForm, ValuationForm
-from .models import Mortgage, OwnershipPeriod, OwnershipPeriodShare, Property, PropertyInvitation, PropertyOwnership
+from .forms import ExpenseForm, InviteCoOwnerForm, MortgageForm, PropertyForm, PropertyTaxForm, ValuationForm
+from .models import (
+    Mortgage,
+    OwnershipPeriod,
+    OwnershipPeriodShare,
+    Property,
+    PropertyInvitation,
+    PropertyOwnership,
+    PropertyTax,
+)
 from .services import (
     estimate_sale_proceeds,
     generate_amortization_schedule,
@@ -80,6 +90,54 @@ def property_detail(request, pk):
     active_mortgage = prop.mortgages.filter(is_active=True).first()
     expenses = prop.expenses.all()[:20]
     valuations = prop.valuations.all()[:10]
+    taxes = prop.taxes.all()
+    pending_invitations = prop.invitations.filter(accepted=False)
+
+    # Chart data
+    equity_chart = json.dumps(
+        {
+            "labels": [str(_("Equity")), str(_("Remaining mortgage"))],
+            "values": [float(snapshot["equity"]), float(snapshot["mortgage_balance"])],
+            "colors": ["#10b981", "#e2e8f0"],
+        }
+    )
+
+    total_principal_paid = Decimal("0")
+    total_interest_paid = Decimal("0")
+    remaining_principal = Decimal("0")
+    if active_mortgage:
+        paid_data = get_total_paid(active_mortgage)
+        total_principal_paid = paid_data["total_principal_paid"]
+        total_interest_paid = paid_data["total_interest_paid"]
+        remaining_principal = snapshot["mortgage_balance"]
+
+    payment_chart = json.dumps(
+        {
+            "labels": [
+                str(_("Principal paid")),
+                str(_("Interest paid")),
+                str(_("Remaining principal")),
+            ],
+            "values": [
+                float(total_principal_paid),
+                float(total_interest_paid),
+                float(remaining_principal),
+            ],
+            "colors": ["#10b981", "#f59e0b", "#e2e8f0"],
+        }
+    )
+
+    expense_by_type = {}
+    for exp in prop.expenses.all():
+        label = exp.get_expense_type_display()
+        expense_by_type[label] = expense_by_type.get(label, 0) + float(exp.amount)
+    expense_chart = json.dumps(
+        {
+            "labels": list(expense_by_type.keys()) or [str(_("No expenses"))],
+            "values": list(expense_by_type.values()) or [0],
+        }
+    )
+
     return render(
         request,
         "real_estate/detail.html",
@@ -93,6 +151,11 @@ def property_detail(request, pk):
             "mortgage": active_mortgage,
             "expenses": expenses,
             "valuations": valuations,
+            "taxes": taxes,
+            "pending_invitations": pending_invitations,
+            "equity_chart": equity_chart,
+            "payment_chart": payment_chart,
+            "expense_chart": expense_chart,
         },
     )
 
@@ -101,14 +164,32 @@ def property_detail(request, pk):
 def property_edit(request, pk):
     prop = get_object_or_404(Property, pk=pk, owners=request.user)
     ownership = get_object_or_404(PropertyOwnership, property=prop, user=request.user, is_admin=True)
+    active_mortgage = prop.mortgages.filter(is_active=True).first()
+    pending_invitations = prop.invitations.filter(accepted=False)
     if request.method == "POST":
         form = PropertyForm(request.POST, instance=prop)
-        if form.is_valid():
+        mortgage_form = (
+            MortgageForm(request.POST, prefix="mortgage", instance=active_mortgage) if active_mortgage else None
+        )
+        if form.is_valid() and (mortgage_form is None or mortgage_form.is_valid()):
             form.save()
+            if mortgage_form:
+                mortgage_form.save()
             return redirect("real_estate:detail", pk=prop.pk)
     else:
         form = PropertyForm(instance=prop)
-    return render(request, "real_estate/edit.html", {"form": form, "property": prop, "ownership": ownership})
+        mortgage_form = MortgageForm(prefix="mortgage", instance=active_mortgage) if active_mortgage else None
+    return render(
+        request,
+        "real_estate/edit.html",
+        {
+            "form": form,
+            "mortgage_form": mortgage_form,
+            "property": prop,
+            "ownership": ownership,
+            "pending_invitations": pending_invitations,
+        },
+    )
 
 
 @login_required
@@ -141,7 +222,11 @@ def add_valuation(request, pk):
             prop.valuation_date = valuation.date
             prop.save(update_fields=["current_valuation", "valuation_date"])
             valuations = prop.valuations.all()[:10]
-            return render(request, "real_estate/partials/valuation_history.html", {"valuations": valuations})
+            return render(
+                request,
+                "real_estate/partials/valuation_history.html",
+                {"valuations": valuations, "oob_update": True, "property": prop},
+            )
     form = ValuationForm()
     return render(request, "real_estate/partials/valuation_form.html", {"form": form, "property": prop})
 
@@ -151,6 +236,9 @@ def amortization_view(request, pk, mortgage_id):
     prop = get_object_or_404(Property, pk=pk, owners=request.user)
     mortgage = get_object_or_404(Mortgage, pk=mortgage_id, real_estate=prop)
     schedule = generate_amortization_schedule(mortgage)
+    today = date.today()
+    for entry in schedule:
+        entry["is_current"] = entry["date"].year == today.year and entry["date"].month == today.month
     paid = get_total_paid(mortgage)
     return render(
         request,
@@ -162,6 +250,29 @@ def amortization_view(request, pk, mortgage_id):
             "paid": paid,
         },
     )
+
+
+@login_required
+def add_tax(request, pk):
+    prop = get_object_or_404(Property, pk=pk, owners=request.user)
+    if request.method == "POST":
+        form = PropertyTaxForm(request.POST)
+        if form.is_valid():
+            tax = form.save(commit=False)
+            tax.property = prop
+            if PropertyTax.objects.filter(
+                property=prop,
+                tax_type=tax.tax_type,
+                year=tax.year,
+            ).exists():
+                form.add_error(None, _("A tax entry for this type and year already exists."))
+                return render(request, "real_estate/partials/tax_form.html", {"form": form, "property": prop})
+            tax.save()
+            taxes = prop.taxes.all()
+            return render(request, "real_estate/partials/tax_list.html", {"taxes": taxes})
+    else:
+        form = PropertyTaxForm()
+    return render(request, "real_estate/partials/tax_form.html", {"form": form, "property": prop})
 
 
 @login_required

@@ -1,0 +1,28 @@
+{% load i18n real_estate_filters %}
+
+{% if taxes %}
+<div class="overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead>
+      <tr class="border-b border-border">
+        <th class="px-3 py-2 text-left text-text-muted">{% trans "Year" %}</th>
+        <th class="px-3 py-2 text-left text-text-muted">{% trans "Type" %}</th>
+        <th class="px-3 py-2 text-right text-text-muted">{% trans "Amount" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tax in taxes %}
+      <tr class="border-b border-gray-100">
+        <td class="px-3 py-2 text-text-muted">{{ tax.year }}</td>
+        <td class="px-3 py-2">
+          {% include "components/badge.html" with label=tax.get_tax_type_display variant="neutral" %}
+        </td>
+        <td class="px-3 py-2 text-right text-text">{{ tax.amount|cad }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="text-sm text-text-muted py-2">{% trans "No taxes recorded." %}</p>
+{% endif %}
