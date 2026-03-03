@@ -46,7 +46,7 @@
           <span class="text-sm font-medium text-text">{% trans "I have a co-owner" %}</span>
         </label>
 
-        <div x-show="hasCoOwner" x-transition class="rounded-xl border border-border bg-bg-subtle p-4 space-y-4">
+        <div x-show="hasCoOwner" x-transition class="rounded-xl border border-primary-200 border-l-[3px] border-l-primary-400 bg-primary-50/30 p-4 space-y-4">
           <div class="max-w-sm">
             <label for="{{ form.co_owner_email.id_for_label }}" class="block text-sm font-medium text-text mb-1">
               {{ form.co_owner_email.label }}
@@ -80,6 +80,7 @@
             {% if form.co_owner_share.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_share.errors.0 }}</p>{% endif %}
             <p class="mt-2 text-sm text-text-muted">
               {% trans "Your share" %}: <span id="your-share-display" class="font-semibold text-text">—</span>
+              <span id="share-hint" class="hidden text-xs text-text-faint ml-2"></span>
             </p>
           </div>
         </div>
@@ -125,15 +126,23 @@ document.addEventListener('DOMContentLoaded', function () {
   const principal = document.getElementById('id_mortgage-principal');
   const insurancePremium = document.getElementById('id_mortgage-insurance_premium');
   const yourShareDisplay = document.getElementById('your-share-display');
+  const shareHint = document.getElementById('share-hint');
 
   let principalDirty = false;
   let insuranceDirty = false;
+  let shareDirty = false;
 
   if (principal) {
     principal.addEventListener('input', function () { principalDirty = true; });
   }
   if (insurancePremium) {
     insurancePremium.addEventListener('input', function () { insuranceDirty = true; });
+  }
+  if (coOwnerShare) {
+    coOwnerShare.addEventListener('input', function () {
+      shareDirty = true;
+      if (shareHint) shareHint.classList.add('hidden');
+    });
   }
 
   // Sync purchase date → mortgage start date
@@ -190,9 +199,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function updateShareFromDownPayments() {
+    if (shareDirty || !coOwnerShare) return;
+    const yourDown = parseFloat(downPayment?.value) || 0;
+    const coDown = parseFloat(coOwnerDownPayment?.value) || 0;
+    const totalDown = yourDown + coDown;
+    if (totalDown > 0 && coDown > 0) {
+      const coShare = (coDown / totalDown) * 100;
+      coOwnerShare.value = coShare.toFixed(2);
+      updateYourShare();
+      if (shareHint) {
+        shareHint.textContent = '{% trans "Based on down payments" %}';
+        shareHint.classList.remove('hidden');
+      }
+    }
+  }
+
   function updateAll() {
     updatePrincipal();
     updateInsurance();
+    updateShareFromDownPayments();
   }
 
   if (purchasePrice) purchasePrice.addEventListener('input', updateAll);

@@ -26,4 +26,5 @@ urlpatterns = [
     path("<int:pk>/remove-owner/<int:ownership_id>/", views.remove_co_owner, name="remove_co_owner"),
     path("invite/<str:token>/accept/", views.accept_invitation, name="accept_invite"),
     path("<int:pk>/ownership-periods/", views.manage_ownership_periods, name="ownership_periods"),
+    path("currency/toggle/", views.toggle_currency, name="toggle_currency"),
 ]

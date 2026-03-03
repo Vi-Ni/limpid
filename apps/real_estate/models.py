@@ -24,6 +24,11 @@ class Property(models.Model):
         ("commercial", _("Commercial")),
     ]
 
+    CURRENCY_CHOICES = [
+        ("CAD", _("Canadian Dollar (CAD)")),
+        ("EUR", _("Euro (EUR)")),
+    ]
+
     name = models.CharField(_("name"), max_length=200)
     property_type = models.CharField(_("property type"), max_length=20, choices=PROPERTY_TYPE_CHOICES)
     usage = models.CharField(_("usage"), max_length=20, choices=USAGE_CHOICES)
@@ -31,6 +36,7 @@ class Property(models.Model):
     city = models.CharField(_("city"), max_length=100)
     province = models.CharField(_("province"), max_length=50, default="QC")
     postal_code = models.CharField(_("postal code"), max_length=10, blank=True)
+    currency = models.CharField(_("currency"), max_length=3, choices=CURRENCY_CHOICES, default="CAD")
 
     purchase_price = models.DecimalField(_("purchase price"), max_digits=12, decimal_places=2)
     purchase_date = models.DateField(_("purchase date"))

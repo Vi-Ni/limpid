@@ -31,3 +31,8 @@ def unread_notifications(request):
         count = PropertyNotification.objects.filter(recipient=request.user, is_read=False).count()
         return {"unread_notification_count": count}
     return {"unread_notification_count": 0}
+
+
+def currency_context(request):
+    display_currency = request.session.get("display_currency")
+    return {"display_currency": display_currency}

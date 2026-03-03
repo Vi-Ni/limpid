@@ -9,7 +9,7 @@
       {% include "components/badge.html" with label=val.get_source_display variant="neutral" %}
     </div>
     <div class="flex items-center gap-3">
-      <span class="text-sm font-semibold text-text font-mono tabular-nums">{{ val.value|cad }}</span>
+      <span class="text-sm font-semibold text-text font-mono tabular-nums">{% show_money val.value property.currency %}</span>
       <span class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
         <button hx-get="{% url 'real_estate:edit_valuation' property.pk val.pk %}"
                 hx-target="#valuation-form-container"

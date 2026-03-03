@@ -20,11 +20,11 @@
         <div class="space-y-3">
           <div class="flex items-baseline justify-between">
             <span class="text-sm text-text-muted">{% trans "Value" %}</span>
-            <span class="text-lg font-semibold text-text font-mono">{{ item.snapshot.current_valuation|cad }}</span>
+            <span class="text-lg font-semibold text-text font-mono">{% show_money item.snapshot.current_valuation item.property.currency %}</span>
           </div>
           <div class="flex items-baseline justify-between">
             <span class="text-sm text-text-muted">{% trans "Your equity" %}</span>
-            <span class="font-semibold text-primary-600 font-mono">{{ item.snapshot.your_equity|cad }}</span>
+            <span class="font-semibold text-primary-600 font-mono">{% show_money item.snapshot.your_equity item.property.currency %}</span>
           </div>
         </div>
         <div class="flex items-center gap-2 mt-5">

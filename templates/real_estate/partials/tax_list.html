@@ -18,7 +18,7 @@
         <td class="px-3 py-2">
           {% include "components/badge.html" with label=tax.get_tax_type_display variant="neutral" %}
         </td>
-        <td class="px-3 py-2 text-right text-text font-mono tabular-nums">{{ tax.amount|cad }}</td>
+        <td class="px-3 py-2 text-right text-text font-mono tabular-nums">{% show_money tax.amount property.currency %}</td>
         <td class="px-3 py-2 text-right">
           <span class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 justify-end">
             <button hx-get="{% url 'real_estate:edit_tax' property.pk tax.pk %}"

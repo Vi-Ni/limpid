@@ -120,6 +120,7 @@ class TestPropertyCreate:
                 "name": "New Property",
                 "property_type": "condo",
                 "usage": "primary",
+                "currency": "CAD",
                 "address": "789 New St",
                 "city": "Laval",
                 "province": "QC",
@@ -245,6 +246,7 @@ class TestCreateWithCoOwner:
                 "name": "Shared Condo",
                 "property_type": "condo",
                 "usage": "primary",
+                "currency": "CAD",
                 "address": "100 Shared Ave",
                 "city": "Montreal",
                 "province": "QC",
@@ -289,6 +291,7 @@ class TestCreateWithCoOwner:
                 "name": "Solo House",
                 "property_type": "house",
                 "usage": "primary",
+                "currency": "CAD",
                 "address": "200 Solo St",
                 "city": "Laval",
                 "province": "QC",
@@ -621,3 +624,46 @@ class TestNotificationViews:
         response = client.get("/real-estate/notifications/")
         assert response.status_code == 200
         assert b"Aucune notification" in response.content
+
+
+class TestToggleCurrency:
+    def test_toggle_cycles(self, client):
+        response = client.get("/real-estate/currency/toggle/?target=EUR")
+        assert response.status_code == 302
+        assert client.session.get("display_currency") == "EUR"
+
+        response = client.get("/real-estate/currency/toggle/?target=EUR")
+        assert client.session.get("display_currency") is None
+
+    def test_requires_login(self, db):
+        c = Client()
+        response = c.get("/real-estate/currency/toggle/")
+        assert response.status_code == 302
+        assert "/accounts/login" in response.url
+
+
+class TestCreateWithEurCurrency:
+    def test_create_eur_property(self, client):
+        response = client.post(
+            "/real-estate/create/",
+            {
+                "name": "Paris Flat",
+                "property_type": "condo",
+                "usage": "primary",
+                "currency": "EUR",
+                "address": "10 Rue de Rivoli",
+                "city": "Paris",
+                "province": "QC",
+                "purchase_price": "300000",
+                "purchase_date": "2023-01-01",
+                "welcome_tax_paid": "0",
+                "notary_fees_purchase": "0",
+                "current_valuation": "320000",
+                "valuation_date": "2024-01-01",
+                "municipal_assessment": "0",
+                "down_payment": "60000",
+            },
+        )
+        assert response.status_code == 302
+        prop = Property.objects.get(name="Paris Flat")
+        assert prop.currency == "EUR"

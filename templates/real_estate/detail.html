@@ -10,6 +10,14 @@
       <p class="mt-1 text-sm text-text-muted">{{ property.address }}, {{ property.city }}</p>
     </div>
     <div class="flex items-center gap-2">
+      {% other_currency property.currency as target %}
+      <a href="{% url 'real_estate:toggle_currency' %}?target={{ target }}" class="btn-ghost text-xs">
+        {% if display_currency and display_currency != property.currency %}
+          {% trans "Show in" %} {{ property.currency }}
+        {% else %}
+          {% trans "Convert to" %} {{ target }}
+        {% endif %}
+      </a>
       {% include "components/badge.html" with label=property.get_usage_display variant="neutral" %}
       {% if ownership.is_admin %}
         <a href="{% url 'real_estate:edit' property.pk %}" class="btn-ghost">{% trans "Edit" %}</a>
@@ -19,13 +27,17 @@
 
   {# Stat cards row #}
   <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-    {% include "components/stat_card.html" with label=_("Value") value=snapshot.current_valuation|cad %}
+    {% show_money snapshot.current_valuation property.currency as val_display %}
+    {% include "components/stat_card.html" with label=_("Value") value=val_display tooltip_id="value" tooltip_text=tips.value %}
+    {% show_money snapshot.equity property.currency as eq_display %}
     {% with pct=snapshot.equity_pct|floatformat:1|add:"%" %}
-    {% include "components/stat_card.html" with label=_("Equity") value=snapshot.equity|cad annotation=pct %}
+    {% include "components/stat_card.html" with label=_("Equity") value=eq_display annotation=pct tooltip_id="equity" tooltip_text=tips.equity %}
     {% endwith %}
-    {% include "components/stat_card.html" with label=_("Mortgage") value=snapshot.mortgage_balance|cad %}
+    {% show_money snapshot.mortgage_balance property.currency as mort_display %}
+    {% include "components/stat_card.html" with label=_("Mortgage") value=mort_display tooltip_id="mortgage" tooltip_text=tips.mortgage %}
+    {% show_money owner_snapshot.your_equity property.currency as share_display %}
     {% with pct=owner_snapshot.share_pct|floatformat:0|add:"%" %}
-    {% include "components/stat_card.html" with label=_("Your share") value=owner_snapshot.your_equity|cad annotation=pct %}
+    {% include "components/stat_card.html" with label=_("Your share") value=share_display annotation=pct tooltip_id="your_share" tooltip_text=tips.your_share %}
     {% endwith %}
   </div>
 
@@ -36,28 +48,34 @@
       {# Property details #}
       {% include "components/card_start.html" with title=_("Details") %}
         <div class="space-y-0">
-          {% include "components/metric_row.html" with label=_("Purchase price") value=snapshot.purchase_price|cad %}
+          {% show_money snapshot.purchase_price property.currency as pp_display %}
+          {% include "components/metric_row.html" with label=_("Purchase price") value=pp_display tooltip_id="purchase_price" tooltip_text=tips.purchase_price %}
+          {% show_money snapshot.appreciation property.currency as appr_display %}
           {% with pct=snapshot.appreciation_pct|floatformat:1 %}
-          {% include "components/metric_row.html" with label=_("Appreciation") value=snapshot.appreciation|cad annotation=pct %}
+          {% include "components/metric_row.html" with label=_("Appreciation") value=appr_display annotation=pct tooltip_id="appreciation" tooltip_text=tips.appreciation %}
           {% endwith %}
-          {% include "components/metric_row.html" with label=_("Your valuation share") value=owner_snapshot.your_valuation|cad %}
-          {% include "components/metric_row.html" with label=_("Your mortgage share") value=owner_snapshot.your_mortgage_share|cad %}
-          {% include "components/metric_row.html" with label=_("Down payment") value=owner_snapshot.your_contributions.down_payment|cad %}
-          {% include "components/metric_row.html" with label=_("Principal paid") value=owner_snapshot.your_contributions.principal_paid|cad %}
+          {% show_money owner_snapshot.your_valuation property.currency as yv_display %}
+          {% include "components/metric_row.html" with label=_("Your valuation share") value=yv_display tooltip_id="your_valuation_share" tooltip_text=tips.your_valuation_share %}
+          {% show_money owner_snapshot.your_mortgage_share property.currency as ym_display %}
+          {% include "components/metric_row.html" with label=_("Your mortgage share") value=ym_display tooltip_id="your_mortgage_share" tooltip_text=tips.your_mortgage_share %}
+          {% show_money owner_snapshot.your_contributions.down_payment property.currency as dp_display %}
+          {% include "components/metric_row.html" with label=_("Down payment") value=dp_display tooltip_id="down_payment" tooltip_text=tips.down_payment %}
+          {% show_money owner_snapshot.your_contributions.principal_paid property.currency as princ_display %}
+          {% include "components/metric_row.html" with label=_("Principal paid") value=princ_display tooltip_id="principal_paid" tooltip_text=tips.principal_paid %}
         </div>
       {% include "components/card_end.html" %}
 
       {# Charts #}
       <div class="grid gap-6 sm:grid-cols-3">
-        {% include "components/card_start.html" with title=_("Equity Breakdown") %}
+        {% include "components/card_start.html" with title=_("Equity Breakdown") tooltip_id="equity_breakdown" tooltip_text=tips.equity_breakdown %}
           <canvas data-chart="allocation" data-chart-data='{{ equity_chart }}'></canvas>
         {% include "components/card_end.html" %}
 
-        {% include "components/card_start.html" with title=_("Payment Breakdown") %}
+        {% include "components/card_start.html" with title=_("Payment Breakdown") tooltip_id="payment_breakdown" tooltip_text=tips.payment_breakdown %}
           <canvas data-chart="allocation" data-chart-data='{{ payment_chart }}'></canvas>
         {% include "components/card_end.html" %}
 
-        {% include "components/card_start.html" with title=_("Expenses by Type") %}
+        {% include "components/card_start.html" with title=_("Expenses by Type") tooltip_id="expenses_by_type" tooltip_text=tips.expenses_by_type %}
           <canvas data-chart="allocation" data-chart-data='{{ expense_chart }}'></canvas>
         {% include "components/card_end.html" %}
       </div>
@@ -123,7 +141,7 @@
     {# Right col: ownership + mortgage + taxes #}
     <div class="space-y-6">
       {# Ownership #}
-      {% include "components/card_start.html" with title=_("Ownership") %}
+      {% include "components/card_start.html" with title=_("Ownership") tooltip_id="ownership" tooltip_text=tips.ownership %}
         <div class="space-y-3">
           {% for own, share in shares.items %}
           <div class="flex items-center justify-between group">
@@ -162,13 +180,15 @@
       {% if mortgage %}
       {% include "components/card_start.html" with title=_("Mortgage") %}
         <div class="space-y-0">
-          {% include "components/metric_row.html" with label=_("Lender") value=mortgage.lender %}
+          {% include "components/metric_row.html" with label=_("Lender") value=mortgage.lender tooltip_id="lender" tooltip_text=tips.lender %}
           {% with rate=mortgage.annual_rate|floatformat:2 rtype=mortgage.get_rate_type_display %}
-          {% include "components/metric_row.html" with label=_("Rate") value=rate annotation=rtype %}
+          {% include "components/metric_row.html" with label=_("Rate") value=rate annotation=rtype tooltip_id="rate" tooltip_text=tips.rate %}
           {% endwith %}
-          {% include "components/metric_row.html" with label=_("Monthly payment") value=snapshot.monthly_payment|cad %}
-          {% include "components/metric_row.html" with label=_("Remaining balance") value=snapshot.mortgage_balance|cad %}
-          {% include "components/metric_row.html" with label=_("Amortization") value=mortgage.amortization_years annotation=_("years") %}
+          {% show_money snapshot.monthly_payment property.currency as mp_display %}
+          {% include "components/metric_row.html" with label=_("Monthly payment") value=mp_display tooltip_id="monthly_payment" tooltip_text=tips.monthly_payment %}
+          {% show_money snapshot.mortgage_balance property.currency as rb_display %}
+          {% include "components/metric_row.html" with label=_("Remaining balance") value=rb_display tooltip_id="remaining_balance" tooltip_text=tips.remaining_balance %}
+          {% include "components/metric_row.html" with label=_("Amortization") value=mortgage.amortization_years annotation=_("years") tooltip_id="amortization" tooltip_text=tips.amortization %}
         </div>
         <div class="mt-4 pt-4 border-t border-border">
           <a href="{% url 'real_estate:amortization' property.pk mortgage.pk %}" class="text-sm text-primary-600 hover:text-primary-700">

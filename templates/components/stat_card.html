@@ -1,8 +1,13 @@
 {% load i18n %}
 <div class="rounded-2xl border border-border bg-bg-card p-5 sm:p-6">
-  <p class="text-[0.8125rem] font-medium uppercase tracking-wide text-text-muted">{{ label }}</p>
-  <p class="mt-2 text-[1.75rem] font-semibold tracking-tight text-text font-mono">{{ value }}</p>
+  <div class="text-[0.8125rem] font-medium uppercase tracking-wide text-text-muted">
+    {{ label }}
+    {% if tooltip_id %}
+      {% include "components/tooltip.html" with id=tooltip_id text=tooltip_text %}
+    {% endif %}
+  </div>
+  <div class="mt-2 text-[1.75rem] font-semibold tracking-tight text-text font-mono">{{ value }}</div>
   {% if annotation %}
-  <p class="mt-1 text-sm text-text-faint">{{ annotation }}</p>
+  <div class="mt-1 text-sm text-text-faint">{{ annotation }}</div>
   {% endif %}
 </div>

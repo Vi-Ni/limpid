@@ -5,10 +5,7 @@ from apps.accounts.forms import TAILWIND_SELECT_CLASS
 
 from .models import Mortgage, Property, PropertyExpense, PropertyInvitation, PropertyTax, PropertyValuation
 
-TAILWIND_INPUT_CLASS = (
-    "w-full rounded-lg border border-border px-3 py-2 text-sm"
-    " shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-)
+TAILWIND_INPUT_CLASS = "input"
 
 TAILWIND_CHECKBOX_CLASS = "rounded border-border text-primary-600 focus:ring-primary-500"
 
@@ -89,6 +86,7 @@ class PropertyForm(forms.ModelForm):
             "name",
             "property_type",
             "usage",
+            "currency",
             "address",
             "city",
             "province",
@@ -105,6 +103,7 @@ class PropertyForm(forms.ModelForm):
             "name": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "property_type": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
             "usage": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "currency": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
             "address": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "city": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "province": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),

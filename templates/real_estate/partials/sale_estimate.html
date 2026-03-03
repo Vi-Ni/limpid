@@ -1,22 +1,32 @@
 {% load i18n real_estate_filters %}
 
 <div class="space-y-2">
-  {% include "components/metric_row.html" with label=_("Sale price") value=estimate.sale_price|cad %}
-  {% include "components/metric_row.html" with label=_("Mortgage balance") value=estimate.mortgage_balance|cad %}
-  {% include "components/metric_row.html" with label=_("Gross equity") value=estimate.gross_equity|cad %}
+  {% show_money estimate.sale_price property.currency as sp_display %}
+  {% include "components/metric_row.html" with label=_("Sale price") value=sp_display tooltip_id="sale_price" tooltip_text=tips.sale_price %}
+  {% show_money estimate.mortgage_balance property.currency as mb_display %}
+  {% include "components/metric_row.html" with label=_("Mortgage balance") value=mb_display tooltip_id="mortgage_balance" tooltip_text=tips.mortgage_balance %}
+  {% show_money estimate.gross_equity property.currency as ge_display %}
+  {% include "components/metric_row.html" with label=_("Gross equity") value=ge_display tooltip_id="gross_equity" tooltip_text=tips.gross_equity %}
   <div class="border-t border-border pt-2 mt-2">
-    {% include "components/metric_row.html" with label=_("Agent commission (incl. tax)") value=estimate.agent_commission|cad %}
-    {% include "components/metric_row.html" with label=_("Notary fees") value=estimate.notary_fees|cad %}
+    {% show_money estimate.agent_commission property.currency as ac_display %}
+    {% include "components/metric_row.html" with label=_("Agent commission (incl. tax)") value=ac_display tooltip_id="agent_commission" tooltip_text=tips.agent_commission %}
+    {% show_money estimate.notary_fees property.currency as nf_display %}
+    {% include "components/metric_row.html" with label=_("Notary fees") value=nf_display tooltip_id="notary_fees" tooltip_text=tips.notary_fees %}
     {% if estimate.capital_gains_tax > 0 %}
-    {% include "components/metric_row.html" with label=_("Capital gains tax (est.)") value=estimate.capital_gains_tax|cad %}
+    {% show_money estimate.capital_gains_tax property.currency as cgt_display %}
+    {% include "components/metric_row.html" with label=_("Capital gains tax (est.)") value=cgt_display tooltip_id="capital_gains_tax" tooltip_text=tips.capital_gains_tax %}
     {% endif %}
-    {% include "components/metric_row.html" with label=_("Total costs") value=estimate.total_costs|cad %}
+    {% show_money estimate.total_costs property.currency as tc_display %}
+    {% include "components/metric_row.html" with label=_("Total costs") value=tc_display tooltip_id="total_costs" tooltip_text=tips.total_costs %}
   </div>
   <div class="border-t border-border pt-2 mt-2">
     <div class="flex items-baseline justify-between">
-      <span class="text-sm font-semibold text-text">{% trans "Net proceeds" %}</span>
-      <span class="text-lg font-semibold font-mono tabular-nums {% if estimate.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}"
-        {{ estimate.net_proceeds|cad }}
+      <div class="text-sm font-semibold text-text">
+        {% trans "Net proceeds" %}
+        {% include "components/tooltip.html" with id="net_proceeds" text=tips.net_proceeds %}
+      </div>
+      <span class="text-lg font-semibold font-mono tabular-nums {% if estimate.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}">
+        {% show_money estimate.net_proceeds property.currency %}
       </span>
     </div>
   </div>
@@ -28,7 +38,7 @@
     <div class="flex items-center justify-between py-1">
       <span class="text-sm text-text-muted">{{ owner.user.get_full_name|default:owner.user.email }} ({{ owner.share_pct|floatformat:0 }}%)</span>
       <span class="text-sm font-semibold {% if owner.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}">
-        {{ owner.net_proceeds|cad }}
+        {% show_money owner.net_proceeds property.currency %}
       </span>
     </div>
     {% endfor %}

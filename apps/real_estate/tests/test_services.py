@@ -344,3 +344,82 @@ class TestNotifyCoOwners:
     def test_no_co_owners(self, prop, user):
         notify_co_owners(prop, user, "expense_added", "added expense")
         assert PropertyNotification.objects.count() == 0
+
+
+# ── Currency filters & exchange rates ────────────────────────
+
+
+class TestMoneyFilter:
+    def test_cad_format(self):
+        from apps.real_estate.templatetags.real_estate_filters import money
+
+        assert money(Decimal("1234"), "CAD") == "$1,234"
+        assert money(Decimal("1234.56"), "CAD") == "$1,234.56"
+
+    def test_eur_format(self):
+        from apps.real_estate.templatetags.real_estate_filters import money
+
+        assert money(Decimal("1234"), "EUR") == "\u20ac1,234"
+        assert money(Decimal("1234.56"), "EUR") == "\u20ac1,234.56"
+
+    def test_none_value(self):
+        from apps.real_estate.templatetags.real_estate_filters import money
+
+        assert money(None) == ""
+
+    def test_cad_backward_compat(self):
+        from apps.real_estate.templatetags.real_estate_filters import cad
+
+        assert cad(Decimal("500000")) == "$500,000"
+
+
+class TestExchangeRates:
+    def test_convert_same_currency(self):
+        from apps.real_estate.exchange_rates import convert
+
+        assert convert(Decimal("100"), "CAD", "CAD") == Decimal("100")
+
+    def test_convert_uses_fallback(self):
+        from unittest.mock import patch
+
+        from apps.real_estate.exchange_rates import convert
+
+        with patch("apps.real_estate.exchange_rates._fetch_rates", return_value=None):
+            result = convert(Decimal("100"), "CAD", "EUR")
+            assert result is not None
+            assert result == Decimal("67.00")
+
+    def test_convert_to_filter(self):
+        from apps.real_estate.templatetags.real_estate_filters import convert_to
+
+        with __import__("unittest.mock", fromlist=["patch"]).patch(
+            "apps.real_estate.exchange_rates.get_exchange_rates",
+            return_value={
+                ("CAD", "EUR"): Decimal("0.67"),
+                ("EUR", "CAD"): Decimal("1.49"),
+                ("CAD", "CAD"): Decimal("1"),
+                ("EUR", "EUR"): Decimal("1"),
+            },
+        ):
+            result = convert_to(Decimal("100"), "CAD,EUR")
+            assert "\u20ac" in result
+
+
+class TestPropertyCurrency:
+    def test_property_default_cad(self, prop):
+        assert prop.currency == "CAD"
+
+    def test_create_eur_property(self, user):
+        p = Property.objects.create(
+            name="Paris Flat",
+            property_type="condo",
+            usage="primary",
+            currency="EUR",
+            address="10 Rue de Rivoli",
+            city="Paris",
+            purchase_price=Decimal("300000"),
+            purchase_date=date(2023, 1, 1),
+            current_valuation=Decimal("320000"),
+            valuation_date=date(2024, 1, 1),
+        )
+        assert p.currency == "EUR"

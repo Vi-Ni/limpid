@@ -31,6 +31,9 @@ from .services import (
     get_total_paid,
     notify_co_owners,
 )
+from .tooltips import TERM_TOOLTIPS
+
+OTHER_CURRENCY = {"CAD": "EUR", "EUR": "CAD"}
 
 
 @login_required
@@ -40,7 +43,7 @@ def property_list(request):
     for prop in properties:
         snapshot = get_owner_snapshot(prop, request.user)
         summaries.append({"property": prop, "snapshot": snapshot})
-    return render(request, "real_estate/list.html", {"summaries": summaries})
+    return render(request, "real_estate/list.html", {"summaries": summaries, "tips": TERM_TOOLTIPS})
 
 
 @login_required
@@ -161,6 +164,7 @@ def property_detail(request, pk):
             "equity_chart": equity_chart,
             "payment_chart": payment_chart,
             "expense_chart": expense_chart,
+            "tips": TERM_TOOLTIPS,
         },
     )
 
@@ -266,6 +270,7 @@ def amortization_view(request, pk, mortgage_id):
             "mortgage": mortgage,
             "schedule": schedule,
             "paid": paid,
+            "tips": TERM_TOOLTIPS,
         },
     )
 
@@ -314,7 +319,7 @@ def sale_simulator(request, pk):
     except (InvalidOperation, TypeError):
         commission = Decimal("5")
     estimate = estimate_sale_proceeds(prop, sale_price=sale_price, agent_commission_pct=commission)
-    return render(request, "real_estate/partials/sale_estimate.html", {"property": prop, "estimate": estimate})
+    return render(request, "real_estate/partials/sale_estimate.html", {"property": prop, "estimate": estimate, "tips": TERM_TOOLTIPS})
 
 
 @login_required
@@ -618,3 +623,14 @@ def remove_co_owner(request, pk, ownership_id):
         "real_estate/confirm_remove_owner.html",
         {"property": prop, "target_ownership": target_ownership},
     )
+
+
+@login_required
+def toggle_currency(request):
+    current = request.session.get("display_currency")
+    target = request.GET.get("target")
+    if current and current == target:
+        request.session["display_currency"] = None
+    else:
+        request.session["display_currency"] = target
+    return redirect(request.META.get("HTTP_REFERER", "/real-estate/"))

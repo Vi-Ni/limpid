@@ -1,0 +1,118 @@
+from django.utils.translation import gettext_lazy as _
+
+TERM_TOOLTIPS = {
+    "value": _(
+        "The estimated current market value of the entire property. "
+        "This is what you'd expect to sell it for today."
+    ),
+    "equity": _(
+        "The portion of the property you truly own — the value minus what you still owe on the mortgage. "
+        "Think of it as your 'net worth' in this property."
+    ),
+    "mortgage": _(
+        "The remaining amount you owe to the bank. "
+        "This decreases with each payment as you pay down the principal."
+    ),
+    "your_share": _(
+        "Your personal portion of the equity, based on your ownership percentage. "
+        "If you own 50% of a property with $200k equity, your share is $100k."
+    ),
+    "purchase_price": _(
+        "The total price you paid for the property when you bought it, before taxes and closing costs."
+    ),
+    "appreciation": _(
+        "How much the property value has increased (or decreased) since you bought it. "
+        "Calculated as: current value minus purchase price."
+    ),
+    "your_valuation_share": _(
+        "Your portion of the total property value, based on your ownership percentage."
+    ),
+    "your_mortgage_share": _(
+        "Your portion of the remaining mortgage debt, based on your ownership percentage."
+    ),
+    "down_payment": _(
+        "The cash you contributed upfront when purchasing the property. "
+        "A larger down payment means less mortgage debt and lower insurance costs."
+    ),
+    "principal_paid": _(
+        "The total amount of mortgage principal you've paid off so far. "
+        "This is the portion of your payments that actually reduces your debt."
+    ),
+    "monthly_payment": _(
+        "Your regular mortgage payment amount, including both principal and interest. "
+        "Principal reduces your debt; interest is the cost of borrowing."
+    ),
+    "remaining_balance": _(
+        "How much you still owe on the mortgage. "
+        "This decreases with each payment as you chip away at the principal."
+    ),
+    "amortization": _(
+        "The total number of years to fully pay off the mortgage. "
+        "In Canada, 25 years is the most common amortization period."
+    ),
+    "rate": _(
+        "The annual interest rate on your mortgage. "
+        "Fixed means it stays the same for your term; variable means it can change with the market."
+    ),
+    "sale_price": _(
+        "The assumed selling price. By default, this is your current property valuation. "
+        "Adjust it to simulate different scenarios."
+    ),
+    "mortgage_balance": _(
+        "The remaining amount owed on your mortgage at the time of sale."
+    ),
+    "gross_equity": _(
+        "Sale price minus the remaining mortgage. This is what you'd have before paying selling costs."
+    ),
+    "agent_commission": _(
+        "The real estate agent's fee, typically 4-6% of the sale price in Canada. "
+        "This includes applicable sales taxes (GST/QST)."
+    ),
+    "notary_fees": _(
+        "Legal fees for the sale transaction, paid to the notary who handles the paperwork."
+    ),
+    "capital_gains_tax": _(
+        "If this isn't your primary residence, you may owe tax on the profit. "
+        "In Canada, 50% of the capital gain is taxable at your marginal rate."
+    ),
+    "total_costs": _(
+        "All costs associated with selling: agent fees, notary fees, and taxes."
+    ),
+    "net_proceeds": _(
+        "What you actually take home after selling — the sale price minus the mortgage and all selling costs. "
+        "This is your real profit from the sale."
+    ),
+    "equity_breakdown": _(
+        "A visual split of how much of the property value is yours (equity) vs. still owed to the bank."
+    ),
+    "payment_breakdown": _(
+        "How your mortgage payments are split between principal (paying down debt) and interest (cost of borrowing)."
+    ),
+    "expenses_by_type": _(
+        "A breakdown of all expenses you've recorded by category — renovations, maintenance, insurance, etc."
+    ),
+    "ownership": _(
+        "Who owns this property and their respective share percentages. "
+        "Shares can change when co-owners are added or removed."
+    ),
+    "lender": _(
+        "The bank or financial institution that provided your mortgage."
+    ),
+    "your_equity": _(
+        "Your personal equity — how much of the property's net value belongs to you. "
+        "Calculated as: total equity multiplied by your ownership percentage."
+    ),
+    "total_interest_paid": _(
+        "The total amount of interest you've paid since the start of your mortgage. "
+        "This is the cost of borrowing — it doesn't reduce your debt."
+    ),
+    "total_paid": _(
+        "The total amount you've paid to date, combining both principal and interest portions."
+    ),
+    "original_principal": _(
+        "The total amount originally borrowed, including any mortgage insurance premium added to the loan."
+    ),
+    "annual_rate": _(
+        "The yearly interest rate on your mortgage, as stated in your contract."
+    ),
+}

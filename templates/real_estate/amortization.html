@@ -16,30 +16,48 @@
   {% include "components/card_start.html" with title=_("Summary") %}
     <div class="grid gap-4 sm:grid-cols-3">
       <div>
-        <p class="text-xs text-text-muted">{% trans "Monthly payment" %}</p>
-        <p class="text-lg font-semibold text-text font-mono tabular-nums">{{ mortgage.monthly_payment|cad }}</p>
+        <div class="text-xs text-text-muted">
+          {% trans "Monthly payment" %}
+          {% include "components/tooltip.html" with id="amort_monthly" text=tips.monthly_payment %}
+        </div>
+        <div class="text-lg font-semibold text-text font-mono tabular-nums">{% show_money mortgage.monthly_payment property.currency %}</div>
       </div>
       <div>
-        <p class="text-xs text-text-muted">{% trans "Total interest paid" %}</p>
-        <p class="text-lg font-semibold text-text font-mono tabular-nums">{{ paid.total_interest_paid|cad }}</p>
+        <div class="text-xs text-text-muted">
+          {% trans "Total interest paid" %}
+          {% include "components/tooltip.html" with id="amort_interest" text=tips.total_interest_paid %}
+        </div>
+        <div class="text-lg font-semibold text-text font-mono tabular-nums">{% show_money paid.total_interest_paid property.currency %}</div>
       </div>
       <div>
-        <p class="text-xs text-text-muted">{% trans "Total paid to date" %}</p>
-        <p class="text-lg font-semibold text-text font-mono tabular-nums">{{ paid.total_paid|cad }}</p>
+        <div class="text-xs text-text-muted">
+          {% trans "Total paid to date" %}
+          {% include "components/tooltip.html" with id="amort_total_paid" text=tips.total_paid %}
+        </div>
+        <div class="text-lg font-semibold text-text font-mono tabular-nums">{% show_money paid.total_paid property.currency %}</div>
       </div>
     </div>
     <div class="mt-4 grid gap-4 sm:grid-cols-3">
       <div>
-        <p class="text-xs text-text-muted">{% trans "Original principal" %}</p>
-        <p class="text-sm font-medium text-text">{{ mortgage.effective_principal|cad }}</p>
+        <div class="text-xs text-text-muted">
+          {% trans "Original principal" %}
+          {% include "components/tooltip.html" with id="amort_principal" text=tips.original_principal %}
+        </div>
+        <div class="text-sm font-medium text-text">{% show_money mortgage.effective_principal property.currency %}</div>
       </div>
       <div>
-        <p class="text-xs text-text-muted">{% trans "Annual rate" %}</p>
-        <p class="text-sm font-medium text-text">{{ mortgage.annual_rate|floatformat:3 }}% ({{ mortgage.get_rate_type_display }})</p>
+        <div class="text-xs text-text-muted">
+          {% trans "Annual rate" %}
+          {% include "components/tooltip.html" with id="amort_rate" text=tips.annual_rate %}
+        </div>
+        <div class="text-sm font-medium text-text">{{ mortgage.annual_rate|floatformat:3 }}% ({{ mortgage.get_rate_type_display }})</div>
       </div>
       <div>
-        <p class="text-xs text-text-muted">{% trans "Amortization" %}</p>
-        <p class="text-sm font-medium text-text">{{ mortgage.amortization_years }} {% trans "years" %}</p>
+        <div class="text-xs text-text-muted">
+          {% trans "Amortization" %}
+          {% include "components/tooltip.html" with id="amort_years" text=tips.amortization %}
+        </div>
+        <div class="text-sm font-medium text-text">{{ mortgage.amortization_years }} {% trans "years" %}</div>
       </div>
     </div>
   {% include "components/card_end.html" %}
@@ -62,10 +80,10 @@
           <tr class="border-b border-border/60 {% if entry.is_current %}bg-primary-50 font-semibold{% endif %}" {% if entry.is_current %}id="current-payment"{% endif %}>
             <td class="px-3 py-2 text-text-muted">{{ entry.payment_number }}</td>
             <td class="px-3 py-2 text-text-muted">{{ entry.date }}</td>
-            <td class="px-3 py-2 text-right font-mono tabular-nums text-text">{{ entry.total_payment|cad }}</td>
-            <td class="px-3 py-2 text-right font-mono tabular-nums text-success-600">{{ entry.principal|cad }}</td>
-            <td class="px-3 py-2 text-right font-mono tabular-nums text-danger-600">{{ entry.interest|cad }}</td>
-            <td class="px-3 py-2 text-right font-mono tabular-nums font-medium text-text">{{ entry.balance|cad }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-text">{% show_money entry.total_payment property.currency %}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-success-600">{% show_money entry.principal property.currency %}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-danger-600">{% show_money entry.interest property.currency %}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums font-medium text-text">{% show_money entry.balance property.currency %}</td>
           </tr>
           {% endfor %}
         </tbody>

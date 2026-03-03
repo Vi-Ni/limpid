@@ -66,6 +66,7 @@ TEMPLATES = [
                 "django.template.context_processors.i18n",
                 "config.context_processors.nav_current",
                 "config.context_processors.unread_notifications",
+                "config.context_processors.currency_context",
             ],
         },
     },
