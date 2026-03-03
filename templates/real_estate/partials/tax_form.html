@@ -4,13 +4,11 @@
       hx-target="#tax-list"
       hx-swap="innerHTML"
       class="mt-4 space-y-3">
-  {% csrf_token %}
   <div class="grid gap-3 sm:grid-cols-3">
     {% for field in form %}
     <div>
-      <label for="{{ field.id_for_label }}" class="block text-xs text-text-muted mb-1">{{ field.label }}</label>
+      <label for="{{ field.id_for_label }}" class="mb-1 block text-sm font-medium text-text">{{ field.label }}</label>
       {{ field }}
-      {% if field.errors %}<p class="mt-1 text-xs text-danger-600">{{ field.errors.0 }}</p>{% endif %}
     </div>
     {% endfor %}
   </div>
@@ -18,12 +16,12 @@
   <p class="text-sm text-danger-600">{{ form.non_field_errors.0 }}</p>
   {% endif %}
   <div class="flex gap-2">
-    <button type="submit" class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
-      {% if editing %}{% trans "Save" %}{% else %}{% trans "Save" %}{% endif %}
+    <button type="submit" class="btn-primary">
+      {% trans "Save" %}
     </button>
     <button type="button"
             onclick="this.closest('form').remove()"
-            class="rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:bg-gray-50">
+            class="btn-ghost">
       {% trans "Cancel" %}
     </button>
   </div>

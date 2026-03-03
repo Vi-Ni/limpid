@@ -3,32 +3,41 @@
 @source "../../../apps/**/templates/**/*.html";
 
 @theme {
-  /* Primary: indigo */
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
-  --color-primary-800: #3730a3;
-  --color-primary-900: #312e81;
+  --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
 
-  /* Background */
-  --color-bg-base: #f8fafc;
+  /* Primary: custom indigo — slightly warmer, less electric */
+  --color-primary-50: #f0f0ff;
+  --color-primary-100: #e0e1ff;
+  --color-primary-200: #c4c5fe;
+  --color-primary-300: #a3a4fc;
+  --color-primary-400: #8182f7;
+  --color-primary-500: #6364ed;
+  --color-primary-600: #4e4ddb;
+  --color-primary-700: #4240ba;
+  --color-primary-800: #373596;
+  --color-primary-900: #2e2c78;
+
+  /* Backgrounds — warm, not clinical */
+  --color-bg-base: #fafaf9;
   --color-bg-card: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #f5f5f4;
+  --color-bg-hover: #f5f5f4;
 
-  /* Text */
-  --color-text: #1e293b;
-  --color-text-muted: #64748b;
+  /* Text — warm neutrals */
+  --color-text: #1c1917;
+  --color-text-muted: #78716c;
+  --color-text-faint: #a8a29e;
 
   /* Border */
-  --color-border: #e2e8f0;
+  --color-border: #e7e5e4;
+  --color-border-strong: #d6d3d1;
 
   /* Semantic: success */
   --color-success-50: #f0fdf4;
   --color-success-100: #dcfce7;
+  --color-success-400: #4ade80;
   --color-success-500: #22c55e;
   --color-success-600: #16a34a;
   --color-success-700: #15803d;
@@ -36,6 +45,7 @@
   /* Semantic: warning */
   --color-warning-50: #fffbeb;
   --color-warning-100: #fef3c7;
+  --color-warning-400: #fbbf24;
   --color-warning-500: #f59e0b;
   --color-warning-600: #d97706;
   --color-warning-700: #b45309;
@@ -43,6 +53,7 @@
   /* Semantic: danger */
   --color-danger-50: #fef2f2;
   --color-danger-100: #fee2e2;
+  --color-danger-400: #f87171;
   --color-danger-500: #ef4444;
   --color-danger-600: #dc2626;
   --color-danger-700: #b91c1c;
@@ -50,10 +61,59 @@
 
 @layer base {
   body {
-    font-size: 15px;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
     line-height: 1.6;
+    font-weight: 400;
     color: var(--color-text);
     background-color: var(--color-bg-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.025em;
+    font-weight: 600;
+  }
+
+  .font-mono, [data-value], td:last-child {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  a, button, input, select, textarea {
+    transition: color 150ms ease, background-color 150ms ease,
+                border-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  /* HTMX swap animations */
+  .htmx-added {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .htmx-settling {
+    opacity: 0;
+  }
+
+  /* Staggered page entrance */
+  .animate-enter > * {
+    animation: fadeSlideUp 300ms ease-out both;
+  }
+  .animate-enter > *:nth-child(1) { animation-delay: 0ms; }
+  .animate-enter > *:nth-child(2) { animation-delay: 50ms; }
+  .animate-enter > *:nth-child(3) { animation-delay: 100ms; }
+  .animate-enter > *:nth-child(4) { animation-delay: 150ms; }
+  .animate-enter > *:nth-child(5) { animation-delay: 200ms; }
+  .animate-enter > *:nth-child(6) { animation-delay: 250ms; }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 }
 
@@ -67,6 +127,91 @@
   @media (min-width: 640px) {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+  }
+}
+
+@utility safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-medium text-white;
+    transition: all 150ms ease;
+  }
+  .btn-primary:hover {
+    @apply bg-primary-700;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px -2px rgb(78 77 219 / 0.3);
+  }
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  .btn-primary:focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium text-text-muted;
+    transition: all 150ms ease;
+  }
+  .btn-ghost:hover {
+    @apply bg-bg-hover text-text;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center rounded-xl bg-danger-600 px-4 py-2.5 text-sm font-medium text-white;
+    transition: all 150ms ease;
+  }
+  .btn-danger:hover {
+    @apply bg-danger-700;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px -2px rgb(220 38 38 / 0.3);
+  }
+  .btn-danger:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full rounded-xl border border-border bg-bg-card px-3.5 py-2.5 text-sm text-text
+           placeholder:text-text-faint
+           focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:outline-none;
+    transition: all 150ms ease;
+  }
+  .input-error {
+    @apply border-danger-400 focus:border-danger-400 focus:ring-danger-100;
+  }
+
+  /* Interactive cards */
+  .card-interactive {
+    transition: all 200ms ease;
+  }
+  .card-interactive:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: 0 4px 16px -4px rgb(0 0 0 / 0.06);
+    transform: translateY(-2px);
+  }
+
+  /* Notification badge pulse */
+  .badge-notification {
+    animation: pulse-subtle 2s ease-in-out infinite;
+  }
+  @keyframes pulse-subtle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Toast entrance */
+  .animate-toast-in {
+    animation: toastIn 300ms ease-out;
+  }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 }
 
@@ -127,7 +272,7 @@
   .prose code {
     padding: 0.125rem 0.375rem;
     border-radius: 0.25rem;
-    background-color: var(--color-bg-base);
+    background-color: var(--color-bg-subtle);
     font-size: 0.875em;
     color: var(--color-primary-700);
   }

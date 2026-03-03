@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-<div class="container-limpid py-6">
+<div class="container-limpid py-6 animate-enter">
   <div class="mx-auto max-w-md">
     {% include "components/card_start.html" with title=_("Remove Co-owner") variant="warning" %}
       <p class="text-sm text-text mb-4">
@@ -16,12 +16,10 @@
       <form method="post">
         {% csrf_token %}
         <div class="flex gap-3">
-          <button type="submit"
-                  class="rounded-lg bg-danger-600 px-4 py-2 text-sm font-medium text-white hover:bg-danger-700">
+          <button type="submit" class="btn-danger">
             {% trans "Remove" %}
           </button>
-          <a href="{% url 'real_estate:detail' property.pk %}"
-             class="rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:bg-gray-50">
+          <a href="{% url 'real_estate:detail' property.pk %}" class="btn-ghost">
             {% trans "Cancel" %}
           </a>
         </div>

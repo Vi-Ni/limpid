@@ -4,16 +4,16 @@
     {% csrf_token %}
     <input type="hidden" name="language" value="fr">
     <input type="hidden" name="next" value="{{ request.path }}">
-    <button type="submit" class="px-1.5 py-0.5 rounded {% if LANGUAGE_CODE == 'fr' %}font-bold text-primary-600{% else %}text-text-muted hover:text-text{% endif %}">
+    <button type="submit" class="px-1.5 py-0.5 rounded transition-colors {% if LANGUAGE_CODE == 'fr' %}font-bold text-primary-600{% else %}text-text-muted hover:text-text{% endif %}">
       FR
     </button>
   </form>
-  <span class="text-border">|</span>
+  <span class="text-text-faint">|</span>
   <form method="post" action="{% url 'set_language' %}" class="inline">
     {% csrf_token %}
     <input type="hidden" name="language" value="en">
     <input type="hidden" name="next" value="{{ request.path }}">
-    <button type="submit" class="px-1.5 py-0.5 rounded {% if LANGUAGE_CODE == 'en' %}font-bold text-primary-600{% else %}text-text-muted hover:text-text{% endif %}">
+    <button type="submit" class="px-1.5 py-0.5 rounded transition-colors {% if LANGUAGE_CODE == 'en' %}font-bold text-primary-600{% else %}text-text-muted hover:text-text{% endif %}">
       EN
     </button>
   </form>

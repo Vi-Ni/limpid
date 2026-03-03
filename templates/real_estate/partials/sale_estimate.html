@@ -15,7 +15,7 @@
   <div class="border-t border-border pt-2 mt-2">
     <div class="flex items-baseline justify-between">
       <span class="text-sm font-semibold text-text">{% trans "Net proceeds" %}</span>
-      <span class="text-lg font-bold {% if estimate.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}">
+      <span class="text-lg font-semibold font-mono tabular-nums {% if estimate.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}"
         {{ estimate.net_proceeds|cad }}
       </span>
     </div>

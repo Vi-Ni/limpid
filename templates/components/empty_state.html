@@ -1,0 +1,13 @@
+{% load i18n %}
+<div class="flex flex-col items-center py-16 text-center">
+  {% if icon %}
+  <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-bg-subtle text-text-faint">
+    {{ icon }}
+  </div>
+  {% endif %}
+  <h3 class="mt-4 text-sm font-semibold text-text">{{ title }}</h3>
+  <p class="mt-1 max-w-sm text-sm text-text-muted">{{ description }}</p>
+  {% if action_url %}
+  <a href="{{ action_url }}" class="btn-primary mt-6">{{ action_label }}</a>
+  {% endif %}
+</div>

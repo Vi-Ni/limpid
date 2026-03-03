@@ -14,13 +14,13 @@
     </thead>
     <tbody>
       {% for expense in expenses %}
-      <tr class="border-b border-gray-100 group">
-        <td class="px-3 py-2 text-text-muted">{{ expense.date }}</td>
+      <tr class="border-b border-border/60 group">
+        <td class="px-3 py-2 text-text-faint">{{ expense.date }}</td>
         <td class="px-3 py-2">
           {% include "components/badge.html" with label=expense.get_expense_type_display variant="neutral" %}
         </td>
         <td class="px-3 py-2 text-text">{{ expense.description }}</td>
-        <td class="px-3 py-2 text-right text-text">{{ expense.amount|cad }}</td>
+        <td class="px-3 py-2 text-right text-text font-mono tabular-nums">{{ expense.amount|cad }}</td>
         <td class="px-3 py-2 text-right">
           <span class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 justify-end">
             <button hx-get="{% url 'real_estate:edit_expense' property.pk expense.pk %}"
@@ -44,5 +44,5 @@
   </table>
 </div>
 {% else %}
-<p class="text-sm text-text-muted py-2">{% trans "No expenses recorded." %}</p>
+<p class="text-sm text-text-faint">{% trans "No expenses recorded." %}</p>
 {% endif %}

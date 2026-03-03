@@ -4,26 +4,28 @@
 {% block title %}{% trans "Logout" %} — Limpid{% endblock %}
 
 {% block content %}
-<div class="mx-auto max-w-md">
-  {% include "components/card_start.html" with title="" %}
-    <div class="text-center">
-      <h1 class="mb-4 text-2xl font-bold text-text">{% trans "Logout" %}</h1>
-      <p class="mb-6 text-text-muted">{% trans "Are you sure you want to log out?" %}</p>
-
-      <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        <button type="submit"
-                class="w-full rounded-lg bg-danger-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-danger-700 focus:outline-none focus:ring-2 focus:ring-danger-500 focus:ring-offset-2">
-          {% trans "Logout" %}
-        </button>
-      </form>
-
-      <p class="mt-4">
-        <a href="{% url 'home' %}" class="text-sm font-medium text-primary-600 hover:text-primary-500">
-          {% trans "Back to home" %}
-        </a>
-      </p>
+<div class="flex min-h-[80vh] items-center justify-center animate-enter">
+  <div class="w-full max-w-sm text-center">
+    <div class="mb-8 flex justify-center">
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600">
+        <span class="text-lg font-bold text-white">L</span>
+      </div>
     </div>
-  {% include "components/card_end.html" %}
+    <h1 class="text-xl font-semibold tracking-tight text-text">{% trans "Logout" %}</h1>
+    <p class="mt-1 text-sm text-text-muted">{% trans "Are you sure you want to log out?" %}</p>
+
+    <form method="post" action="{% url 'account_logout' %}" class="mt-8">
+      {% csrf_token %}
+      <button type="submit" class="btn-danger w-full">
+        {% trans "Logout" %}
+      </button>
+    </form>
+
+    <p class="mt-4">
+      <a href="{% url 'home' %}" class="text-sm font-medium text-text-muted hover:text-text transition-colors">
+        {% trans "Back to home" %}
+      </a>
+    </p>
+  </div>
 </div>
 {% endblock %}

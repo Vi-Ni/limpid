@@ -1,7 +1,7 @@
-<div class="flex items-baseline justify-between py-2">
+<div class="flex items-baseline justify-between py-2.5 border-b border-border/60 last:border-0">
   <dt class="text-sm text-text-muted">{{ label }}</dt>
-  <dd class="text-sm font-medium text-text">
+  <dd class="text-sm font-medium text-text font-mono tabular-nums">
     {{ value }}
-    {% if annotation %}<span class="ml-1 text-xs text-text-muted">({{ annotation }})</span>{% endif %}
+    {% if annotation %}<span class="ml-1.5 text-xs text-text-faint">({{ annotation }})</span>{% endif %}
   </dd>
 </div>

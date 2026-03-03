@@ -699,11 +699,23 @@ msgid "Login"
 msgstr "Connexion"
 
 # ── Auth templates ──
+msgid "Welcome back"
+msgstr "Bon retour"
+
+msgid "Sign in to your account"
+msgstr "Connectez-vous à votre compte"
+
 msgid "Don't have an account?"
 msgstr "Vous n'avez pas de compte ?"
 
 msgid "Sign up"
 msgstr "S'inscrire"
+
+msgid "Create your account"
+msgstr "Créez votre compte"
+
+msgid "Get started with Limpid"
+msgstr "Commencez avec Limpid"
 
 msgid "Logout"
 msgstr "Déconnexion"
@@ -930,6 +942,9 @@ msgstr "Aucune transaction pour le moment."
 
 msgid "No portfolios yet."
 msgstr "Aucun portefeuille pour le moment."
+
+msgid "Create your first portfolio to start tracking your investments."
+msgstr "Créez votre premier portefeuille pour suivre vos investissements."
 
 # ── Real Estate Templates ──
 msgid "Amortization Schedule"
@@ -1329,6 +1344,9 @@ msgstr "Tout marquer comme lu"
 
 msgid "No notifications yet."
 msgstr "Aucune notification."
+
+msgid "You'll see activity from your co-owned properties here."
+msgstr "L'activité de vos propriétés en copropriété apparaîtra ici."
 
 msgid "ago"
 msgstr ""

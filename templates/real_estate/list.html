@@ -2,11 +2,10 @@
 {% load i18n real_estate_filters %}
 
 {% block content %}
-<div class="container-limpid py-8 space-y-8">
+<div class="container-limpid py-8 animate-enter space-y-8">
   <div class="flex items-center justify-between">
-    <h1 class="text-2xl font-bold text-text">{% trans "Real Estate" %}</h1>
-    <a href="{% url 'real_estate:create' %}"
-       class="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
+    <h1 class="text-[1.75rem] font-semibold tracking-tight text-text">{% trans "Real Estate" %}</h1>
+    <a href="{% url 'real_estate:create' %}" class="btn-primary">
       {% trans "+ Add property" %}
     </a>
   </div>
@@ -15,16 +14,17 @@
   <div class="grid gap-6 sm:grid-cols-2">
     {% for item in summaries %}
     <a href="{% url 'real_estate:detail' item.property.pk %}" class="block">
-      {% include "components/card_start.html" with title=item.property.name %}
+      <div class="rounded-2xl border border-border bg-bg-card p-5 sm:p-6 card-interactive">
+        <h3 class="text-[0.8125rem] font-medium uppercase tracking-wide text-text-muted mb-4">{{ item.property.name }}</h3>
         <p class="text-sm text-text-muted mb-4">{{ item.property.address }}, {{ item.property.city }}</p>
         <div class="space-y-3">
           <div class="flex items-baseline justify-between">
             <span class="text-sm text-text-muted">{% trans "Value" %}</span>
-            <span class="text-lg font-bold text-text">{{ item.snapshot.current_valuation|cad }}</span>
+            <span class="text-lg font-semibold text-text font-mono">{{ item.snapshot.current_valuation|cad }}</span>
           </div>
           <div class="flex items-baseline justify-between">
             <span class="text-sm text-text-muted">{% trans "Your equity" %}</span>
-            <span class="font-semibold text-primary-600">{{ item.snapshot.your_equity|cad }}</span>
+            <span class="font-semibold text-primary-600 font-mono">{{ item.snapshot.your_equity|cad }}</span>
           </div>
         </div>
         <div class="flex items-center gap-2 mt-5">
@@ -34,20 +34,12 @@
             {% include "components/badge.html" with label=item.snapshot.share_pct|floatformat:0|add:"%" variant="warning" %}
           {% endif %}
         </div>
-      {% include "components/card_end.html" %}
+      </div>
     </a>
     {% endfor %}
   </div>
   {% else %}
-  {% include "components/card_start.html" %}
-    <div class="py-12 text-center">
-      <p class="text-text-muted mb-6">{% trans "No properties yet." %}</p>
-      <a href="{% url 'real_estate:create' %}"
-         class="inline-block rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700">
-        {% trans "Add your first property" %}
-      </a>
-    </div>
-  {% include "components/card_end.html" %}
+  {% include "components/empty_state.html" with title=_("No properties yet") description=_("Add your first property to start tracking your real estate patrimony.") action_url="/real-estate/create/" action_label=_("Add your first property") %}
   {% endif %}
 </div>
 {% endblock %}

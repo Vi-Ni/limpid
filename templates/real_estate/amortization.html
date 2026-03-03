@@ -2,10 +2,10 @@
 {% load i18n real_estate_filters %}
 
 {% block content %}
-<div class="container-limpid py-6 space-y-6">
+<div class="container-limpid py-6 animate-enter space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-2xl font-bold text-text">{% trans "Amortization Schedule" %}</h1>
+      <h1 class="text-[1.75rem] font-semibold tracking-tight text-text">{% trans "Amortization Schedule" %}</h1>
       <p class="text-text-muted">{{ property.name }} — {{ mortgage.lender }}</p>
     </div>
     <a href="{% url 'real_estate:detail' property.pk %}" class="text-sm text-primary-600 hover:text-primary-700">
@@ -17,15 +17,15 @@
     <div class="grid gap-4 sm:grid-cols-3">
       <div>
         <p class="text-xs text-text-muted">{% trans "Monthly payment" %}</p>
-        <p class="text-lg font-semibold text-text">{{ mortgage.monthly_payment|cad }}</p>
+        <p class="text-lg font-semibold text-text font-mono tabular-nums">{{ mortgage.monthly_payment|cad }}</p>
       </div>
       <div>
         <p class="text-xs text-text-muted">{% trans "Total interest paid" %}</p>
-        <p class="text-lg font-semibold text-text">{{ paid.total_interest_paid|cad }}</p>
+        <p class="text-lg font-semibold text-text font-mono tabular-nums">{{ paid.total_interest_paid|cad }}</p>
       </div>
       <div>
         <p class="text-xs text-text-muted">{% trans "Total paid to date" %}</p>
-        <p class="text-lg font-semibold text-text">{{ paid.total_paid|cad }}</p>
+        <p class="text-lg font-semibold text-text font-mono tabular-nums">{{ paid.total_paid|cad }}</p>
       </div>
     </div>
     <div class="mt-4 grid gap-4 sm:grid-cols-3">
@@ -59,13 +59,13 @@
         </thead>
         <tbody>
           {% for entry in schedule %}
-          <tr class="border-b border-gray-100 {% if entry.is_current %}bg-primary-50 font-semibold{% endif %}" {% if entry.is_current %}id="current-payment"{% endif %}>
+          <tr class="border-b border-border/60 {% if entry.is_current %}bg-primary-50 font-semibold{% endif %}" {% if entry.is_current %}id="current-payment"{% endif %}>
             <td class="px-3 py-2 text-text-muted">{{ entry.payment_number }}</td>
             <td class="px-3 py-2 text-text-muted">{{ entry.date }}</td>
-            <td class="px-3 py-2 text-right text-text">{{ entry.total_payment|cad }}</td>
-            <td class="px-3 py-2 text-right text-success-600">{{ entry.principal|cad }}</td>
-            <td class="px-3 py-2 text-right text-danger-600">{{ entry.interest|cad }}</td>
-            <td class="px-3 py-2 text-right font-medium text-text">{{ entry.balance|cad }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-text">{{ entry.total_payment|cad }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-success-600">{{ entry.principal|cad }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-danger-600">{{ entry.interest|cad }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums font-medium text-text">{{ entry.balance|cad }}</td>
           </tr>
           {% endfor %}
         </tbody>

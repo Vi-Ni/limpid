@@ -1,9 +1,11 @@
 {% load i18n %}
-<div class="rounded-xl border bg-bg-card shadow-sm {% if variant == 'warning' %}border-warning-500/30{% elif variant == 'success' %}border-success-500/30{% else %}border-border{% endif %}">
+<div class="rounded-2xl border bg-bg-card {% if variant == 'warning' %}border-warning-400/40{% elif variant == 'success' %}border-success-400/40{% elif variant == 'elevated' %}border-border shadow-md shadow-black/[0.03]{% else %}border-border{% endif %} p-5 sm:p-6">
   {% if title %}
-  <div class="flex items-center gap-2 border-b border-border px-5 py-4">
-    {% if icon %}<span class="text-text-muted">{{ icon }}</span>{% endif %}
-    <h3 class="text-base font-semibold text-text">{{ title }}</h3>
+  <div class="mb-4">
+    <h3 class="text-[0.8125rem] font-medium uppercase tracking-wide text-text-muted">
+      {% if icon %}<span class="mr-1.5 inline-block align-middle">{{ icon }}</span>{% endif %}
+      {{ title }}
+    </h3>
   </div>
   {% endif %}
-  <div class="px-5 py-4">
+  <div>

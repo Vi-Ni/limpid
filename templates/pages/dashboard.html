@@ -4,7 +4,8 @@
 {% block title %}Limpid — {% trans "Dashboard" %}{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold text-text">{% trans "Dashboard" %}</h1>
+<div class="animate-enter space-y-6">
+<h1 class="text-[1.75rem] font-semibold tracking-tight text-text">{% trans "Dashboard" %}</h1>
 <p class="mt-1 text-sm text-text-muted">{{ portfolio.name }}</p>
 
 <!-- Row 1: Snapshot -->
@@ -13,7 +14,7 @@
     <div class="flex flex-wrap items-baseline gap-4">
       <div>
         <p class="text-sm text-text-muted">{% trans "Total value" %}</p>
-        <p class="text-3xl font-bold text-text">${{ snapshot.total_value }}</p>
+        <p class="text-3xl font-semibold text-text font-mono">${{ snapshot.total_value }}</p>
       </div>
       <div>
         {% if snapshot.daily_change >= 0 %}
@@ -23,7 +24,7 @@
         {% endif %}
       </div>
     </div>
-    <dl class="mt-4 divide-y divide-gray-100">
+    <dl class="mt-4 divide-y divide-border/60">
       {% include "components/metric_row.html" with label=_("Total cost") value=snapshot.total_cost %}
       {% include "components/metric_row.html" with label=_("Gain / Loss") value=snapshot.gain_loss_display %}
     </dl>
@@ -37,7 +38,7 @@
     <div class="mx-auto max-w-xs">
       <canvas data-chart="allocation" data-chart-data='{{ allocation.chart_data }}'></canvas>
     </div>
-    <dl class="mt-4 divide-y divide-gray-100">
+    <dl class="mt-4 divide-y divide-border/60">
       {% for item in allocation.breakdown %}
         {% include "components/metric_row.html" with label=item.label value=item.display %}
       {% endfor %}
@@ -55,8 +56,8 @@
           <span class="text-text">{{ item.label }}</span>
           <span class="text-text-muted">{{ item.pct }}%</span>
         </div>
-        <div class="mt-1 h-2 w-full rounded-full bg-gray-200">
-          <div class="h-2 rounded-full bg-primary-600" style="width: {{ item.pct }}%"></div>
+        <div class="mt-1 h-1.5 w-full rounded-full bg-bg-subtle">
+          <div class="h-1.5 rounded-full bg-primary-500" style="width: {{ item.pct }}%"></div>
         </div>
       </div>
       {% endfor %}
@@ -72,8 +73,8 @@
           <span class="text-text">{{ item.label }}</span>
           <span class="text-text-muted">{{ item.pct }}%</span>
         </div>
-        <div class="mt-1 h-2 w-full rounded-full bg-gray-200">
-          <div class="h-2 rounded-full bg-primary-400" style="width: {{ item.pct }}%"></div>
+        <div class="mt-1 h-1.5 w-full rounded-full bg-bg-subtle">
+          <div class="h-1.5 rounded-full bg-primary-400" style="width: {{ item.pct }}%"></div>
         </div>
       </div>
       {% endfor %}
@@ -87,14 +88,14 @@
   <!-- Clarity Score -->
   {% include "components/card_start.html" with title=_("Clarity Score") %}
     <div class="text-center">
-      <p class="text-4xl font-bold text-primary-600">{{ clarity.score }}%</p>
+      <p class="text-4xl font-semibold text-primary-600 font-mono">{{ clarity.score }}%</p>
       <p class="mt-1 text-sm text-text-muted">
         {% blocktrans with learned=clarity.learned total=clarity.total %}{{ learned }} of {{ total }} asset types understood{% endblocktrans %}
       </p>
     </div>
     <div class="mt-4">
-      <div class="h-2 w-full rounded-full bg-gray-200">
-        <div class="h-2 rounded-full bg-primary-600 transition-all" style="width: {{ clarity.score }}%"></div>
+      <div class="h-1.5 w-full rounded-full bg-bg-subtle">
+        <div class="h-1.5 rounded-full bg-primary-500 transition-all" style="width: {{ clarity.score }}%"></div>
       </div>
     </div>
     <div class="mt-4 text-center">
@@ -111,7 +112,7 @@
       <p class="text-sm text-text-muted">{% trans "Level" %} {{ next_lesson.level }}</p>
       <p class="mt-1 text-lg font-semibold text-text">{{ next_lesson.title }}</p>
       <a href="{% url 'education:lesson' next_lesson.id %}"
-         class="mt-4 inline-block rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
+         class="btn-primary mt-4 inline-block">
         {% trans "Start lesson" %}
       </a>
     </div>

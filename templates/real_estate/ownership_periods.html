@@ -2,10 +2,10 @@
 {% load i18n %}
 
 {% block content %}
-<div class="container-limpid py-6 space-y-6">
+<div class="container-limpid py-6 animate-enter space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-2xl font-bold text-text">{% trans "Ownership Periods" %}</h1>
+      <h1 class="text-[1.75rem] font-semibold tracking-tight text-text">{% trans "Ownership Periods" %}</h1>
       <p class="text-text-muted">{{ property.name }}</p>
     </div>
     <a href="{% url 'real_estate:detail' property.pk %}" class="text-sm text-primary-600 hover:text-primary-700">

@@ -4,15 +4,21 @@
 {% block title %}{% trans "Login" %} — Limpid{% endblock %}
 
 {% block content %}
-<div class="mx-auto max-w-md">
-  {% include "components/card_start.html" with title="" %}
-    <h1 class="mb-6 text-center text-2xl font-bold text-text">{% trans "Login" %}</h1>
+<div class="flex min-h-[80vh] items-center justify-center animate-enter">
+  <div class="w-full max-w-sm">
+    <div class="mb-8 flex justify-center">
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600">
+        <span class="text-lg font-bold text-white">L</span>
+      </div>
+    </div>
+    <h1 class="text-center text-xl font-semibold tracking-tight text-text">{% trans "Welcome back" %}</h1>
+    <p class="mt-1 text-center text-sm text-text-muted">{% trans "Sign in to your account" %}</p>
 
-    <form method="post" action="{% url 'account_login' %}" class="space-y-4">
+    <form method="post" action="{% url 'account_login' %}" class="mt-8 space-y-4">
       {% csrf_token %}
 
       {% if form.non_field_errors %}
-      <div class="rounded-lg border border-danger-100 bg-danger-50 px-4 py-3 text-sm text-red-800">
+      <div class="rounded-xl border border-danger-100 bg-danger-50 px-4 py-3 text-sm text-danger-700">
         {% for error in form.non_field_errors %}
         <p>{{ error }}</p>
         {% endfor %}
@@ -28,7 +34,7 @@
                name="{{ field.html_name }}"
                id="{{ field.id_for_label }}"
                value="{{ field.value|default:'' }}"
-               class="w-full rounded-lg border border-border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 {% if field.errors %}border-danger-500{% endif %}"
+               class="input {% if field.errors %}input-error{% endif %}"
                {% if field.field.required %}required{% endif %}>
         {% if field.errors %}
         <p class="mt-1 text-sm text-danger-600">{{ field.errors.0 }}</p>
@@ -36,8 +42,7 @@
       </div>
       {% endfor %}
 
-      <button type="submit"
-              class="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+      <button type="submit" class="btn-primary w-full">
         {% trans "Login" %}
       </button>
     </form>
@@ -48,6 +53,6 @@
         {% trans "Sign up" %}
       </a>
     </p>
-  {% include "components/card_end.html" %}
+  </div>
 </div>
 {% endblock %}

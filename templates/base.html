@@ -8,6 +8,10 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='700' font-size='20' fill='white'>L</text></svg>">
   <meta name="description" content="{% block meta_description %}{% trans 'Educational investment dashboard for beginners' %}{% endblock %}">
 
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.min.css">
+
   <script>document.documentElement.style.visibility='hidden';</script>
   {% vite_hmr_client %}
   {% vite_asset "src/main.js" %}
@@ -20,16 +24,22 @@
   {% include "components/disclaimer_banner.html" %}
   {% include "components/nav.html" %}
 
-  <div class="flex flex-1 flex-col md:pl-60">
+  <div class="flex flex-1 flex-col md:pl-56">
     <main class="container-limpid flex-1 py-8">
       {% if messages %}
       <div class="mb-6 space-y-2">
         {% for message in messages %}
-        <div class="rounded-lg border px-4 py-3 text-sm
-          {% if message.tags == 'error' %}border-danger-100 bg-danger-50 text-red-800
-          {% elif message.tags == 'success' %}border-success-100 bg-success-50 text-green-800
+        <div class="animate-toast-in rounded-xl border px-4 py-3 text-sm
+          {% if message.tags == 'error' %}border-danger-100 bg-danger-50 text-danger-700
+          {% elif message.tags == 'success' %}border-success-100 bg-success-50 text-success-700
           {% else %}border-primary-100 bg-primary-50 text-primary-800{% endif %}"
-          role="alert">
+          role="alert"
+          x-data="{ show: true }"
+          x-show="show"
+          x-init="setTimeout(() => show = false, 5000)"
+          x-transition:leave="transition ease-in duration-200"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-2">
           {{ message }}
         </div>
         {% endfor %}
