@@ -51,7 +51,7 @@
           {% show_money snapshot.purchase_price property.currency as pp_display %}
           {% include "components/metric_row.html" with label=_("Purchase price") value=pp_display tooltip_id="purchase_price" tooltip_text=tips.purchase_price %}
           {% show_money snapshot.appreciation property.currency as appr_display %}
-          {% with pct=snapshot.appreciation_pct|floatformat:1 %}
+          {% with pct=snapshot.appreciation_pct|signed_pct %}
           {% include "components/metric_row.html" with label=_("Appreciation") value=appr_display annotation=pct tooltip_id="appreciation" tooltip_text=tips.appreciation %}
           {% endwith %}
           {% show_money owner_snapshot.your_valuation property.currency as yv_display %}
@@ -91,12 +91,21 @@
                    hx-trigger="input changed delay:500ms"
                    hx-target="#sale-results"
                    hx-include="[name='commission']"
+                   hx-on::before-request="$dispatch('close-tooltips')"
                    name="sale_price" />
           </div>
           <div class="w-32">
-            <label class="block text-sm text-text-muted mb-1">{% trans "Commission (%)" %}</label>
+            <label class="block text-sm text-text-muted mb-1">
+              {% trans "Commission (%)" %}
+              {% include "components/tooltip.html" with id="commission_pct" text=tips.agent_commission %}
+            </label>
             <input type="number" value="5" step="0.5" min="0" max="10"
                    class="input"
+                   hx-get="{% url 'real_estate:sale_simulator' property.pk %}"
+                   hx-trigger="input changed delay:500ms"
+                   hx-target="#sale-results"
+                   hx-include="[name='sale_price']"
+                   hx-on::before-request="$dispatch('close-tooltips')"
                    name="commission" />
           </div>
         </div>
@@ -199,7 +208,11 @@
       {% endif %}
 
       {# Property Taxes #}
+      {% if property.country == "FR" %}
+      {% include "components/card_start.html" with title=_("Taxes & Charges") %}
+      {% else %}
       {% include "components/card_start.html" with title=_("Property Taxes") %}
+      {% endif %}
         <div id="tax-list">
           {% include "real_estate/partials/tax_list.html" %}
         </div>

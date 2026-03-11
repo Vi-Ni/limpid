@@ -72,6 +72,9 @@
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Payment" %}</th>
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Principal" %}</th>
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Interest" %}</th>
+            {% if property.country == "FR" and mortgage.borrower_insurance_rate %}
+            <th class="px-3 py-2 text-right text-text-muted">{% trans "Insurance" %}</th>
+            {% endif %}
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Balance" %}</th>
           </tr>
         </thead>
@@ -83,6 +86,9 @@
             <td class="px-3 py-2 text-right font-mono tabular-nums text-text">{% show_money entry.total_payment property.currency %}</td>
             <td class="px-3 py-2 text-right font-mono tabular-nums text-success-600">{% show_money entry.principal property.currency %}</td>
             <td class="px-3 py-2 text-right font-mono tabular-nums text-danger-600">{% show_money entry.interest property.currency %}</td>
+            {% if property.country == "FR" and mortgage.borrower_insurance_rate %}
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-warning-600">{% show_money entry.insurance property.currency %}</td>
+            {% endif %}
             <td class="px-3 py-2 text-right font-mono tabular-nums font-medium text-text">{% show_money entry.balance property.currency %}</td>
           </tr>
           {% endfor %}

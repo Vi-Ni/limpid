@@ -5,16 +5,33 @@
 <div class="container-limpid py-6 animate-enter space-y-6">
   <h1 class="text-[1.75rem] font-semibold tracking-tight text-text">{% trans "Add a property" %}</h1>
 
-  <form method="post">
+  <form method="post" x-data="propertyForm()">
     {% csrf_token %}
 
     {% include "components/card_start.html" with title=_("Property details") %}
       <div class="grid gap-4 sm:grid-cols-2">
         {% for field in form %}
           {% if field.name != "down_payment" and field.name != "co_owner_email" and field.name != "co_owner_down_payment" and field.name != "co_owner_share" %}
-          <div {% if field.name == "address" %}class="sm:col-span-2"{% endif %}>
+          <div {% if field.name == "address" %}class="sm:col-span-2"{% endif %}
+               {% if field.name == "insurance_premium" %}x-show="country === 'CA'" x-cloak{% endif %}
+          >
             <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text mb-1">
-              {{ field.label }}{% if field.field.required %}<span class="text-danger-600 ml-0.5">*</span>{% endif %}
+              {% if field.name == "province" %}
+                <span x-show="country !== 'FR'">{% trans "Province" %}</span>
+                <span x-show="country === 'FR'" x-cloak>{% trans "Département" %}</span>
+              {% elif field.name == "welcome_tax_paid" %}
+                <span x-show="country !== 'FR'">{% trans "Welcome tax paid" %}</span>
+                <span x-show="country === 'FR'" x-cloak>{% trans "Frais de notaire (achat)" %}</span>
+              {% elif field.name == "notary_fees_purchase" %}
+                <span x-show="country !== 'FR'">{% trans "Notary fees at purchase" %}</span>
+                <span x-show="country === 'FR'" x-cloak>{% trans "Frais d'agence (achat)" %}</span>
+              {% elif field.name == "municipal_assessment" %}
+                <span x-show="country !== 'FR'">{% trans "Municipal assessment" %}</span>
+                <span x-show="country === 'FR'" x-cloak>{% trans "Valeur cadastrale" %}</span>
+              {% else %}
+                {{ field.label }}
+              {% endif %}
+              {% if field.field.required %}<span class="text-danger-600 ml-0.5">*</span>{% endif %}
               {% if field.help_text %}
                 {% include "components/tooltip.html" with id=field.html_name text=field.help_text %}
               {% endif %}
@@ -90,9 +107,16 @@
     {% include "components/card_start.html" with title=_("Mortgage (optional)") %}
       <div class="grid gap-4 sm:grid-cols-2">
         {% for field in mortgage_form %}
-        <div>
+        <div {% if field.name == "insurance_premium" or field.name == "term_years" %}x-show="country === 'CA'" x-cloak{% endif %}
+             {% if field.name == "borrower_insurance_rate" %}x-show="country === 'FR'" x-cloak{% endif %}
+        >
           <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text mb-1">
-            {{ field.label }}
+            {% if field.name == "amortization_years" %}
+              <span x-show="country !== 'FR'">{% trans "Amortization (years)" %}</span>
+              <span x-show="country === 'FR'" x-cloak>{% trans "Loan duration (years)" %}</span>
+            {% else %}
+              {{ field.label }}
+            {% endif %}
             {% if field.help_text %}
               {% include "components/tooltip.html" with id=field.html_name text=field.help_text %}
             {% endif %}
@@ -116,6 +140,32 @@
 </div>
 
 <script>
+function propertyForm() {
+  return {
+    country: document.getElementById('id_country')?.value || 'CA',
+    init() {
+      const countrySelect = document.getElementById('id_country');
+      if (countrySelect) {
+        countrySelect.addEventListener('change', (e) => {
+          this.country = e.target.value;
+          this.onCountryChange();
+        });
+      }
+    },
+    onCountryChange() {
+      const currencySelect = document.getElementById('id_currency');
+      if (currencySelect && !currencySelect._dirty) {
+        currencySelect.value = this.country === 'FR' ? 'EUR' : 'CAD';
+      }
+      const province = document.getElementById('id_province');
+      if (province && !province._dirty) {
+        province.value = this.country === 'FR' ? '' : 'QC';
+      }
+      updateAll();
+    }
+  };
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   const purchaseDate = document.getElementById('id_purchase_date');
   const mortgageStartDate = document.getElementById('id_mortgage-start_date');
@@ -125,18 +175,28 @@ document.addEventListener('DOMContentLoaded', function () {
   const coOwnerShare = document.getElementById('id_co_owner_share');
   const principal = document.getElementById('id_mortgage-principal');
   const insurancePremium = document.getElementById('id_mortgage-insurance_premium');
+  const welcomeTax = document.getElementById('id_welcome_tax_paid');
   const yourShareDisplay = document.getElementById('your-share-display');
   const shareHint = document.getElementById('share-hint');
 
   let principalDirty = false;
   let insuranceDirty = false;
   let shareDirty = false;
+  let welcomeTaxDirty = false;
+
+  const currencySelect = document.getElementById('id_currency');
+  const provinceInput = document.getElementById('id_province');
+  if (currencySelect) currencySelect.addEventListener('input', function () { currencySelect._dirty = true; });
+  if (provinceInput) provinceInput.addEventListener('input', function () { provinceInput._dirty = true; });
 
   if (principal) {
     principal.addEventListener('input', function () { principalDirty = true; });
   }
   if (insurancePremium) {
     insurancePremium.addEventListener('input', function () { insuranceDirty = true; });
+  }
+  if (welcomeTax) {
+    welcomeTax.addEventListener('input', function () { welcomeTaxDirty = true; });
   }
   if (coOwnerShare) {
     coOwnerShare.addEventListener('input', function () {
@@ -145,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Sync purchase date → mortgage start date
+  // Sync purchase date -> mortgage start date
   if (purchaseDate && mortgageStartDate) {
     purchaseDate.addEventListener('change', function () {
       if (!mortgageStartDate.value) {
@@ -154,19 +214,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function getCountry() {
+    return document.getElementById('id_country')?.value || 'CA';
+  }
+
   function getTotalDown() {
     const yourDown = parseFloat(downPayment?.value) || 0;
     const coDown = parseFloat(coOwnerDownPayment?.value) || 0;
     return yourDown + coDown;
   }
 
-  // CMHC tier rates
+  // CMHC tier rates (Canada only)
   function getCmhcRate(downPct) {
     if (downPct >= 20) return 0;
     if (downPct >= 15) return 0.028;
     if (downPct >= 10) return 0.031;
     if (downPct >= 5) return 0.04;
-    return 0; // Below 5% — not insurable
+    return 0;
   }
 
   function updatePrincipal() {
@@ -180,6 +244,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updateInsurance() {
     if (insuranceDirty || !insurancePremium) return;
+    const country = getCountry();
+    if (country !== 'CA') {
+      insurancePremium.value = '0.00';
+      return;
+    }
     const price = parseFloat(purchasePrice?.value) || 0;
     if (price <= 0) return;
     const totalDown = getTotalDown();
@@ -187,6 +256,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const rate = getCmhcRate(downPct);
     const mortgagePrincipal = price - totalDown;
     insurancePremium.value = (mortgagePrincipal * rate).toFixed(2);
+  }
+
+  function updateFraisNotaire() {
+    if (welcomeTaxDirty || !welcomeTax) return;
+    const country = getCountry();
+    if (country !== 'FR') return;
+    const price = parseFloat(purchasePrice?.value) || 0;
+    if (price > 0) {
+      welcomeTax.value = (price * 0.08).toFixed(2);
+    }
   }
 
   function updateYourShare() {
@@ -215,11 +294,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function updateAll() {
+  window.updateAll = function () {
     updatePrincipal();
     updateInsurance();
+    updateFraisNotaire();
     updateShareFromDownPayments();
-  }
+  };
 
   if (purchasePrice) purchasePrice.addEventListener('input', updateAll);
   if (downPayment) downPayment.addEventListener('input', updateAll);

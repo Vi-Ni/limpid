@@ -69,6 +69,20 @@ def other_currency(currency):
 
 
 @register.filter
+def signed_pct(value):
+    if value is None:
+        return ""
+    try:
+        value = Decimal(str(value))
+    except (InvalidOperation, TypeError, ValueError):
+        return ""
+    formatted = f"{value:.1f}%"
+    if value > 0:
+        return f"+{formatted}"
+    return formatted
+
+
+@register.filter
 def convert_to(value, args):
     if value is None:
         return ""

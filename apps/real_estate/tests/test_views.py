@@ -118,6 +118,7 @@ class TestPropertyCreate:
             "/real-estate/create/",
             {
                 "name": "New Property",
+                "country": "CA",
                 "property_type": "condo",
                 "usage": "primary",
                 "currency": "CAD",
@@ -244,6 +245,7 @@ class TestCreateWithCoOwner:
             "/real-estate/create/",
             {
                 "name": "Shared Condo",
+                "country": "CA",
                 "property_type": "condo",
                 "usage": "primary",
                 "currency": "CAD",
@@ -289,6 +291,7 @@ class TestCreateWithCoOwner:
             "/real-estate/create/",
             {
                 "name": "Solo House",
+                "country": "CA",
                 "property_type": "house",
                 "usage": "primary",
                 "currency": "CAD",
@@ -648,12 +651,13 @@ class TestCreateWithEurCurrency:
             "/real-estate/create/",
             {
                 "name": "Paris Flat",
+                "country": "FR",
                 "property_type": "condo",
                 "usage": "primary",
                 "currency": "EUR",
                 "address": "10 Rue de Rivoli",
                 "city": "Paris",
-                "province": "QC",
+                "province": "75",
                 "purchase_price": "300000",
                 "purchase_date": "2023-01-01",
                 "welcome_tax_paid": "0",
@@ -667,3 +671,147 @@ class TestCreateWithEurCurrency:
         assert response.status_code == 302
         prop = Property.objects.get(name="Paris Flat")
         assert prop.currency == "EUR"
+
+
+# ── French property tests ───────────────────────────────────
+
+
+@pytest.fixture
+def french_prop(user):
+    p = Property.objects.create(
+        name="Paris Apartment",
+        property_type="condo",
+        usage="primary",
+        country="FR",
+        currency="EUR",
+        address="10 Rue de Rivoli",
+        city="Paris",
+        province="75",
+        purchase_price=Decimal("300000"),
+        purchase_date=date(2023, 1, 1),
+        welcome_tax_paid=Decimal("24000"),
+        current_valuation=Decimal("320000"),
+        valuation_date=date(2024, 1, 1),
+    )
+    ownership = PropertyOwnership.objects.create(user=user, property=p, is_admin=True, down_payment=Decimal("60000"))
+    period = OwnershipPeriod.objects.create(property=p, start_date=date(2023, 1, 1))
+    OwnershipPeriodShare.objects.create(period=period, owner=ownership, share_pct=Decimal("100"))
+    return p
+
+
+@pytest.fixture
+def french_mortgage(french_prop):
+    return Mortgage.objects.create(
+        real_estate=french_prop,
+        lender="BNP Paribas",
+        principal=Decimal("240000"),
+        annual_rate=Decimal("3.500"),
+        rate_type="fixed",
+        amortization_years=20,
+        start_date=date(2023, 1, 1),
+        borrower_insurance_rate=Decimal("0.300"),
+    )
+
+
+class TestCreateFrenchProperty:
+    def test_create_french_property(self, client):
+        response = client.post(
+            "/real-estate/create/",
+            {
+                "name": "Appartement Paris",
+                "country": "FR",
+                "property_type": "condo",
+                "usage": "primary",
+                "currency": "EUR",
+                "address": "10 Rue de Rivoli",
+                "city": "Paris",
+                "province": "75",
+                "purchase_price": "300000",
+                "purchase_date": "2024-01-15",
+                "welcome_tax_paid": "24000",
+                "notary_fees_purchase": "0",
+                "current_valuation": "320000",
+                "valuation_date": "2026-01-01",
+                "municipal_assessment": "0",
+                "down_payment": "60000",
+            },
+        )
+        assert response.status_code == 302
+        prop = Property.objects.get(name="Appartement Paris")
+        assert prop.country == "FR"
+        assert prop.currency == "EUR"
+
+    def test_french_property_with_mortgage(self, client):
+        response = client.post(
+            "/real-estate/create/",
+            {
+                "name": "Maison Lyon",
+                "country": "FR",
+                "property_type": "house",
+                "usage": "primary",
+                "currency": "EUR",
+                "address": "5 Place Bellecour",
+                "city": "Lyon",
+                "province": "69",
+                "purchase_price": "400000",
+                "purchase_date": "2024-06-01",
+                "welcome_tax_paid": "32000",
+                "notary_fees_purchase": "0",
+                "current_valuation": "420000",
+                "valuation_date": "2026-01-01",
+                "municipal_assessment": "0",
+                "down_payment": "80000",
+                "mortgage-lender": "BNP Paribas",
+                "mortgage-principal": "320000",
+                "mortgage-annual_rate": "3.500",
+                "mortgage-rate_type": "fixed",
+                "mortgage-amortization_years": "20",
+                "mortgage-start_date": "2024-07-01",
+                "mortgage-borrower_insurance_rate": "0.300",
+            },
+        )
+        assert response.status_code == 302
+        prop = Property.objects.get(name="Maison Lyon")
+        mortgage = prop.mortgages.first()
+        assert mortgage.borrower_insurance_rate == Decimal("0.300")
+        assert mortgage.insurance_premium == 0
+
+
+class TestFrenchTaxTypes:
+    def test_add_taxe_fonciere(self, client, french_prop):
+        response = client.post(
+            f"/real-estate/{french_prop.pk}/tax/",
+            {
+                "tax_type": "taxe_fonciere",
+                "year": "2025",
+                "amount": "1500",
+            },
+        )
+        assert response.status_code == 200
+        assert PropertyTax.objects.filter(property=french_prop, tax_type="taxe_fonciere").exists()
+
+
+class TestFrenchPropertyDetail:
+    def test_detail_page_renders(self, client, french_prop, french_mortgage):
+        response = client.get(f"/real-estate/{french_prop.pk}/")
+        assert response.status_code == 200
+        assert b"Paris Apartment" in response.content
+
+
+class TestFrenchAmortizationView:
+    def test_amortization_page_renders(self, client, french_prop, french_mortgage):
+        response = client.get(f"/real-estate/{french_prop.pk}/mortgage/{french_mortgage.pk}/amortization/")
+        assert response.status_code == 200
+        # "Insurance" is translated to "Assurance" in FR locale
+        assert b"Assurance" in response.content or b"Insurance" in response.content
+
+    def test_insurance_column_in_schedule(self, client, french_prop, french_mortgage):
+        response = client.get(f"/real-estate/{french_prop.pk}/mortgage/{french_mortgage.pk}/amortization/")
+        assert response.status_code == 200
+        assert b"BNP Paribas" in response.content
+
+
+class TestFrenchSaleSimulatorView:
+    def test_sale_simulator_renders(self, client, french_prop, french_mortgage):
+        response = client.get(f"/real-estate/{french_prop.pk}/sale-simulator/?sale_price=350000&commission=5")
+        assert response.status_code == 200

@@ -29,7 +29,13 @@ class Property(models.Model):
         ("EUR", _("Euro (EUR)")),
     ]
 
+    COUNTRY_CHOICES = [
+        ("CA", _("Canada")),
+        ("FR", _("France")),
+    ]
+
     name = models.CharField(_("name"), max_length=200)
+    country = models.CharField(_("country"), max_length=2, choices=COUNTRY_CHOICES, default="CA")
     property_type = models.CharField(_("property type"), max_length=20, choices=PROPERTY_TYPE_CHOICES)
     usage = models.CharField(_("usage"), max_length=20, choices=USAGE_CHOICES)
     address = models.CharField(_("address"), max_length=500)
@@ -129,6 +135,7 @@ class Mortgage(models.Model):
     RATE_TYPE_CHOICES = [
         ("fixed", _("Fixed")),
         ("variable", _("Variable")),
+        ("mixed", _("Mixed (taux mixte)")),
     ]
 
     PAYMENT_FREQUENCY_CHOICES = [
@@ -150,6 +157,12 @@ class Mortgage(models.Model):
     start_date = models.DateField(_("start date"))
     is_active = models.BooleanField(_("active"), default=True)
     insurance_premium = models.DecimalField(_("mortgage insurance premium"), max_digits=10, decimal_places=2, default=0)
+    borrower_insurance_rate = models.DecimalField(
+        _("borrower insurance rate (%)"),
+        max_digits=5,
+        decimal_places=3,
+        default=0,
+    )
 
     class Meta:
         ordering = ["-start_date"]
@@ -164,6 +177,9 @@ class Mortgage(models.Model):
     @property
     def monthly_rate(self):
         r = self.annual_rate / 100
+        country = self.real_estate.country
+        if country == "FR":
+            return r / 12
         if self.rate_type == "fixed":
             return (1 + r / 2) ** (Decimal("1") / 6) - 1
         return r / 12
@@ -173,9 +189,11 @@ class Mortgage(models.Model):
         r = self.monthly_rate
         n = self.amortization_years * 12
         p = self.effective_principal
-        if r == 0:
-            return p / n
-        return (r * p) / (1 - (1 + r) ** (-n))
+        base = p / n if r == 0 else (r * p) / (1 - (1 + r) ** (-n))
+        insurance_monthly = Decimal("0")
+        if self.borrower_insurance_rate:
+            insurance_monthly = self.effective_principal * self.borrower_insurance_rate / 100 / 12
+        return base + insurance_monthly
 
 
 class MortgagePayment(models.Model):
@@ -205,6 +223,8 @@ class PropertyExpense(models.Model):
         ("property_tax", _("Property tax")),
         ("insurance", _("Insurance")),
         ("condo_fees", _("Condo fees")),
+        ("charges_copro", _("Charges de copropriété")),
+        ("assurance_emprunteur", _("Assurance emprunteur")),
         ("other", _("Other")),
     ]
 
@@ -254,6 +274,9 @@ class PropertyTax(models.Model):
     TAX_TYPE_CHOICES = [
         ("municipal", _("Municipal tax")),
         ("school", _("School tax")),
+        ("taxe_fonciere", _("Taxe foncière")),
+        ("taxe_habitation", _("Taxe d'habitation")),
+        ("ifi", _("IFI (wealth tax)")),
     ]
 
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="taxes")

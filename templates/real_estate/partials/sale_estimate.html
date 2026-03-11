@@ -16,6 +16,38 @@
     {% show_money estimate.capital_gains_tax property.currency as cgt_display %}
     {% include "components/metric_row.html" with label=_("Capital gains tax (est.)") value=cgt_display tooltip_id="capital_gains_tax" tooltip_text=tips.capital_gains_tax %}
     {% endif %}
+
+    {% if estimate.capital_gains_details %}
+    <div class="ml-4 space-y-1 text-xs text-text-muted border-l-2 border-border pl-3 my-2">
+      <div class="flex justify-between">
+        <span>{% trans "Holding period" %}</span>
+        <span>{{ estimate.capital_gains_details.holding_years }} {% trans "years" %}</span>
+      </div>
+      <div class="flex justify-between">
+        <span>{% trans "Income tax (19%)" %}</span>
+        <span class="font-mono">{% show_money estimate.capital_gains_details.ir_tax property.currency %}</span>
+      </div>
+      <div class="flex justify-between">
+        <span>{% trans "Social contributions (17.2%)" %}</span>
+        <span class="font-mono">{% show_money estimate.capital_gains_details.ps_tax property.currency %}</span>
+      </div>
+      {% if estimate.capital_gains_details.surtax > 0 %}
+      <div class="flex justify-between">
+        <span>{% trans "Surtax" %}</span>
+        <span class="font-mono">{% show_money estimate.capital_gains_details.surtax property.currency %}</span>
+      </div>
+      {% endif %}
+      <div class="flex justify-between">
+        <span>{% trans "IR abatement" %}</span>
+        <span>{{ estimate.capital_gains_details.ir_abatement_pct }}%</span>
+      </div>
+      <div class="flex justify-between">
+        <span>{% trans "Social abatement" %}</span>
+        <span>{{ estimate.capital_gains_details.ps_abatement_pct }}%</span>
+      </div>
+    </div>
+    {% endif %}
+
     {% show_money estimate.total_costs property.currency as tc_display %}
     {% include "components/metric_row.html" with label=_("Total costs") value=tc_display tooltip_id="total_costs" tooltip_text=tips.total_costs %}
   </div>

@@ -4,8 +4,9 @@ from decimal import Decimal, InvalidOperation
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext as _
 
@@ -31,7 +32,7 @@ from .services import (
     get_total_paid,
     notify_co_owners,
 )
-from .tooltips import TERM_TOOLTIPS
+from .tooltips import get_tooltips
 
 OTHER_CURRENCY = {"CAD": "EUR", "EUR": "CAD"}
 
@@ -43,14 +44,15 @@ def property_list(request):
     for prop in properties:
         snapshot = get_owner_snapshot(prop, request.user)
         summaries.append({"property": prop, "snapshot": snapshot})
-    return render(request, "real_estate/list.html", {"summaries": summaries, "tips": TERM_TOOLTIPS})
+    return render(request, "real_estate/list.html", {"summaries": summaries, "tips": get_tooltips()})
 
 
 @login_required
 def property_create(request):
     if request.method == "POST":
         form = PropertyForm(request.POST)
-        mortgage_form = MortgageForm(request.POST, prefix="mortgage")
+        country = request.POST.get("country", "CA")
+        mortgage_form = MortgageForm(request.POST, prefix="mortgage", country=country)
         if form.is_valid() and mortgage_form.is_valid():
             prop = form.save()
             down_payment = form.cleaned_data.get("down_payment") or Decimal("0")
@@ -164,7 +166,7 @@ def property_detail(request, pk):
             "equity_chart": equity_chart,
             "payment_chart": payment_chart,
             "expense_chart": expense_chart,
-            "tips": TERM_TOOLTIPS,
+            "tips": get_tooltips(prop.country),
         },
     )
 
@@ -178,7 +180,9 @@ def property_edit(request, pk):
     if request.method == "POST":
         form = PropertyForm(request.POST, instance=prop)
         mortgage_form = (
-            MortgageForm(request.POST, prefix="mortgage", instance=active_mortgage) if active_mortgage else None
+            MortgageForm(request.POST, prefix="mortgage", instance=active_mortgage, country=prop.country)
+            if active_mortgage
+            else None
         )
         if form.is_valid() and (mortgage_form is None or mortgage_form.is_valid()):
             form.save()
@@ -188,7 +192,9 @@ def property_edit(request, pk):
             return redirect("real_estate:detail", pk=prop.pk)
     else:
         form = PropertyForm(instance=prop)
-        mortgage_form = MortgageForm(prefix="mortgage", instance=active_mortgage) if active_mortgage else None
+        mortgage_form = (
+            MortgageForm(prefix="mortgage", instance=active_mortgage, country=prop.country) if active_mortgage else None
+        )
     return render(
         request,
         "real_estate/edit.html",
@@ -243,12 +249,9 @@ def add_valuation(request, pk):
                 "valuation_added",
                 _("added valuation of %(value)s") % {"value": valuation.value},
             )
-            valuations = prop.valuations.all()[:10]
-            return render(
-                request,
-                "real_estate/partials/valuation_history.html",
-                {"valuations": valuations, "oob_update": True, "property": prop},
-            )
+            response = HttpResponse()
+            response["HX-Redirect"] = reverse("real_estate:detail", args=[prop.pk])
+            return response
     form = ValuationForm()
     return render(request, "real_estate/partials/valuation_form.html", {"form": form, "property": prop})
 
@@ -270,7 +273,7 @@ def amortization_view(request, pk, mortgage_id):
             "mortgage": mortgage,
             "schedule": schedule,
             "paid": paid,
-            "tips": TERM_TOOLTIPS,
+            "tips": get_tooltips(prop.country),
         },
     )
 
@@ -279,7 +282,7 @@ def amortization_view(request, pk, mortgage_id):
 def add_tax(request, pk):
     prop = get_object_or_404(Property, pk=pk, owners=request.user)
     if request.method == "POST":
-        form = PropertyTaxForm(request.POST)
+        form = PropertyTaxForm(request.POST, country=prop.country)
         if form.is_valid():
             tax = form.save(commit=False)
             tax.property = prop
@@ -301,7 +304,7 @@ def add_tax(request, pk):
             taxes = prop.taxes.all()
             return render(request, "real_estate/partials/tax_list.html", {"taxes": taxes, "property": prop})
     else:
-        form = PropertyTaxForm()
+        form = PropertyTaxForm(country=prop.country)
     return render(request, "real_estate/partials/tax_form.html", {"form": form, "property": prop})
 
 
@@ -319,7 +322,11 @@ def sale_simulator(request, pk):
     except (InvalidOperation, TypeError):
         commission = Decimal("5")
     estimate = estimate_sale_proceeds(prop, sale_price=sale_price, agent_commission_pct=commission)
-    return render(request, "real_estate/partials/sale_estimate.html", {"property": prop, "estimate": estimate, "tips": TERM_TOOLTIPS})
+    return render(
+        request,
+        "real_estate/partials/sale_estimate.html",
+        {"property": prop, "estimate": estimate, "tips": get_tooltips(prop.country)},
+    )
 
 
 @login_required
@@ -449,7 +456,7 @@ def edit_tax(request, pk, tax_id):
     prop = get_object_or_404(Property, pk=pk, owners=request.user)
     tax = get_object_or_404(PropertyTax, pk=tax_id, property=prop)
     if request.method == "POST":
-        form = PropertyTaxForm(request.POST, instance=tax)
+        form = PropertyTaxForm(request.POST, instance=tax, country=prop.country)
         if form.is_valid():
             updated = form.save(commit=False)
             updated.property = prop
@@ -474,7 +481,7 @@ def edit_tax(request, pk, tax_id):
             taxes = prop.taxes.all()
             return render(request, "real_estate/partials/tax_list.html", {"taxes": taxes, "property": prop})
     else:
-        form = PropertyTaxForm(instance=tax)
+        form = PropertyTaxForm(instance=tax, country=prop.country)
     return render(
         request,
         "real_estate/partials/tax_form.html",
@@ -518,12 +525,9 @@ def edit_valuation(request, pk, valuation_id):
                 "valuation_updated",
                 _("updated valuation to %(value)s on %(date)s") % {"value": valuation.value, "date": valuation.date},
             )
-            valuations = prop.valuations.all()[:10]
-            return render(
-                request,
-                "real_estate/partials/valuation_history.html",
-                {"valuations": valuations, "oob_update": True, "property": prop},
-            )
+            response = HttpResponse()
+            response["HX-Redirect"] = reverse("real_estate:detail", args=[prop.pk])
+            return response
     else:
         form = ValuationForm(instance=valuation)
     return render(
@@ -552,12 +556,9 @@ def delete_valuation(request, pk, valuation_id):
             prop.valuation_date = prop.purchase_date
         prop.save(update_fields=["current_valuation", "valuation_date"])
         notify_co_owners(prop, request.user, "valuation_deleted", description)
-        valuations = prop.valuations.all()[:10]
-        return render(
-            request,
-            "real_estate/partials/valuation_history.html",
-            {"valuations": valuations, "oob_update": True, "property": prop},
-        )
+        response = HttpResponse()
+        response["HX-Redirect"] = reverse("real_estate:detail", args=[prop.pk])
+        return response
     return HttpResponseNotAllowed(["DELETE"])
 
 

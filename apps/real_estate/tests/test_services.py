@@ -15,6 +15,8 @@ from apps.real_estate.models import (
 )
 from apps.real_estate.services import (
     _calculate_acb,
+    _calculate_french_capital_gains_tax,
+    _calculate_french_surtax,
     calculate_monthly_payment,
     calculate_monthly_rate,
     estimate_sale_proceeds,
@@ -423,3 +425,268 @@ class TestPropertyCurrency:
             valuation_date=date(2024, 1, 1),
         )
         assert p.currency == "EUR"
+
+
+# ── French mortgage math ────────────────────────────────────
+
+
+class TestFrenchMonthlyRate:
+    def test_fixed_rate_uses_simple_division(self):
+        rate = calculate_monthly_rate(Decimal("3.5"), rate_type="fixed", country="FR")
+        expected = Decimal("3.5") / 100 / 12
+        assert abs(rate - expected) < Decimal("0.000001")
+
+    def test_variable_rate_same_as_fixed(self):
+        fixed = calculate_monthly_rate(Decimal("3.5"), rate_type="fixed", country="FR")
+        variable = calculate_monthly_rate(Decimal("3.5"), rate_type="variable", country="FR")
+        assert fixed == variable
+
+    def test_french_rate_higher_than_canadian(self):
+        fr_rate = calculate_monthly_rate(Decimal("5.0"), rate_type="fixed", country="FR")
+        ca_rate = calculate_monthly_rate(Decimal("5.0"), rate_type="fixed", country="CA")
+        assert fr_rate > ca_rate
+
+
+class TestFrenchMonthlyPayment:
+    def test_standard_french_mortgage(self):
+        pmt = calculate_monthly_payment(
+            Decimal("200000"),
+            Decimal("3.5"),
+            20,
+            rate_type="fixed",
+            country="FR",
+        )
+        assert Decimal("1155") < pmt < Decimal("1165")
+
+    def test_french_with_borrower_insurance(self):
+        base_pmt = calculate_monthly_payment(
+            Decimal("200000"),
+            Decimal("3.5"),
+            20,
+            rate_type="fixed",
+            country="FR",
+        )
+        insurance_monthly = Decimal("200000") * Decimal("0.30") / 100 / 12
+        total = base_pmt + insurance_monthly
+        assert total > base_pmt
+        assert insurance_monthly == Decimal("50.00")
+
+
+class TestFrenchAmortizationSchedule:
+    @pytest.fixture
+    def french_prop(self, user):
+        p = Property.objects.create(
+            name="Paris Flat",
+            property_type="condo",
+            usage="primary",
+            country="FR",
+            currency="EUR",
+            address="10 Rue de Rivoli",
+            city="Paris",
+            province="75",
+            purchase_price=Decimal("300000"),
+            purchase_date=date(2023, 1, 1),
+            current_valuation=Decimal("320000"),
+            valuation_date=date(2024, 1, 1),
+        )
+        PropertyOwnership.objects.create(user=user, property=p, is_admin=True, down_payment=Decimal("60000"))
+        return p
+
+    @pytest.fixture
+    def french_mortgage(self, french_prop):
+        return Mortgage.objects.create(
+            real_estate=french_prop,
+            lender="BNP Paribas",
+            principal=Decimal("240000"),
+            annual_rate=Decimal("3.500"),
+            rate_type="fixed",
+            amortization_years=20,
+            start_date=date(2023, 1, 1),
+            borrower_insurance_rate=Decimal("0.300"),
+        )
+
+    def test_uses_proportional_rate(self, french_mortgage):
+        schedule = generate_amortization_schedule(french_mortgage)
+        first = schedule[0]
+        expected_interest = (Decimal("240000") * Decimal("3.5") / 100 / 12).quantize(TWO_PLACES)
+        assert first["interest"] == expected_interest
+
+    def test_insurance_in_each_entry(self, french_mortgage):
+        schedule = generate_amortization_schedule(french_mortgage)
+        expected_insurance = (Decimal("240000") * Decimal("0.300") / 100 / 12).quantize(TWO_PLACES)
+        assert schedule[0]["insurance"] == expected_insurance
+        assert schedule[10]["insurance"] == expected_insurance
+
+    def test_total_payment_includes_insurance(self, french_mortgage):
+        schedule = generate_amortization_schedule(french_mortgage)
+        first = schedule[0]
+        base_payment = first["principal"] + first["interest"]
+        assert first["total_payment"] == base_payment + first["insurance"]
+
+
+# ── French capital gains tax ─────────────────────────────────
+
+
+class TestFrenchCapitalGainsTax:
+    @pytest.fixture
+    def french_rental(self, user):
+        p = Property.objects.create(
+            name="Paris Apartment",
+            property_type="condo",
+            usage="rental",
+            address="10 Rue de Rivoli",
+            city="Paris",
+            province="75",
+            country="FR",
+            currency="EUR",
+            purchase_price=Decimal("300000"),
+            purchase_date=date(2015, 1, 1),
+            welcome_tax_paid=Decimal("24000"),
+            notary_fees_purchase=Decimal("0"),
+            current_valuation=Decimal("400000"),
+            valuation_date=date(2026, 1, 1),
+        )
+        PropertyOwnership.objects.create(user=user, property=p, is_admin=True)
+        return p
+
+    def test_primary_residence_exempt(self, user):
+        p = Property.objects.create(
+            name="Paris Home",
+            property_type="condo",
+            usage="primary",
+            address="5 Av Montaigne",
+            city="Paris",
+            province="75",
+            country="FR",
+            currency="EUR",
+            purchase_price=Decimal("500000"),
+            purchase_date=date(2010, 1, 1),
+            current_valuation=Decimal("800000"),
+            valuation_date=date(2026, 1, 1),
+        )
+        tax, details = _calculate_french_capital_gains_tax(p, Decimal("800000"))
+        assert tax == Decimal("0")
+
+    def test_rental_under_5_years_no_abatement(self, french_rental):
+        french_rental.purchase_date = date(2024, 1, 1)
+        french_rental.save()
+        tax, details = _calculate_french_capital_gains_tax(french_rental, Decimal("400000"))
+        # Gain: 400k - (300k + 24k) = 76k
+        assert details["ir_abatement_pct"] == Decimal("0")
+        assert details["ps_abatement_pct"] == Decimal("0")
+
+    def test_rental_10_years_partial_abatement(self, french_rental):
+        french_rental.purchase_date = date(2016, 1, 1)
+        french_rental.save()
+        tax, details = _calculate_french_capital_gains_tax(french_rental, Decimal("400000"))
+        assert details["holding_years"] == 10
+        assert details["ir_abatement_pct"] == Decimal("30")
+
+    def test_rental_22_years_ir_exempt(self, french_rental):
+        french_rental.purchase_date = date(2004, 1, 1)
+        french_rental.save()
+        tax, details = _calculate_french_capital_gains_tax(french_rental, Decimal("400000"))
+        assert details["ir_abatement_pct"] == Decimal("100")
+        assert details["ir_tax"] == Decimal("0")
+        assert details["ps_tax"] > 0
+
+    def test_rental_30_years_fully_exempt(self, french_rental):
+        french_rental.purchase_date = date(1995, 1, 1)
+        french_rental.save()
+        tax, details = _calculate_french_capital_gains_tax(french_rental, Decimal("400000"))
+        assert tax == Decimal("0")
+
+    def test_no_gain_no_tax(self, french_rental):
+        tax, details = _calculate_french_capital_gains_tax(french_rental, Decimal("250000"))
+        assert tax == Decimal("0")
+
+
+class TestFrenchSurtax:
+    def test_no_surtax_under_50k(self):
+        assert _calculate_french_surtax(Decimal("49000")) == Decimal("0")
+
+    def test_surtax_at_100k(self):
+        result = _calculate_french_surtax(Decimal("100000"))
+        assert result == Decimal("2000.00")
+
+    def test_surtax_at_260k_plus(self):
+        result = _calculate_french_surtax(Decimal("300000"))
+        assert result == Decimal("18000.00")
+
+    def test_surtax_boundary_60k(self):
+        result = _calculate_french_surtax(Decimal("55000"))
+        expected = (Decimal("55000") * Decimal("0.02") - (60000 - 55000) * Decimal("0.05")).quantize(TWO_PLACES)
+        assert result == expected
+
+
+# ── French sale simulation ───────────────────────────────────
+
+
+class TestFrenchSaleSimulation:
+    def test_french_commission_includes_tva(self, user):
+        p = Property.objects.create(
+            name="Lyon House",
+            property_type="house",
+            usage="primary",
+            address="1 Place Bellecour",
+            city="Lyon",
+            province="69",
+            country="FR",
+            currency="EUR",
+            purchase_price=Decimal("400000"),
+            purchase_date=date(2020, 1, 1),
+            current_valuation=Decimal("500000"),
+            valuation_date=date(2026, 1, 1),
+        )
+        PropertyOwnership.objects.create(user=user, property=p, is_admin=True)
+        period = OwnershipPeriod.objects.create(property=p, start_date=date(2020, 1, 1))
+        ownership = p.ownerships.get()
+        OwnershipPeriodShare.objects.create(period=period, owner=ownership, share_pct=Decimal("100"))
+        estimate = estimate_sale_proceeds(p, sale_price=Decimal("500000"))
+        # 5% * 500k = 25k * 1.20 TVA = 30k
+        assert estimate["agent_commission"] == Decimal("30000.00")
+
+    def test_french_primary_no_cgt(self, user):
+        p = Property.objects.create(
+            name="Paris Home",
+            property_type="condo",
+            usage="primary",
+            address="5 Rue de Passy",
+            city="Paris",
+            province="75",
+            country="FR",
+            currency="EUR",
+            purchase_price=Decimal("500000"),
+            purchase_date=date(2015, 1, 1),
+            current_valuation=Decimal("700000"),
+            valuation_date=date(2026, 1, 1),
+        )
+        PropertyOwnership.objects.create(user=user, property=p, is_admin=True)
+        period = OwnershipPeriod.objects.create(property=p, start_date=date(2015, 1, 1))
+        ownership = p.ownerships.get()
+        OwnershipPeriodShare.objects.create(period=period, owner=ownership, share_pct=Decimal("100"))
+        estimate = estimate_sale_proceeds(p, sale_price=Decimal("700000"))
+        assert estimate["capital_gains_tax"] == Decimal("0.00")
+
+    def test_french_rental_has_cgt(self, user):
+        p = Property.objects.create(
+            name="Nice Studio",
+            property_type="condo",
+            usage="rental",
+            address="10 Prom. des Anglais",
+            city="Nice",
+            province="06",
+            country="FR",
+            currency="EUR",
+            purchase_price=Decimal("200000"),
+            purchase_date=date(2022, 1, 1),
+            current_valuation=Decimal("250000"),
+            valuation_date=date(2026, 1, 1),
+        )
+        PropertyOwnership.objects.create(user=user, property=p, is_admin=True)
+        period = OwnershipPeriod.objects.create(property=p, start_date=date(2022, 1, 1))
+        ownership = p.ownerships.get()
+        OwnershipPeriodShare.objects.create(period=period, owner=ownership, share_pct=Decimal("100"))
+        estimate = estimate_sale_proceeds(p, sale_price=Decimal("250000"))
+        assert estimate["capital_gains_tax"] > Decimal("0")
+        assert "capital_gains_details" in estimate

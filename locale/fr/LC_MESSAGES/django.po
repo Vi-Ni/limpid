@@ -1735,3 +1735,192 @@ msgstr "Afficher en"
 
 msgid "Convert to"
 msgstr "Convertir en"
+
+# ── France support ──
+
+# Country names
+msgid "Canada"
+msgstr "Canada"
+
+msgid "France"
+msgstr "France"
+
+msgid "country"
+msgstr "pays"
+
+# French tax types
+msgid "Taxe foncière"
+msgstr "Taxe foncière"
+
+msgid "Taxe d'habitation"
+msgstr "Taxe d'habitation"
+
+msgid "IFI (wealth tax)"
+msgstr "IFI (impôt sur la fortune immobilière)"
+
+# French expense types
+msgid "Charges de copropriété"
+msgstr "Charges de copropriété"
+
+msgid "Assurance emprunteur"
+msgstr "Assurance emprunteur"
+
+# French mortgage terms
+msgid "Mixed (taux mixte)"
+msgstr "Mixte (taux mixte)"
+
+msgid "borrower insurance rate (%)"
+msgstr "taux d'assurance emprunteur (%)"
+
+msgid "Loan duration (years)"
+msgstr "Durée du prêt (années)"
+
+msgid "Amortization (years)"
+msgstr "Amortissement (années)"
+
+# French form labels
+msgid "Département"
+msgstr "Département"
+
+msgid "Frais de notaire (achat)"
+msgstr "Frais de notaire (achat)"
+
+msgid "Frais d'agence (achat)"
+msgstr "Frais d'agence (achat)"
+
+msgid "Valeur cadastrale"
+msgstr "Valeur cadastrale"
+
+msgid "Welcome tax paid"
+msgstr "Taxe de bienvenue payée"
+
+msgid "Notary fees at purchase"
+msgstr "Frais de notaire à l'achat"
+
+# French sale simulation
+msgid "Holding period"
+msgstr "Durée de détention"
+
+msgid "Income tax (19%)"
+msgstr "Impôt sur le revenu (19 %)"
+
+msgid "Social contributions (17.2%)"
+msgstr "Prélèvements sociaux (17,2 %)"
+
+msgid "Surtax"
+msgstr "Surtaxe"
+
+msgid "IR abatement"
+msgstr "Abattement IR"
+
+msgid "Social abatement"
+msgstr "Abattement prélèvements sociaux"
+
+# French detail page
+msgid "Taxes & Charges"
+msgstr "Impôts et charges"
+
+# ── French-specific tooltips ──
+
+msgid ""
+"The total duration of your mortgage in years. In France, 20 or 25 years is "
+"most common. Maximum allowed: 25 years."
+msgstr ""
+"La durée totale de votre prêt immobilier en années. En France, 20 ou 25 ans "
+"est le plus courant. Maximum autorisé : 25 ans."
+
+msgid ""
+"The real estate agent's fee, typically 3-6% of the sale price in France. "
+"This includes 20% TVA."
+msgstr ""
+"Les honoraires de l'agent immobilier, typiquement 3-6 % du prix de vente en "
+"France. TVA de 20 % incluse."
+
+msgid ""
+"If this isn't your primary residence, you owe plus-value tax on the profit: "
+"19% income tax + 17.2% social contributions. Abatements apply based on how "
+"long you've owned the property — full IR exemption after 22 years, full "
+"social exemption after 30."
+msgstr ""
+"Si ce n'est pas votre résidence principale, vous devez la taxe sur la "
+"plus-value : 19 % d'impôt sur le revenu + 17,2 % de prélèvements sociaux. "
+"Des abattements s'appliquent selon la durée de détention — exonération "
+"totale d'IR après 22 ans, exonération totale des prélèvements sociaux après "
+"30 ans."
+
+msgid ""
+"Assurance emprunteur — mandatory insurance covering death, disability, and "
+"job loss. Paid monthly on top of your mortgage payment. Typical rate: "
+"0.15-0.50% per year of the loan amount."
+msgstr ""
+"Assurance emprunteur — assurance obligatoire couvrant décès, invalidité et "
+"perte d'emploi. Payée mensuellement en plus de votre mensualité de prêt. "
+"Taux typique : 0,15-0,50 % par an du montant emprunté."
+
+msgid ""
+"The 'frais de notaire' include transfer taxes (droits de mutation), notary "
+"fees, and administrative costs. For existing properties: 7-8.5% of the "
+"price. For new builds: 2-3% (VAT is included in the purchase price instead)."
+msgstr ""
+"Les « frais de notaire » incluent les droits de mutation, les honoraires du "
+"notaire et les frais administratifs. Pour l'ancien : 7-8,5 % du prix. Pour "
+"le neuf : 2-3 % (la TVA est incluse dans le prix d'achat)."
+
+msgid ""
+"Annual property tax paid to the municipality. Based on the cadastral value "
+"and local tax rates. Varies widely by location."
+msgstr ""
+"Taxe annuelle payée à la commune. Basée sur la valeur cadastrale et les "
+"taux locaux. Varie considérablement selon l'emplacement."
+
+msgid ""
+"Abolished for all primary residences since 2023. Still applies to secondary "
+"residences, with possible surcharges in high-demand areas."
+msgstr ""
+"Supprimée pour toutes les résidences principales depuis 2023. S'applique "
+"toujours aux résidences secondaires, avec d'éventuelles majorations dans "
+"les zones tendues."
+
+msgid ""
+"Wealth tax on real estate (Impot sur la Fortune Immobiliere). Applies if "
+"your total net real estate exceeds 1,300,000 EUR. Primary residence benefits "
+"from a 30% valuation abatement."
+msgstr ""
+"Impôt sur la fortune immobilière (IFI). S'applique si votre patrimoine "
+"immobilier net total dépasse 1 300 000 €. La résidence principale bénéficie "
+"d'un abattement de 30 % sur sa valeur."
+
+# ── French form field tooltips ──
+
+msgid ""
+"Total 'frais de notaire' paid at purchase. Includes transfer taxes (droits "
+"de mutation), notary fees, and administrative costs. Typically 7-8.5% for "
+"existing properties, 2-3% for new builds."
+msgstr ""
+"Total des « frais de notaire » payés à l'achat. Inclut les droits de "
+"mutation, les honoraires du notaire et les frais administratifs. "
+"Typiquement 7-8,5 % pour l'ancien, 2-3 % pour le neuf."
+
+msgid "Real estate agent fees paid at purchase, if any."
+msgstr "Frais d'agence immobilière payés à l'achat, le cas échéant."
+
+msgid ""
+"The cadastral rental value (valeur locative cadastrale) used to calculate "
+"taxe foncière. Found on your taxe foncière notice."
+msgstr ""
+"La valeur locative cadastrale utilisée pour calculer la taxe foncière. "
+"Se trouve sur votre avis de taxe foncière."
+
+msgid ""
+"Total mortgage duration in years. Most common in France: 20 or 25 years. "
+"Maximum allowed by regulation: 25 years."
+msgstr ""
+"Durée totale du prêt en années. Le plus courant en France : 20 ou 25 ans. "
+"Maximum autorisé par la réglementation : 25 ans."
+
+msgid ""
+"Annual rate for assurance emprunteur (e.g. 0.30 for 0.30%). Required by all "
+"French banks. Typical rates: 0.15-0.50% depending on age."
+msgstr ""
+"Taux annuel de l'assurance emprunteur (ex. 0,30 pour 0,30 %). Exigée par "
+"toutes les banques françaises. Taux typiques : 0,15-0,50 % selon l'âge."

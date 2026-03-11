@@ -10,15 +10,17 @@ TWO_PLACES = Decimal("0.01")
 # ── Amortization ──────────────────────────────────────────────
 
 
-def calculate_monthly_rate(annual_rate_pct, rate_type="fixed"):
+def calculate_monthly_rate(annual_rate_pct, rate_type="fixed", country="CA"):
     r = annual_rate_pct / 100
+    if country == "FR":
+        return r / 12
     if rate_type == "fixed":
         return (1 + r / 2) ** (Decimal("1") / 6) - 1
     return r / 12
 
 
-def calculate_monthly_payment(principal, annual_rate_pct, amortization_years, rate_type="fixed"):
-    r = calculate_monthly_rate(annual_rate_pct, rate_type)
+def calculate_monthly_payment(principal, annual_rate_pct, amortization_years, rate_type="fixed", country="CA"):
+    r = calculate_monthly_rate(annual_rate_pct, rate_type, country)
     n = amortization_years * 12
     if r == 0:
         return (principal / n).quantize(TWO_PLACES)
@@ -27,10 +29,19 @@ def calculate_monthly_payment(principal, annual_rate_pct, amortization_years, ra
 
 
 def generate_amortization_schedule(mortgage):
-    r = calculate_monthly_rate(mortgage.annual_rate, mortgage.rate_type)
+    country = mortgage.real_estate.country
+    r = calculate_monthly_rate(mortgage.annual_rate, mortgage.rate_type, country)
     n = mortgage.amortization_years * 12
     principal = mortgage.effective_principal
-    pmt = calculate_monthly_payment(principal, mortgage.annual_rate, mortgage.amortization_years, mortgage.rate_type)
+    pmt = calculate_monthly_payment(
+        principal, mortgage.annual_rate, mortgage.amortization_years, mortgage.rate_type, country
+    )
+
+    insurance_monthly = Decimal("0")
+    if mortgage.borrower_insurance_rate:
+        insurance_monthly = (mortgage.effective_principal * mortgage.borrower_insurance_rate / 100 / 12).quantize(
+            TWO_PLACES
+        )
 
     balance = principal
     schedule = []
@@ -53,9 +64,10 @@ def generate_amortization_schedule(mortgage):
             {
                 "payment_number": i,
                 "date": payment_date,
-                "total_payment": actual_payment,
+                "total_payment": actual_payment + insurance_monthly,
                 "principal": principal_portion,
                 "interest": interest,
+                "insurance": insurance_monthly,
                 "balance": balance,
             }
         )
@@ -139,23 +151,38 @@ def get_owner_contributions(ownership):
 # ── Sale Simulation ──────────────────────────────────────────
 
 
-def estimate_sale_proceeds(prop, sale_price=None, agent_commission_pct=Decimal("5"), notary_fees=Decimal("800")):
+def estimate_sale_proceeds(prop, sale_price=None, agent_commission_pct=None, notary_fees=None):
     if sale_price is None:
         sale_price = prop.current_valuation
+
+    if prop.country == "FR":
+        if agent_commission_pct is None:
+            agent_commission_pct = Decimal("5")
+        if notary_fees is None:
+            notary_fees = Decimal("3000")
+    else:
+        if agent_commission_pct is None:
+            agent_commission_pct = Decimal("5")
+        if notary_fees is None:
+            notary_fees = Decimal("800")
 
     total_mortgage_balance = Decimal("0")
     for mortgage in prop.mortgages.filter(is_active=True):
         total_mortgage_balance += get_remaining_balance(mortgage)
 
     commission = sale_price * agent_commission_pct / 100
-    commission_with_tax = commission * Decimal("1.14975")
+    commission_with_tax = commission * Decimal("1.20") if prop.country == "FR" else commission * Decimal("1.14975")
 
-    capital_gains_tax = Decimal("0")
-    if prop.usage != "primary":
-        acb = _calculate_acb(prop)
-        capital_gain = sale_price - acb
-        if capital_gain > 0:
-            capital_gains_tax = capital_gain * Decimal("0.50") * Decimal("0.45")
+    capital_gains_details = {}
+    if prop.country == "FR":
+        capital_gains_tax, capital_gains_details = _calculate_french_capital_gains_tax(prop, sale_price)
+    else:
+        capital_gains_tax = Decimal("0")
+        if prop.usage != "primary":
+            acb = _calculate_acb(prop)
+            capital_gain = sale_price - acb
+            if capital_gain > 0:
+                capital_gains_tax = capital_gain * Decimal("0.50") * Decimal("0.45")
 
     gross_equity = sale_price - total_mortgage_balance
     total_costs = commission_with_tax + notary_fees + capital_gains_tax
@@ -175,7 +202,7 @@ def estimate_sale_proceeds(prop, sale_price=None, agent_commission_pct=Decimal("
             }
         )
 
-    return {
+    result = {
         "sale_price": sale_price,
         "mortgage_balance": total_mortgage_balance,
         "gross_equity": gross_equity,
@@ -186,6 +213,9 @@ def estimate_sale_proceeds(prop, sale_price=None, agent_commission_pct=Decimal("
         "net_proceeds": net_proceeds.quantize(TWO_PLACES),
         "per_owner": per_owner,
     }
+    if capital_gains_details:
+        result["capital_gains_details"] = capital_gains_details
+    return result
 
 
 def _calculate_acb(prop):
@@ -194,6 +224,84 @@ def _calculate_acb(prop):
         "total"
     ] or Decimal("0")
     return acb + capital_improvements
+
+
+def _calculate_french_capital_gains_tax(prop, sale_price):
+    if prop.usage == "primary":
+        return Decimal("0"), {}
+
+    acb = _calculate_acb(prop)
+    raw_gain = sale_price - acb
+    if raw_gain <= 0:
+        return Decimal("0"), {}
+
+    today = date.today()
+    holding_years = (today - prop.purchase_date).days // 365
+
+    if holding_years >= 22:
+        ir_abatement_pct = Decimal("100")
+    elif holding_years <= 5:
+        ir_abatement_pct = Decimal("0")
+    elif holding_years == 21:
+        ir_abatement_pct = Decimal("96")
+    else:
+        ir_abatement_pct = Decimal(str((holding_years - 5) * 6))
+
+    if holding_years >= 30:
+        ps_abatement_pct = Decimal("100")
+    elif holding_years <= 5:
+        ps_abatement_pct = Decimal("0")
+    elif holding_years <= 21:
+        ps_abatement_pct = Decimal(str(Decimal(str(holding_years - 5)) * Decimal("1.65")))
+    elif holding_years == 22:
+        ps_abatement_pct = Decimal("28")
+    else:
+        ps_abatement_pct = Decimal("28") + Decimal(str((holding_years - 22) * 9))
+
+    ir_taxable = raw_gain * (1 - ir_abatement_pct / 100)
+    ps_taxable = raw_gain * (1 - ps_abatement_pct / 100)
+
+    ir_tax = ir_taxable * Decimal("0.19")
+    ps_tax = ps_taxable * Decimal("0.172")
+
+    surtax = _calculate_french_surtax(ir_taxable)
+
+    total = (ir_tax + ps_tax + surtax).quantize(TWO_PLACES)
+    details = {
+        "raw_gain": raw_gain.quantize(TWO_PLACES),
+        "holding_years": holding_years,
+        "ir_abatement_pct": ir_abatement_pct,
+        "ps_abatement_pct": ps_abatement_pct,
+        "ir_tax": ir_tax.quantize(TWO_PLACES),
+        "ps_tax": ps_tax.quantize(TWO_PLACES),
+        "surtax": surtax.quantize(TWO_PLACES),
+    }
+    return total, details
+
+
+def _calculate_french_surtax(taxable_gain):
+    pv = taxable_gain
+    if pv <= 50000:
+        return Decimal("0")
+    if pv <= 60000:
+        return (pv * Decimal("0.02") - (60000 - pv) * Decimal("0.05")).quantize(TWO_PLACES)
+    if pv <= 100000:
+        return (pv * Decimal("0.02")).quantize(TWO_PLACES)
+    if pv <= 110000:
+        return (pv * Decimal("0.03") - (110000 - pv) * Decimal("0.1")).quantize(TWO_PLACES)
+    if pv <= 150000:
+        return (pv * Decimal("0.03")).quantize(TWO_PLACES)
+    if pv <= 160000:
+        return (pv * Decimal("0.04") - (160000 - pv) * Decimal("0.15")).quantize(TWO_PLACES)
+    if pv <= 200000:
+        return (pv * Decimal("0.04")).quantize(TWO_PLACES)
+    if pv <= 210000:
+        return (pv * Decimal("0.05") - (210000 - pv) * Decimal("0.2")).quantize(TWO_PLACES)
+    if pv <= 250000:
+        return (pv * Decimal("0.05")).quantize(TWO_PLACES)
+    if pv <= 260000:
+        return (pv * Decimal("0.06") - (260000 - pv) * Decimal("0.25")).quantize(TWO_PLACES)
+    return (pv * Decimal("0.06")).quantize(TWO_PLACES)
 
 
 # ── Property Snapshot ─────────────────────────────────────────
