@@ -43,6 +43,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
       - run: uv sync --frozen
+      # .mo files are gitignored; the app defaults to French (LANGUAGE_CODE=fr),
+      # so views must be tested against compiled translations, as production runs.
+      - run: sudo apt-get install -y gettext
+      - run: uv run python manage.py compilemessages
       - run: uv run pytest --cov=apps --cov-report=term-missing
 
   build:
