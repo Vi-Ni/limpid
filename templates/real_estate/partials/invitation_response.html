@@ -1,0 +1,12 @@
+{% load i18n %}
+
+{% if accepted %}
+<div class="rounded-lg bg-success-50 border border-success-200 px-4 py-3 text-sm text-success-700">
+  {% blocktrans with name=property.name %}You are now a co-owner of <strong>{{ name }}</strong>.{% endblocktrans %}
+  <a href="{% url 'real_estate:detail' property.pk %}" class="underline font-medium ml-1">{% trans "View property" %}</a>
+</div>
+{% else %}
+<div class="rounded-lg bg-bg-hover px-4 py-3 text-sm text-text-muted">
+  {% trans "Invitation declined." %}
+</div>
+{% endif %}

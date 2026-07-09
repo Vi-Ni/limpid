@@ -2,7 +2,7 @@
 {% load i18n real_estate_filters %}
 
 {% block content %}
-<div class="container-limpid py-6 animate-enter space-y-6">
+<div class="container-limpid py-6 animate-enter space-y-6" x-data="{ showMine: false }">
   <!-- Header -->
   <div class="flex items-start justify-between">
     <div>
@@ -21,30 +21,88 @@
       {% include "components/badge.html" with label=property.get_usage_display variant="neutral" %}
       {% if ownership.is_admin %}
         <a href="{% url 'real_estate:edit' property.pk %}" class="btn-ghost">{% trans "Edit" %}</a>
+        <a href="{% url 'real_estate:delete' property.pk %}" class="btn-ghost text-danger-500 hover:text-danger-700 text-sm">{% trans "Delete" %}</a>
       {% endif %}
     </div>
   </div>
 
-  {# Stat cards row #}
-  <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-    {% show_money snapshot.current_valuation property.currency as val_display %}
-    {% include "components/stat_card.html" with label=_("Value") value=val_display tooltip_id="value" tooltip_text=tips.value %}
-    {% show_money snapshot.equity property.currency as eq_display %}
-    {% with pct=snapshot.equity_pct|floatformat:1|add:"%" %}
-    {% include "components/stat_card.html" with label=_("Equity") value=eq_display annotation=pct tooltip_id="equity" tooltip_text=tips.equity %}
-    {% endwith %}
-    {% show_money snapshot.mortgage_balance property.currency as mort_display %}
-    {% include "components/stat_card.html" with label=_("Mortgage") value=mort_display tooltip_id="mortgage" tooltip_text=tips.mortgage %}
-    {% show_money owner_snapshot.your_equity property.currency as share_display %}
-    {% with pct=owner_snapshot.share_pct|floatformat:0|add:"%" %}
-    {% include "components/stat_card.html" with label=_("Your share") value=share_display annotation=pct tooltip_id="your_share" tooltip_text=tips.your_share %}
-    {% endwith %}
+  {# Stat cards row with global my-share toggle #}
+  {% if has_co_owners %}
+  <div class="flex justify-end mb-2">
+    <label class="inline-flex items-center cursor-pointer gap-2">
+      <span class="text-xs text-text-muted">{% trans "Total" %}</span>
+      <div class="relative">
+        <input type="checkbox" class="sr-only peer" x-model="showMine">
+        <div class="w-9 h-5 bg-border rounded-full peer-checked:bg-primary-600 transition"></div>
+        <div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></div>
+      </div>
+      <span class="text-xs text-text-muted">{% trans "My share" %}</span>
+    </label>
   </div>
+  {% endif %}
+  {% with owner_pct=owner_snapshot.share_pct|floatformat:0|add:"%" %}
+  <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div x-show="!showMine">
+      {% show_money snapshot.current_valuation property.currency as val_display %}
+      {% with pct=snapshot.appreciation_pct|signed_pct %}
+      {% include "components/stat_card.html" with label=_("Value") value=val_display annotation=pct tooltip_id="value" tooltip_text=tips.value %}
+      {% endwith %}
+    </div>
+    <div x-show="showMine" x-cloak>
+      {% show_money owner_snapshot.your_valuation property.currency as yval_display %}
+      {% include "components/stat_card.html" with label=_("Your value") value=yval_display annotation=owner_pct %}
+    </div>
+
+    <div x-show="!showMine">
+      {% show_money snapshot.equity property.currency as eq_display %}
+      {% with pct=snapshot.equity_pct|floatformat:1|add:"%" %}
+      {% include "components/stat_card.html" with label=_("Equity") value=eq_display annotation=pct tooltip_id="equity" tooltip_text=tips.equity %}
+      {% endwith %}
+    </div>
+    <div x-show="showMine" x-cloak>
+      {% show_money owner_snapshot.your_equity property.currency as yeq_display %}
+      {% with pct=snapshot.equity_pct|floatformat:1|add:"%" %}
+      {% include "components/stat_card.html" with label=_("Your equity") value=yeq_display annotation=pct %}
+      {% endwith %}
+    </div>
+
+    <div x-show="!showMine">
+      {% show_money snapshot.mortgage_balance property.currency as mort_display %}
+      {% include "components/stat_card.html" with label=_("Mortgage") value=mort_display annotation=mortgage_pct tooltip_id="mortgage" tooltip_text=tips.mortgage %}
+    </div>
+    <div x-show="showMine" x-cloak>
+      {% show_money owner_snapshot.your_mortgage_share property.currency as ymort_display %}
+      {% include "components/stat_card.html" with label=_("Your mortgage") value=ymort_display annotation=mortgage_pct %}
+    </div>
+
+    <div x-show="!showMine">
+      {% show_money cost_total.total_monthly property.currency as mc_total_display %}
+      {% include "components/stat_card.html" with label=_("Monthly cost") value=mc_total_display tooltip_id="monthly_cost" tooltip_text=tips.monthly_cost %}
+    </div>
+    {% if has_co_owners %}
+    <div x-show="showMine" x-cloak>
+      {% show_money cost_mine.your_total_monthly property.currency as mc_mine_display %}
+      {% include "components/stat_card.html" with label=_("My monthly cost") value=mc_mine_display annotation=owner_pct %}
+    </div>
+    {% endif %}
+  </div>
+  {% endwith %}
 
   {# Main content: 3-col layout #}
   <div class="grid gap-6 lg:grid-cols-3">
-    {# Left 2 cols: details + charts + expenses + valuations #}
+    {# Left 2 cols #}
     <div class="lg:col-span-2 space-y-6">
+
+      {# Monthly cost — inside left column #}
+      {% include "components/card_start.html" with title=_("Monthly Cost") tooltip_id="monthly_cost" tooltip_text=tips.monthly_cost %}
+        <div id="monthly-cost-container"
+             hx-get="{% url 'real_estate:monthly_cost' property.pk %}"
+             hx-trigger="expenses-changed from:body, taxes-changed from:body, rental-changed from:body, mortgage-changed from:body, payments-changed from:body"
+             hx-swap="innerHTML">
+          {% include "real_estate/partials/monthly_cost.html" %}
+        </div>
+      {% include "components/card_end.html" %}
+
       {# Property details #}
       {% include "components/card_start.html" with title=_("Details") %}
         <div class="space-y-0">
@@ -65,52 +123,99 @@
         </div>
       {% include "components/card_end.html" %}
 
-      {# Charts #}
-      <div class="grid gap-6 sm:grid-cols-3">
-        {% include "components/card_start.html" with title=_("Equity Breakdown") tooltip_id="equity_breakdown" tooltip_text=tips.equity_breakdown %}
-          <canvas data-chart="allocation" data-chart-data='{{ equity_chart }}'></canvas>
-        {% include "components/card_end.html" %}
+      {# Mortgage #}
+      {% if mortgage %}
+      {% include "components/card_start.html" with title=_("Mortgage") %}
+        <div class="space-y-0">
+          {% include "components/metric_row.html" with label=_("Lender") value=mortgage.lender tooltip_id="lender" tooltip_text=tips.lender %}
+          {% with rate=mortgage.annual_rate|floatformat:2 rtype=mortgage.get_rate_type_display %}
+          {% include "components/metric_row.html" with label=_("Rate") value=rate annotation=rtype tooltip_id="rate" tooltip_text=tips.rate %}
+          {% endwith %}
+          {% show_money snapshot.monthly_payment property.currency as mp_display %}
+          {% include "components/metric_row.html" with label=_("Monthly payment") value=mp_display tooltip_id="monthly_payment" tooltip_text=tips.monthly_payment %}
+          {% show_money snapshot.mortgage_balance property.currency as rb_display %}
+          {% include "components/metric_row.html" with label=_("Remaining balance") value=rb_display tooltip_id="remaining_balance" tooltip_text=tips.remaining_balance %}
+          {% include "components/metric_row.html" with label=_("Amortization") value=mortgage.amortization_years annotation=_("years") tooltip_id="amortization" tooltip_text=tips.amortization %}
+        </div>
+        <div class="mt-4 pt-4 border-t border-border">
+          <a href="{% url 'real_estate:amortization' property.pk mortgage.pk %}" class="text-sm text-primary-600 hover:text-primary-700">
+            {% trans "View full amortization schedule" %} &rarr;
+          </a>
+        </div>
 
-        {% include "components/card_start.html" with title=_("Payment Breakdown") tooltip_id="payment_breakdown" tooltip_text=tips.payment_breakdown %}
-          <canvas data-chart="allocation" data-chart-data='{{ payment_chart }}'></canvas>
-        {% include "components/card_end.html" %}
-
-        {% include "components/card_start.html" with title=_("Expenses by Type") tooltip_id="expenses_by_type" tooltip_text=tips.expenses_by_type %}
-          <canvas data-chart="allocation" data-chart-data='{{ expense_chart }}'></canvas>
-        {% include "components/card_end.html" %}
-      </div>
-
-      {# Sale simulator #}
-      {% include "components/card_start.html" with title=_("If I sell today...") %}
-        <div class="flex flex-col gap-4 sm:flex-row sm:gap-6 mb-4">
-          <div class="flex-1">
-            <label class="block text-sm text-text-muted mb-1">{% trans "Sale price" %}</label>
-            <input type="number" value="{{ property.current_valuation|floatformat:0 }}"
-                   class="input"
-                   hx-get="{% url 'real_estate:sale_simulator' property.pk %}"
-                   hx-trigger="input changed delay:500ms"
-                   hx-target="#sale-results"
-                   hx-include="[name='commission']"
-                   hx-on::before-request="$dispatch('close-tooltips')"
-                   name="sale_price" />
+        {# Rate changes #}
+        <div class="mt-4 pt-4 border-t border-border">
+          <h4 class="text-xs font-medium uppercase tracking-wide text-text-muted mb-3">{% trans "Rate Changes" %}</h4>
+          <div id="rate-change-list">
+            {% include "real_estate/partials/rate_change_list.html" with rate_changes=mortgage.rate_changes.all %}
           </div>
-          <div class="w-32">
-            <label class="block text-sm text-text-muted mb-1">
-              {% trans "Commission (%)" %}
-              {% include "components/tooltip.html" with id="commission_pct" text=tips.agent_commission %}
-            </label>
-            <input type="number" value="5" step="0.5" min="0" max="10"
-                   class="input"
-                   hx-get="{% url 'real_estate:sale_simulator' property.pk %}"
-                   hx-trigger="input changed delay:500ms"
-                   hx-target="#sale-results"
-                   hx-include="[name='sale_price']"
-                   hx-on::before-request="$dispatch('close-tooltips')"
-                   name="commission" />
+          <div class="mt-3">
+            <button hx-get="{% url 'real_estate:add_rate_change' property.pk mortgage.pk %}"
+                    hx-target="#rate-change-form-container"
+                    hx-swap="innerHTML"
+                    class="btn-ghost text-primary-600 hover:text-primary-700 text-sm">
+              {% trans "+ Add rate change" %}
+            </button>
+            <div id="rate-change-form-container"></div>
           </div>
         </div>
-        <div id="sale-results">
-          {% include "real_estate/partials/sale_estimate.html" with estimate=sale_estimate %}
+
+        {# Payment split (if co-owners) #}
+        {% if shares|length > 1 %}
+        <div class="mt-4 pt-4 border-t border-border">
+          <h4 class="text-xs font-medium uppercase tracking-wide text-text-muted mb-3">{% trans "Payment Split" %}</h4>
+          <div id="owner-payments-container"
+               hx-get="{% url 'real_estate:owner_payments' property.pk mortgage.pk %}"
+               hx-trigger="load"
+               hx-swap="innerHTML">
+          </div>
+        </div>
+        {% endif %}
+      {% include "components/card_end.html" %}
+      {% endif %}
+
+      {# Evolution chart (line chart over time) #}
+      {% if evolution_chart %}
+      {% include "components/card_start.html" with title=_("Mortgage Evolution") %}
+        <canvas data-chart="evolution" data-chart-data='{{ evolution_chart }}'></canvas>
+      {% include "components/card_end.html" %}
+      {% endif %}
+
+      {# Rental Income (for rental properties) #}
+      {% if property.usage == "rental" %}
+      {% include "components/card_start.html" with title=_("Rental Income") tooltip_id="rental_income" tooltip_text=tips.rental_income %}
+        <div id="rental-income-list">
+          {% include "real_estate/partials/rental_income_list.html" %}
+        </div>
+        <div class="mt-4 pt-4 border-t border-border">
+          <button hx-get="{% url 'real_estate:add_rental_income' property.pk %}"
+                  hx-target="#rental-income-form-container"
+                  hx-swap="innerHTML"
+                  class="btn-ghost text-primary-600 hover:text-primary-700 text-sm">
+            {% trans "+ Add rental income" %}
+          </button>
+          <div id="rental-income-form-container"></div>
+        </div>
+      {% include "components/card_end.html" %}
+      {% endif %}
+
+      {# Property Taxes #}
+      {% if property.country == "FR" %}
+      {% include "components/card_start.html" with title=_("Taxes & Charges") %}
+      {% else %}
+      {% include "components/card_start.html" with title=_("Property Taxes") %}
+      {% endif %}
+        <div id="tax-list">
+          {% include "real_estate/partials/tax_list.html" %}
+        </div>
+        <div class="mt-4 pt-4 border-t border-border">
+          <button hx-get="{% url 'real_estate:add_tax' property.pk %}"
+                  hx-target="#tax-form-container"
+                  hx-swap="innerHTML"
+                  class="btn-ghost text-primary-600 hover:text-primary-700">
+            {% trans "+ Add tax" %}
+          </button>
+          <div id="tax-form-container"></div>
         </div>
       {% include "components/card_end.html" %}
 
@@ -145,27 +250,79 @@
           <div id="valuation-form-container"></div>
         </div>
       {% include "components/card_end.html" %}
+
+      {# Sale simulator — last in left column #}
+      {% include "components/card_start.html" with title=_("If I sell today...") %}
+        <div class="flex flex-col gap-4 sm:flex-row sm:gap-6 mb-4">
+          <div class="flex-1">
+            <label class="block text-sm text-text-muted mb-1">{% trans "Sale price" %}</label>
+            <input type="number" value="{{ property.current_valuation|floatformat:0 }}"
+                   class="input"
+                   hx-get="{% url 'real_estate:sale_simulator' property.pk %}"
+                   hx-trigger="input changed delay:500ms"
+                   hx-target="#sale-results"
+                   hx-include="[name='commission']"
+                   hx-on::before-request="$dispatch('close-tooltips')"
+                   name="sale_price" />
+          </div>
+          <div class="w-32">
+            <label class="block text-sm text-text-muted mb-1">
+              {% trans "Commission (%)" %}
+              {% include "components/tooltip.html" with id="commission_pct" text=tips.agent_commission %}
+            </label>
+            <input type="number" value="5" step="0.5" min="0" max="10"
+                   class="input"
+                   hx-get="{% url 'real_estate:sale_simulator' property.pk %}"
+                   hx-trigger="input changed delay:500ms"
+                   hx-target="#sale-results"
+                   hx-include="[name='sale_price']"
+                   hx-on::before-request="$dispatch('close-tooltips')"
+                   name="commission" />
+          </div>
+        </div>
+        <div id="sale-results">
+          {% include "real_estate/partials/sale_estimate.html" with estimate=sale_estimate %}
+        </div>
+      {% include "components/card_end.html" %}
     </div>
 
-    {# Right col: ownership + mortgage + taxes #}
+    {# Right col: ownership + charts #}
     <div class="space-y-6">
       {# Ownership #}
       {% include "components/card_start.html" with title=_("Ownership") tooltip_id="ownership" tooltip_text=tips.ownership %}
+        {# Ownership breakdown blocks — always shown #}
         <div class="space-y-3">
-          {% for own, share in shares.items %}
-          <div class="flex items-center justify-between group">
-            <span class="text-text">{{ own.user.get_full_name|default:own.user.email }}</span>
-            <div class="flex items-center gap-2">
-              <span class="font-semibold text-primary-600 font-mono">{{ share|floatformat:0 }}%</span>
-              {% if ownership.is_admin and own.user != request.user %}
-              <a href="{% url 'real_estate:remove_co_owner' property.pk own.pk %}"
-                 class="text-xs text-danger-500 hover:text-danger-700 opacity-0 group-hover:opacity-100 transition-opacity">
-                {% trans "Remove" %}
-              </a>
-              {% endif %}
+          {% for entry in ownership_comparison %}
+          <div class="rounded-xl bg-bg-subtle p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium text-text">
+                {{ entry.user.get_full_name|default:entry.user.username }}
+              </span>
+              <span class="text-lg font-semibold font-mono text-primary-600">
+                {{ entry.admin_share|floatformat:0 }}%
+              </span>
+            </div>
+            <div class="h-2 rounded-full bg-border overflow-hidden mb-3">
+              <div class="h-full rounded-full bg-primary-500"
+                   style="width: {{ entry.admin_share|floatformat:0 }}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-text-muted">
+              <span>
+                {% trans "At purchase" %}: {{ entry.purchase_share|floatformat:0 }}%
+                {% include "components/tooltip.html" with id="at_purchase" text=tips.at_purchase %}
+              </span>
+              <span>
+                {% trans "At end" %}: {{ entry.contribution_share|floatformat:0 }}%
+                {% include "components/tooltip.html" with id="at_end" text=tips.at_end %}
+              </span>
             </div>
           </div>
           {% endfor %}
+        </div>
+
+        {# Pending invitations #}
+        {% if pending_invitations %}
+        <div class="mt-4 pt-4 border-t border-border space-y-3">
           {% for inv in pending_invitations %}
           <div class="flex items-center justify-between opacity-60">
             <div class="flex items-center gap-2">
@@ -176,6 +333,8 @@
           </div>
           {% endfor %}
         </div>
+        {% endif %}
+
         {% if ownership.is_admin %}
         <div class="mt-4 pt-4 border-t border-border">
           <a href="{% url 'real_estate:invite' property.pk %}" class="text-sm text-primary-600 hover:text-primary-700">
@@ -185,47 +344,13 @@
         {% endif %}
       {% include "components/card_end.html" %}
 
-      {# Mortgage #}
-      {% if mortgage %}
-      {% include "components/card_start.html" with title=_("Mortgage") %}
-        <div class="space-y-0">
-          {% include "components/metric_row.html" with label=_("Lender") value=mortgage.lender tooltip_id="lender" tooltip_text=tips.lender %}
-          {% with rate=mortgage.annual_rate|floatformat:2 rtype=mortgage.get_rate_type_display %}
-          {% include "components/metric_row.html" with label=_("Rate") value=rate annotation=rtype tooltip_id="rate" tooltip_text=tips.rate %}
-          {% endwith %}
-          {% show_money snapshot.monthly_payment property.currency as mp_display %}
-          {% include "components/metric_row.html" with label=_("Monthly payment") value=mp_display tooltip_id="monthly_payment" tooltip_text=tips.monthly_payment %}
-          {% show_money snapshot.mortgage_balance property.currency as rb_display %}
-          {% include "components/metric_row.html" with label=_("Remaining balance") value=rb_display tooltip_id="remaining_balance" tooltip_text=tips.remaining_balance %}
-          {% include "components/metric_row.html" with label=_("Amortization") value=mortgage.amortization_years annotation=_("years") tooltip_id="amortization" tooltip_text=tips.amortization %}
-        </div>
-        <div class="mt-4 pt-4 border-t border-border">
-          <a href="{% url 'real_estate:amortization' property.pk mortgage.pk %}" class="text-sm text-primary-600 hover:text-primary-700">
-            {% trans "View full amortization schedule" %} &rarr;
-          </a>
-        </div>
-      {% include "components/card_end.html" %}
-      {% endif %}
-
-      {# Property Taxes #}
-      {% if property.country == "FR" %}
-      {% include "components/card_start.html" with title=_("Taxes & Charges") %}
-      {% else %}
-      {% include "components/card_start.html" with title=_("Property Taxes") %}
-      {% endif %}
-        <div id="tax-list">
-          {% include "real_estate/partials/tax_list.html" %}
-        </div>
-        <div class="mt-4 pt-4 border-t border-border">
-          <button hx-get="{% url 'real_estate:add_tax' property.pk %}"
-                  hx-target="#tax-form-container"
-                  hx-swap="innerHTML"
-                  class="btn-ghost text-primary-600 hover:text-primary-700">
-            {% trans "+ Add tax" %}
-          </button>
-          <div id="tax-form-container"></div>
-        </div>
-      {% include "components/card_end.html" %}
+      {# Donut charts — refreshable via HTMX #}
+      <div id="sidebar-charts"
+           hx-get="{% url 'real_estate:charts_partial' property.pk %}"
+           hx-trigger="expenses-changed from:body, mortgage-changed from:body"
+           hx-swap="innerHTML">
+        {% include "real_estate/partials/charts_sidebar.html" %}
+      </div>
     </div>
   </div>
 </div>

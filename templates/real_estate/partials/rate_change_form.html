@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<form hx-post="{% url 'real_estate:add_rate_change' property.pk mortgage.pk %}"
+      hx-target="#rate-change-list" hx-swap="innerHTML" class="mt-4 space-y-3">
+  {% csrf_token %}
+  <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    {% for field in form %}
+    <div>
+      <label class="block text-xs text-text-muted mb-1">{{ field.label }}</label>
+      {{ field }}
+      {% for error in field.errors %}<p class="text-xs text-danger-600 mt-1">{{ error }}</p>{% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+  <div class="flex items-center gap-2">
+    <button type="submit" class="btn-primary text-sm">{% trans "Add rate change" %}</button>
+    <button type="button" onclick="this.closest('form').remove()" class="btn-ghost text-sm">{% trans "Cancel" %}</button>
+  </div>
+</form>

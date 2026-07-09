@@ -62,6 +62,67 @@
     </div>
   {% include "components/card_end.html" %}
 
+  {# Per-owner summary cards (co-owners only) #}
+  {% if has_co_owners and owner_summaries %}
+  {% include "components/card_start.html" with title=_("Per-Owner Summary") %}
+    <div class="grid gap-4 sm:grid-cols-{{ owner_summaries|length }}">
+      {% for summary in owner_summaries %}
+      <div class="rounded-xl bg-bg-subtle p-4">
+        <div class="text-sm font-medium text-text mb-3">
+          {{ summary.owner.user.get_full_name|default:summary.owner.user.username }}
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-text-muted">{% trans "Principal paid" %}</span>
+            <span class="font-mono tabular-nums text-success-600">{% show_money summary.principal_paid property.currency %}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-text-muted">{% trans "Interest paid" %}</span>
+            <span class="font-mono tabular-nums text-danger-600">{% show_money summary.interest_paid property.currency %}</span>
+          </div>
+          <div class="flex justify-between border-t border-border/60 pt-2">
+            <span class="text-text font-medium">{% trans "Total paid" %}</span>
+            <span class="font-mono tabular-nums font-semibold">{% show_money summary.total_paid property.currency %}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-text-muted">{% trans "Contribution" %}</span>
+            <span class="font-mono tabular-nums text-primary-600 font-semibold">{{ summary.contribution_pct|floatformat:1 }}%</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {# Per-owner paid to date #}
+    {% if owner_paid_to_date %}
+    <div class="mt-4 pt-4 border-t border-border">
+      <h4 class="text-xs font-medium uppercase tracking-wide text-text-muted mb-3">{% trans "Paid to Date" %}</h4>
+      <div class="grid gap-4 sm:grid-cols-{{ owners_list|length }}">
+        {% for owner in owners_list %}
+        {% with ptd=owner_paid_to_date|dictkey:owner.pk %}
+        <div class="rounded-xl bg-bg-subtle p-3">
+          <div class="text-xs text-text-muted mb-2">{{ owner.user.get_full_name|default:owner.user.username }}</div>
+          <div class="flex justify-between text-sm">
+            <span class="text-text-muted">{% trans "Principal" %}</span>
+            <span class="font-mono tabular-nums text-success-600">{% show_money ptd.principal property.currency %}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-text-muted">{% trans "Interest" %}</span>
+            <span class="font-mono tabular-nums text-danger-600">{% show_money ptd.interest property.currency %}</span>
+          </div>
+          <div class="flex justify-between text-sm border-t border-border/60 pt-1 mt-1">
+            <span class="font-medium">{% trans "Total" %}</span>
+            <span class="font-mono tabular-nums font-semibold">{% show_money ptd.total property.currency %}</span>
+          </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  {% include "components/card_end.html" %}
+  {% endif %}
+
   {% include "components/card_start.html" with title=_("Payment Schedule") %}
     <div class="overflow-x-auto">
       <table class="min-w-full text-sm">
@@ -69,6 +130,7 @@
           <tr class="border-b border-border">
             <th class="px-3 py-2 text-left text-text-muted">#</th>
             <th class="px-3 py-2 text-left text-text-muted">{% trans "Date" %}</th>
+            <th class="px-3 py-2 text-right text-text-muted">{% trans "Rate" %}</th>
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Payment" %}</th>
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Principal" %}</th>
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Interest" %}</th>
@@ -76,6 +138,13 @@
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Insurance" %}</th>
             {% endif %}
             <th class="px-3 py-2 text-right text-text-muted">{% trans "Balance" %}</th>
+            {% if has_co_owners %}
+            {% for owner in owners_list %}
+            <th class="px-3 py-2 text-right text-text-muted">
+              {{ owner.user.get_full_name|default:owner.user.username|truncatechars:12 }}
+            </th>
+            {% endfor %}
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -83,6 +152,7 @@
           <tr class="border-b border-border/60 {% if entry.is_current %}bg-primary-50 font-semibold{% endif %}" {% if entry.is_current %}id="current-payment"{% endif %}>
             <td class="px-3 py-2 text-text-muted">{{ entry.payment_number }}</td>
             <td class="px-3 py-2 text-text-muted">{{ entry.date }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-text-muted">{{ entry.annual_rate|floatformat:3 }}%</td>
             <td class="px-3 py-2 text-right font-mono tabular-nums text-text">{% show_money entry.total_payment property.currency %}</td>
             <td class="px-3 py-2 text-right font-mono tabular-nums text-success-600">{% show_money entry.principal property.currency %}</td>
             <td class="px-3 py-2 text-right font-mono tabular-nums text-danger-600">{% show_money entry.interest property.currency %}</td>
@@ -90,12 +160,51 @@
             <td class="px-3 py-2 text-right font-mono tabular-nums text-warning-600">{% show_money entry.insurance property.currency %}</td>
             {% endif %}
             <td class="px-3 py-2 text-right font-mono tabular-nums font-medium text-text">{% show_money entry.balance property.currency %}</td>
+            {% if has_co_owners %}
+            {% for owner in owners_list %}
+            {% with op=entry.owner_payments|dictkey:owner.pk %}
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-text-muted">
+              {% if op %}{% show_money op.payment property.currency %}{% endif %}
+            </td>
+            {% endwith %}
+            {% endfor %}
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   {% include "components/card_end.html" %}
+
+  {# Contribution evolution table (co-owners only) #}
+  {% if has_co_owners and ownership_evolution %}
+  {% include "components/card_start.html" with title=_("Contribution Evolution") %}
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="border-b border-border">
+            <th class="px-3 py-2 text-left text-text-muted">{% trans "Year" %}</th>
+            {% for owner in owners_list %}
+            <th class="px-3 py-2 text-right text-text-muted">{{ owner.user.get_full_name|default:owner.user.username|truncatechars:15 }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in ownership_evolution %}
+          <tr class="border-b border-border/60">
+            <td class="px-3 py-2 font-mono tabular-nums text-text-muted">{{ row.year }}</td>
+            {% for owner in owners_list %}
+            {% with pct=row.owners|dictkey:owner.pk %}
+            <td class="px-3 py-2 text-right font-mono tabular-nums">{{ pct|floatformat:1 }}%</td>
+            {% endwith %}
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% include "components/card_end.html" %}
+  {% endif %}
 </div>
 
 <script>

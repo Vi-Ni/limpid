@@ -68,7 +68,7 @@
     <p class="text-sm font-medium text-text mb-2">{% trans "Per owner" %}</p>
     {% for owner in estimate.per_owner %}
     <div class="flex items-center justify-between py-1">
-      <span class="text-sm text-text-muted">{{ owner.user.get_full_name|default:owner.user.email }} ({{ owner.share_pct|floatformat:0 }}%)</span>
+      <span class="text-sm text-text-muted">{{ owner.user.get_full_name|default:owner.user.username }} ({{ owner.share_pct|floatformat:0 }}%)</span>
       <span class="text-sm font-semibold {% if owner.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}">
         {% show_money owner.net_proceeds property.currency %}
       </span>

@@ -49,8 +49,10 @@ class Property(models.Model):
     welcome_tax_paid = models.DecimalField(_("welcome tax paid"), max_digits=10, decimal_places=2, default=0)
     notary_fees_purchase = models.DecimalField(_("notary fees at purchase"), max_digits=10, decimal_places=2, default=0)
 
-    current_valuation = models.DecimalField(_("current valuation"), max_digits=12, decimal_places=2)
-    valuation_date = models.DateField(_("valuation date"))
+    current_valuation = models.DecimalField(
+        _("current valuation"), max_digits=12, decimal_places=2, null=True, blank=True
+    )
+    valuation_date = models.DateField(_("valuation date"), null=True, blank=True)
     municipal_assessment = models.DecimalField(_("municipal assessment"), max_digits=12, decimal_places=2, default=0)
 
     owners = models.ManyToManyField(
@@ -77,11 +79,13 @@ class Property(models.Model):
 
     @property
     def total_appreciation(self):
+        if self.current_valuation is None:
+            return Decimal("0")
         return self.current_valuation - self.purchase_price
 
     @property
     def total_appreciation_pct(self):
-        if self.purchase_price:
+        if self.purchase_price and self.current_valuation is not None:
             return (self.total_appreciation / self.purchase_price) * 100
         return Decimal("0")
 
@@ -196,6 +200,27 @@ class Mortgage(models.Model):
         return base + insurance_monthly
 
 
+class MortgageRateChange(models.Model):
+    """Track rate changes over time (renewals or simulated scenarios)."""
+
+    mortgage = models.ForeignKey(Mortgage, on_delete=models.CASCADE, related_name="rate_changes")
+    new_annual_rate = models.DecimalField(_("new annual rate (%)"), max_digits=5, decimal_places=3)
+    new_rate_type = models.CharField(
+        _("new rate type"), max_length=20, choices=Mortgage.RATE_TYPE_CHOICES, blank=True, default=""
+    )
+    effective_date = models.DateField(_("effective date"))
+    is_simulation = models.BooleanField(_("simulation only"), default=False)
+    note = models.CharField(_("note"), max_length=200, blank=True)
+
+    class Meta:
+        ordering = ["effective_date"]
+        verbose_name = _("mortgage rate change")
+        verbose_name_plural = _("mortgage rate changes")
+
+    def __str__(self):
+        return f"{self.new_annual_rate}% from {self.effective_date}"
+
+
 class MortgagePayment(models.Model):
     mortgage = models.ForeignKey(Mortgage, on_delete=models.CASCADE, related_name="payments")
     payment_number = models.PositiveIntegerField(_("payment number"))
@@ -214,6 +239,25 @@ class MortgagePayment(models.Model):
 
     def __str__(self):
         return f"Payment #{self.payment_number} — {self.mortgage}"
+
+
+class OwnerMonthlyPayment(models.Model):
+    """Track how much each co-owner contributes monthly to the mortgage."""
+
+    mortgage = models.ForeignKey(Mortgage, on_delete=models.CASCADE, related_name="owner_payments")
+    owner = models.ForeignKey(PropertyOwnership, on_delete=models.CASCADE, related_name="monthly_payments")
+    monthly_amount = models.DecimalField(_("monthly amount"), max_digits=10, decimal_places=2)
+    effective_date = models.DateField(_("effective date"))
+    note = models.CharField(_("note"), max_length=200, blank=True)
+
+    class Meta:
+        ordering = ["effective_date"]
+        unique_together = [("mortgage", "owner", "effective_date")]
+        verbose_name = _("owner monthly payment")
+        verbose_name_plural = _("owner monthly payments")
+
+    def __str__(self):
+        return f"{self.owner.user.email}: {self.monthly_amount}/mo from {self.effective_date}"
 
 
 class PropertyExpense(models.Model):
@@ -238,6 +282,7 @@ class PropertyExpense(models.Model):
         default=False,
         help_text=_("Capital improvements increase the adjusted cost base for tax purposes."),
     )
+    proof_link = models.URLField(_("proof document link"), max_length=500, blank=True, default="")
     paid_by = models.ForeignKey(
         PropertyOwnership, on_delete=models.SET_NULL, null=True, blank=True, related_name="expenses_paid"
     )
@@ -294,6 +339,36 @@ class PropertyTax(models.Model):
         return f"{self.get_tax_type_display()} {self.year} — ${self.amount}"
 
 
+class RentalIncome(models.Model):
+    """Track rental income for investment properties."""
+
+    real_estate = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="rental_incomes")
+    monthly_rent = models.DecimalField(_("monthly rent"), max_digits=10, decimal_places=2)
+    agency_fee_pct = models.DecimalField(
+        _("agency fee (%)"),
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        help_text=_("Percentage taken by rental management agency"),
+    )
+    start_date = models.DateField(_("start date"))
+    end_date = models.DateField(_("end date"), null=True, blank=True)
+    note = models.CharField(_("note"), max_length=200, blank=True)
+
+    class Meta:
+        ordering = ["-start_date"]
+        verbose_name = _("rental income")
+        verbose_name_plural = _("rental incomes")
+
+    def __str__(self):
+        return f"{self.monthly_rent}/mo from {self.start_date}"
+
+    @property
+    def net_monthly_rent(self):
+        fee = self.monthly_rent * self.agency_fee_pct / 100
+        return (self.monthly_rent - fee).quantize(Decimal("0.01"))
+
+
 class PropertyInvitation(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="invitations")
     invited_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -311,6 +386,7 @@ class PropertyInvitation(models.Model):
 class PropertyNotification(models.Model):
     VERB_CHOICES = [
         ("invitation_sent", _("Invitation sent")),
+        ("invitation_received", _("Invitation received")),
         ("invitation_accepted", _("Invitation accepted")),
         ("co_owner_removed", _("Co-owner removed")),
         ("expense_added", _("Expense added")),
@@ -342,6 +418,13 @@ class PropertyNotification(models.Model):
     )
     verb = models.CharField(_("action"), max_length=30, choices=VERB_CHOICES)
     description = models.CharField(_("description"), max_length=300)
+    invitation = models.ForeignKey(
+        PropertyInvitation,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="notifications",
+    )
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

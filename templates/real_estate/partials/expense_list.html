@@ -9,6 +9,7 @@
         <th class="px-3 py-2 text-left text-text-muted">{% trans "Type" %}</th>
         <th class="px-3 py-2 text-left text-text-muted">{% trans "Description" %}</th>
         <th class="px-3 py-2 text-right text-text-muted">{% trans "Amount" %}</th>
+        <th class="px-3 py-2 text-center text-text-muted">{% trans "Proof" %}</th>
         <th class="px-3 py-2 text-right text-text-muted"></th>
       </tr>
     </thead>
@@ -21,6 +22,9 @@
         </td>
         <td class="px-3 py-2 text-text">{{ expense.description }}</td>
         <td class="px-3 py-2 text-right text-text font-mono tabular-nums">{% show_money expense.amount property.currency %}</td>
+        <td class="px-3 py-2 text-center">
+          {% if expense.proof_link %}<a href="{{ expense.proof_link }}" target="_blank" rel="noopener" class="text-primary-600 hover:text-primary-700 text-xs">{% trans "View" %}</a>{% endif %}
+        </td>
         <td class="px-3 py-2 text-right">
           <span class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 justify-end">
             <button hx-get="{% url 'real_estate:edit_expense' property.pk expense.pk %}"

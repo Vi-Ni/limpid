@@ -30,50 +30,90 @@ def calculate_monthly_payment(principal, annual_rate_pct, amortization_years, ra
 
 def generate_amortization_schedule(mortgage):
     country = mortgage.real_estate.country
-    r = calculate_monthly_rate(mortgage.annual_rate, mortgage.rate_type, country)
-    n = mortgage.amortization_years * 12
-    principal = mortgage.effective_principal
-    pmt = calculate_monthly_payment(
-        principal, mortgage.annual_rate, mortgage.amortization_years, mortgage.rate_type, country
-    )
+    annual_rate = mortgage.annual_rate
+    rate_type = mortgage.rate_type
+    n_total = mortgage.amortization_years * 12
+    balance = mortgage.effective_principal
+    start = mortgage.start_date
 
+    rate_changes = list(mortgage.rate_changes.order_by("effective_date"))
+    change_idx = 0
+
+    r = calculate_monthly_rate(annual_rate, rate_type, country)
     insurance_monthly = Decimal("0")
     if mortgage.borrower_insurance_rate:
         insurance_monthly = (mortgage.effective_principal * mortgage.borrower_insurance_rate / 100 / 12).quantize(
             TWO_PLACES
         )
 
-    balance = principal
-    schedule = []
-    payment_date = mortgage.start_date
+    if r == 0:
+        pmt = (balance / n_total).quantize(TWO_PLACES)
+    else:
+        pmt = ((r * balance) / (1 - (1 + r) ** (-n_total))).quantize(TWO_PLACES)
 
-    for i in range(1, n + 1):
+    schedule = []
+    for i in range(1, n_total + 1):
+        payment_date = start + relativedelta(months=i)
+
+        recalc = False
+        while change_idx < len(rate_changes) and rate_changes[change_idx].effective_date <= payment_date:
+            rc = rate_changes[change_idx]
+            annual_rate = rc.new_annual_rate
+            if rc.new_rate_type:
+                rate_type = rc.new_rate_type
+            r = calculate_monthly_rate(annual_rate, rate_type, country)
+            recalc = True
+            change_idx += 1
+
+        if recalc:
+            remaining = n_total - i + 1
+            if r == 0:
+                pmt = (balance / remaining).quantize(TWO_PLACES)
+            else:
+                pmt = ((r * balance) / (1 - (1 + r) ** (-remaining))).quantize(TWO_PLACES)
+
         interest = (balance * r).quantize(TWO_PLACES)
         principal_portion = pmt - interest
 
-        if balance < principal_portion:
+        if principal_portion >= balance or balance - principal_portion < TWO_PLACES:
             principal_portion = balance
-            actual_payment = interest + principal_portion
-        else:
-            actual_payment = pmt
+            pmt = principal_portion + interest
 
         balance = max(balance - principal_portion, Decimal("0"))
-        payment_date = mortgage.start_date + relativedelta(months=i)
 
         schedule.append(
             {
                 "payment_number": i,
                 "date": payment_date,
-                "total_payment": actual_payment + insurance_monthly,
+                "total_payment": pmt + insurance_monthly,
                 "principal": principal_portion,
                 "interest": interest,
                 "insurance": insurance_monthly,
                 "balance": balance,
+                "annual_rate": annual_rate,
             }
         )
 
         if balance == 0:
             break
+
+    if schedule and schedule[-1]["balance"] > 0:
+        last = schedule[-1]
+        leftover = last["balance"]
+        interest = (leftover * r).quantize(TWO_PLACES)
+        payment_date = start + relativedelta(months=last["payment_number"] + 1)
+        schedule.append(
+            {
+                "payment_number": last["payment_number"] + 1,
+                "date": payment_date,
+                "total_payment": leftover + interest + insurance_monthly,
+                "principal": leftover,
+                "interest": interest,
+                "insurance": insurance_monthly,
+                "balance": Decimal("0"),
+                "annual_rate": annual_rate,
+            }
+        )
 
     return schedule
 
@@ -146,6 +186,48 @@ def get_owner_contributions(ownership):
         "expenses_paid": expenses_paid,
         "total": down + principal_paid + expenses_paid,
     }
+
+
+def get_ownership_comparison(prop):
+    """Per-owner breakdown: purchase share (down payment ratio) vs contribution share."""
+    ownerships = prop.ownerships.select_related("user").all()
+    admin_shares = get_current_ownership_shares(prop)
+
+    # At-purchase: ratio of down payments
+    total_down = sum(o.down_payment for o in ownerships) or Decimal("1")
+
+    # At-end: ratio of total contributions (down payment + principal paid + expenses)
+    contributions = {}
+    grand_total = Decimal("0")
+    for ownership in ownerships:
+        contribs = get_owner_contributions(ownership)
+        # Override principal_paid from amortization (same pattern as get_owner_snapshot)
+        total_principal = Decimal("0")
+        for mortgage in prop.mortgages.filter(is_active=True):
+            paid = get_total_paid(mortgage)
+            pct = admin_shares.get(ownership, Decimal("0"))
+            total_principal += paid["total_principal_paid"] * pct / 100
+        contribs["principal_paid"] = total_principal.quantize(TWO_PLACES)
+        contribs["total"] = contribs["down_payment"] + contribs["principal_paid"] + contribs["expenses_paid"]
+        contributions[ownership] = contribs
+        grand_total += contribs["total"]
+
+    if grand_total == 0:
+        grand_total = Decimal("1")
+
+    result = []
+    for ownership in ownerships:
+        c = contributions[ownership]
+        result.append(
+            {
+                "user": ownership.user,
+                "ownership": ownership,
+                "admin_share": admin_shares.get(ownership, Decimal("0")),
+                "purchase_share": (ownership.down_payment / total_down * 100).quantize(TWO_PLACES),
+                "contribution_share": (c["total"] / grand_total * 100).quantize(TWO_PLACES),
+            }
+        )
+    return result
 
 
 # ── Sale Simulation ──────────────────────────────────────────
@@ -314,9 +396,10 @@ def get_property_snapshot(prop):
         mortgage_balance += get_remaining_balance(mortgage)
         monthly_payment += mortgage.monthly_payment
 
-    equity = prop.current_valuation - mortgage_balance
+    valuation = prop.current_valuation or Decimal("0")
+    equity = valuation - mortgage_balance
     return {
-        "current_valuation": prop.current_valuation,
+        "current_valuation": valuation,
         "purchase_price": prop.purchase_price,
         "appreciation": prop.total_appreciation,
         "appreciation_pct": prop.total_appreciation_pct,
@@ -351,6 +434,233 @@ def get_owner_snapshot(prop, user):
         "your_mortgage_share": (snapshot["mortgage_balance"] * share_pct / 100).quantize(TWO_PLACES),
         "your_contributions": contributions,
         **snapshot,
+    }
+
+
+# ── Notifications ────────────────────────────────────────────
+
+
+def calculate_monthly_cost(prop, for_user=None):
+    """Calculate the total monthly cost of owning a property."""
+    import datetime
+
+    from .models import OwnerMonthlyPayment, RentalIncome
+
+    mortgage_payment = Decimal("0")
+    for m in prop.mortgages.filter(is_active=True):
+        mortgage_payment += m.monthly_payment
+
+    latest_year = prop.taxes.aggregate(max_year=models.Max("year"))["max_year"]
+    taxes_annual = Decimal("0")
+    if latest_year:
+        taxes_annual = sum(t.amount for t in prop.taxes.filter(year=latest_year))
+    taxes_monthly = (taxes_annual / 12).quantize(TWO_PLACES)
+
+    recurring_types = {"condo_fees", "charges_copro", "insurance"}
+    one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
+    recurring_total = prop.expenses.filter(expense_type__in=recurring_types, date__gte=one_year_ago).aggregate(
+        total=models.Sum("amount")
+    )["total"] or Decimal("0")
+    recurring_monthly = (recurring_total / 12).quantize(TWO_PLACES)
+
+    rental_income = Decimal("0")
+    rental_net = Decimal("0")
+    active_rental = RentalIncome.objects.filter(real_estate=prop, end_date__isnull=True).order_by("-start_date").first()
+    if not active_rental:
+        active_rental = RentalIncome.objects.filter(real_estate=prop).order_by("-start_date").first()
+    if active_rental:
+        rental_income = active_rental.monthly_rent
+        rental_net = active_rental.net_monthly_rent
+
+    total_monthly = (mortgage_payment + taxes_monthly + recurring_monthly - rental_net).quantize(TWO_PLACES)
+
+    result = {
+        "mortgage_payment": mortgage_payment.quantize(TWO_PLACES),
+        "taxes_monthly": taxes_monthly,
+        "recurring_expenses_monthly": recurring_monthly,
+        "rental_income": rental_income,
+        "rental_net": rental_net,
+        "total_monthly": total_monthly,
+    }
+
+    if for_user:
+        ownership = prop.ownerships.filter(user=for_user).first()
+        if ownership:
+            shares = get_current_ownership_shares(prop)
+            share_pct = shares.get(ownership, Decimal("100")) / 100
+            all_ownerships = list(prop.ownerships.all())
+
+            your_mortgage = Decimal("0")
+            for m in prop.mortgages.filter(is_active=True):
+                # Collect all custom payments for this mortgage
+                customs = {}
+                for o in all_ownerships:
+                    custom = (
+                        OwnerMonthlyPayment.objects.filter(
+                            mortgage=m, owner=o, effective_date__lte=datetime.date.today()
+                        )
+                        .order_by("-effective_date")
+                        .first()
+                    )
+                    if custom:
+                        customs[o] = custom.monthly_amount
+
+                if ownership in customs:
+                    your_mortgage += customs[ownership]
+                else:
+                    remainder = m.monthly_payment - sum(customs.values())
+                    non_custom_owners = [o for o in all_ownerships if o not in customs]
+                    non_custom_share_total = sum(shares.get(o, Decimal("0")) / 100 for o in non_custom_owners)
+                    if non_custom_share_total > 0:
+                        your_mortgage += (remainder * share_pct / non_custom_share_total).quantize(TWO_PLACES)
+
+            your_taxes = (taxes_monthly * share_pct).quantize(TWO_PLACES)
+            your_recurring = (recurring_monthly * share_pct).quantize(TWO_PLACES)
+            your_rental_offset = (rental_net * share_pct).quantize(TWO_PLACES)
+            your_total = (your_mortgage + your_taxes + your_recurring - your_rental_offset).quantize(TWO_PLACES)
+
+            result["your_mortgage_payment"] = your_mortgage
+            result["your_taxes_monthly"] = your_taxes
+            result["your_recurring_monthly"] = your_recurring
+            result["your_rental_offset"] = your_rental_offset
+            result["your_total_monthly"] = your_total
+
+    return result
+
+
+def generate_per_owner_amortization(mortgage):
+    """Generate amortization schedule with per-owner payment breakdown."""
+    from .models import OwnerMonthlyPayment
+
+    schedule = generate_amortization_schedule(mortgage)
+    prop = mortgage.real_estate
+    all_ownerships = list(prop.ownerships.select_related("user").all())
+
+    if len(all_ownerships) < 2:
+        return schedule, []
+
+    # Pre-fetch all ownership periods to avoid N+1
+    periods = list(prop.ownership_periods.prefetch_related("shares__owner__user").order_by("start_date").all())
+
+    # Pre-fetch all custom payments per owner, keyed by (owner_id, effective_date)
+    all_custom_payments = list(OwnerMonthlyPayment.objects.filter(mortgage=mortgage).order_by("effective_date"))
+
+    def get_shares_for_date(as_of_date):
+        """Get ownership shares for a specific date from pre-fetched periods."""
+        matching = None
+        for p in periods:
+            if p.start_date <= as_of_date and (p.end_date is None or p.end_date >= as_of_date):
+                matching = p
+        if matching:
+            return {s.owner: s.share_pct for s in matching.shares.all()}
+        count = len(all_ownerships)
+        if count == 0:
+            return {}
+        share = (Decimal("100") / count).quantize(TWO_PLACES)
+        return {o: share for o in all_ownerships}
+
+    def get_custom_payment_for(owner, as_of_date):
+        """Get the latest custom payment for an owner effective on or before as_of_date."""
+        result = None
+        for cp in all_custom_payments:
+            if cp.owner_id == owner.pk and cp.effective_date <= as_of_date:
+                result = cp
+        return result
+
+    owner_totals = {
+        o.pk: {"principal": Decimal("0"), "interest": Decimal("0"), "total": Decimal("0")} for o in all_ownerships
+    }
+
+    for entry in schedule:
+        payment_date = entry["date"]
+        shares = get_shares_for_date(payment_date)
+        total_payment = entry["total_payment"]  # includes insurance
+
+        # Collect custom payments
+        customs = {}
+        for o in all_ownerships:
+            cp = get_custom_payment_for(o, payment_date)
+            if cp:
+                customs[o] = cp.monthly_amount
+
+        remainder = max(total_payment - sum(customs.values()), Decimal("0"))
+        non_custom = [o for o in all_ownerships if o not in customs]
+        non_custom_share_total = sum(shares.get(o, Decimal("0")) / 100 for o in non_custom)
+
+        owner_payments = {}
+        for o in all_ownerships:
+            share_pct = shares.get(o, Decimal("0")) / 100
+            if o in customs:
+                ratio = customs[o] / total_payment if total_payment else Decimal("0")
+            elif non_custom_share_total > 0:
+                ratio = (
+                    (remainder * share_pct / non_custom_share_total) / total_payment if total_payment else Decimal("0")
+                )
+            else:
+                ratio = Decimal("0")
+
+            o_payment = (total_payment * ratio).quantize(TWO_PLACES)
+            o_principal = (entry["principal"] * ratio).quantize(TWO_PLACES)
+            o_interest = (entry["interest"] * ratio).quantize(TWO_PLACES)
+            owner_payments[o.pk] = {
+                "owner": o,
+                "payment": o_payment,
+                "principal": o_principal,
+                "interest": o_interest,
+            }
+            owner_totals[o.pk]["principal"] += o_principal
+            owner_totals[o.pk]["interest"] += o_interest
+            owner_totals[o.pk]["total"] += o_payment
+
+        entry["owner_payments"] = owner_payments
+
+    owner_summaries = []
+    for o in all_ownerships:
+        totals = owner_totals[o.pk]
+        grand_total = sum(t["total"] for t in owner_totals.values())
+        contribution_pct = (totals["total"] / grand_total * 100).quantize(TWO_PLACES) if grand_total else Decimal("0")
+        owner_summaries.append(
+            {
+                "owner": o,
+                "principal_paid": totals["principal"],
+                "interest_paid": totals["interest"],
+                "total_paid": totals["total"],
+                "contribution_pct": contribution_pct,
+            }
+        )
+
+    return schedule, owner_summaries
+
+
+def generate_evolution_chart_data(mortgage):
+    """Generate time series data for amortization evolution line charts."""
+    schedule = generate_amortization_schedule(mortgage)
+    today = date.today()
+    current_label = today.strftime("%Y-%m")
+    labels = []
+    principal_series = []
+    interest_series = []
+    balance_series = []
+    payment_series = []
+    current_month_index = None
+
+    for i, entry in enumerate(schedule):
+        label = entry["date"].strftime("%Y-%m")
+        labels.append(label)
+        principal_series.append(float(entry["principal"]))
+        interest_series.append(float(entry["interest"]))
+        balance_series.append(float(entry["balance"]))
+        payment_series.append(float(entry["total_payment"]))
+        if label == current_label:
+            current_month_index = i
+
+    return {
+        "labels": labels,
+        "principal_series": principal_series,
+        "interest_series": interest_series,
+        "balance_series": balance_series,
+        "payment_series": payment_series,
+        "current_month_index": current_month_index,
     }
 
 

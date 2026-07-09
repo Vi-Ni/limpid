@@ -1,0 +1,85 @@
+{% load i18n real_estate_filters %}
+
+<div class="space-y-0">
+  {# Mortgage #}
+  <div x-show="!showMine">
+    {% show_money cost_total.mortgage_payment property.currency as mp %}
+    {% include "components/metric_row.html" with label=_("Mortgage") value=mp %}
+  </div>
+  {% if has_co_owners %}
+  <div x-show="showMine" x-cloak>
+    {% show_money cost_mine.your_mortgage_payment property.currency as ymp %}
+    {% include "components/metric_row.html" with label=_("Mortgage") value=ymp %}
+  </div>
+  {% endif %}
+
+  {# Taxes #}
+  <div x-show="!showMine">
+    {% show_money cost_total.taxes_monthly property.currency as tx %}
+    {% include "components/metric_row.html" with label=_("Taxes (monthly)") value=tx %}
+  </div>
+  {% if has_co_owners %}
+  <div x-show="showMine" x-cloak>
+    {% show_money cost_mine.your_taxes_monthly property.currency as ytx %}
+    {% include "components/metric_row.html" with label=_("Taxes (monthly)") value=ytx %}
+  </div>
+  {% endif %}
+
+  {# Recurring expenses #}
+  {% if cost_total.recurring_expenses_monthly %}
+  <div x-show="!showMine">
+    {% show_money cost_total.recurring_expenses_monthly property.currency as re %}
+    {% include "components/metric_row.html" with label=_("Recurring expenses") value=re %}
+  </div>
+  {% if has_co_owners %}
+  <div x-show="showMine" x-cloak>
+    {% show_money cost_mine.your_recurring_monthly property.currency as yre %}
+    {% include "components/metric_row.html" with label=_("Recurring expenses") value=yre %}
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {# Rental income #}
+  {% if cost_total.rental_income %}
+  <div x-show="!showMine">
+    {% show_money cost_total.rental_net property.currency as rn %}
+    <div class="flex items-baseline justify-between py-2.5 border-b border-border/60">
+      <span class="text-sm text-text-muted">{% trans "Rental income (net)" %}</span>
+      <span class="text-sm font-mono tabular-nums text-success-600">- {{ rn }}</span>
+    </div>
+  </div>
+  {% if has_co_owners %}
+  <div x-show="showMine" x-cloak>
+    {% if cost_mine.your_rental_offset %}
+    {% show_money cost_mine.your_rental_offset property.currency as yrn %}
+    <div class="flex items-baseline justify-between py-2.5 border-b border-border/60">
+      <span class="text-sm text-text-muted">{% trans "Rental income (net)" %}</span>
+      <span class="text-sm font-mono tabular-nums text-success-600">- {{ yrn }}</span>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {# Net total #}
+  <div x-show="!showMine">
+    <div class="flex items-baseline justify-between py-3 mt-1">
+      <span class="text-sm font-semibold text-text">{% trans "Net monthly cost" %}</span>
+      {% show_money cost_total.total_monthly property.currency as total %}
+      <span class="text-lg font-semibold font-mono tabular-nums {% if cost_total.total_monthly > 0 %}text-danger-600{% else %}text-success-600{% endif %}">
+        {{ total }}
+      </span>
+    </div>
+  </div>
+  {% if has_co_owners %}
+  <div x-show="showMine" x-cloak>
+    <div class="flex items-baseline justify-between py-3 mt-1">
+      <span class="text-sm font-semibold text-text">{% trans "Your net monthly cost" %}</span>
+      {% show_money cost_mine.your_total_monthly property.currency as ytotal %}
+      <span class="text-lg font-semibold font-mono tabular-nums {% if cost_mine.your_total_monthly > 0 %}text-danger-600{% else %}text-success-600{% endif %}">
+        {{ ytotal }}
+      </span>
+    </div>
+  </div>
+  {% endif %}
+</div>

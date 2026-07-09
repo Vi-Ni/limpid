@@ -3,6 +3,8 @@ from django.contrib import admin
 from .models import (
     Mortgage,
     MortgagePayment,
+    MortgageRateChange,
+    OwnerMonthlyPayment,
     OwnershipPeriod,
     OwnershipPeriodShare,
     Property,
@@ -10,6 +12,7 @@ from .models import (
     PropertyInvitation,
     PropertyOwnership,
     PropertyValuation,
+    RentalIncome,
 )
 
 
@@ -69,6 +72,22 @@ class PropertyExpenseAdmin(admin.ModelAdmin):
 class PropertyValuationAdmin(admin.ModelAdmin):
     list_display = ["property", "value", "date", "source"]
     list_filter = ["source"]
+
+
+@admin.register(MortgageRateChange)
+class MortgageRateChangeAdmin(admin.ModelAdmin):
+    list_display = ("mortgage", "new_annual_rate", "effective_date", "is_simulation")
+    list_filter = ("is_simulation",)
+
+
+@admin.register(RentalIncome)
+class RentalIncomeAdmin(admin.ModelAdmin):
+    list_display = ("real_estate", "monthly_rent", "agency_fee_pct", "start_date", "end_date")
+
+
+@admin.register(OwnerMonthlyPayment)
+class OwnerMonthlyPaymentAdmin(admin.ModelAdmin):
+    list_display = ("mortgage", "owner", "monthly_amount", "effective_date")
 
 
 @admin.register(PropertyInvitation)

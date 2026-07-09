@@ -83,6 +83,16 @@ def signed_pct(value):
 
 
 @register.filter
+def dictkey(d, key):
+    if d is None:
+        return None
+    try:
+        return d[key]
+    except (KeyError, TypeError):
+        return None
+
+
+@register.filter
 def convert_to(value, args):
     if value is None:
         return ""

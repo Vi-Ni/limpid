@@ -1,0 +1,13 @@
+{% load i18n %}
+
+{% include "components/card_start.html" with title=_("Equity Breakdown") tooltip_id="equity_breakdown" tooltip_text=tips.equity_breakdown %}
+  <canvas data-chart="allocation" data-chart-data='{{ equity_chart }}'></canvas>
+{% include "components/card_end.html" %}
+
+{% include "components/card_start.html" with title=_("Payment Breakdown") tooltip_id="payment_breakdown" tooltip_text=tips.payment_breakdown %}
+  <canvas data-chart="allocation" data-chart-data='{{ payment_chart }}'></canvas>
+{% include "components/card_end.html" %}
+
+{% include "components/card_start.html" with title=_("Expenses by Type") tooltip_id="expenses_by_type" tooltip_text=tips.expenses_by_type %}
+  <canvas data-chart="allocation" data-chart-data='{{ expense_chart }}'></canvas>
+{% include "components/card_end.html" %}

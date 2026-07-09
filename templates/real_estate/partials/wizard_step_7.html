@@ -1,0 +1,113 @@
+{% load i18n %}
+
+<div data-step="7">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-text">{% trans "Review your property" %}</h2>
+    <p class="mt-2 text-text-muted">
+      {% trans "Check that everything looks right before creating your property." %}
+    </p>
+  </div>
+
+  <div class="space-y-4">
+    <div class="rounded-xl border border-border p-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-medium uppercase tracking-wide text-text-muted">{% trans "Property" %}</h3>
+        <button type="button" @click="step = 1" class="text-xs text-primary-600 hover:text-primary-700 font-medium">{% trans "Edit" %}</button>
+      </div>
+      <div class="space-y-1 text-sm">
+        <div class="flex justify-between">
+          <span class="text-text-muted">{% trans "Country" %}</span>
+          <span class="text-text font-medium" x-text="country === 'FR' ? 'France' : 'Canada'"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted">{% trans "Type" %}</span>
+          <span class="text-text font-medium" x-text="document.getElementById('id_property_type')?.selectedOptions[0]?.text || '\u2014'"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted">{% trans "Usage" %}</span>
+          <span class="text-text font-medium" x-text="document.getElementById('id_usage')?.selectedOptions[0]?.text || '\u2014'"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-border p-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-medium uppercase tracking-wide text-text-muted">{% trans "Location" %}</h3>
+        <button type="button" @click="step = 2" class="text-xs text-primary-600 hover:text-primary-700 font-medium">{% trans "Edit" %}</button>
+      </div>
+      <div class="space-y-1 text-sm">
+        <div class="flex justify-between">
+          <span class="text-text-muted">{% trans "Name" %}</span>
+          <span class="text-text font-medium" x-text="document.getElementById('id_name')?.value || '\u2014'"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted">{% trans "Address" %}</span>
+          <span class="text-text font-medium" x-text="document.getElementById('id_address')?.value || '\u2014'"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted">{% trans "City" %}</span>
+          <span class="text-text font-medium" x-text="document.getElementById('id_city')?.value || '\u2014'"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-border p-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-medium uppercase tracking-wide text-text-muted">{% trans "Purchase" %}</h3>
+        <button type="button" @click="step = 3" class="text-xs text-primary-600 hover:text-primary-700 font-medium">{% trans "Edit" %}</button>
+      </div>
+      <div class="space-y-1 text-sm">
+        <div class="flex justify-between">
+          <span class="text-text-muted">{% trans "Price" %}</span>
+          <span class="text-text font-medium font-mono" x-text="(() => { const v = document.getElementById('id_purchase_price')?.value; return v ? Number(v).toLocaleString('en-CA', {minimumFractionDigits: 0}) : '\u2014'; })()"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted">{% trans "Date" %}</span>
+          <span class="text-text font-medium" x-text="document.getElementById('id_purchase_date')?.value || '\u2014'"></span>
+        </div>
+      </div>
+    </div>
+
+    <template x-if="hasMortgage">
+      <div class="rounded-xl border border-border p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-medium uppercase tracking-wide text-text-muted">{% trans "Mortgage" %}</h3>
+          <button type="button" @click="step = 6" class="text-xs text-primary-600 hover:text-primary-700 font-medium">{% trans "Edit" %}</button>
+        </div>
+        <div class="space-y-1 text-sm">
+          <div class="flex justify-between">
+            <span class="text-text-muted">{% trans "Principal" %}</span>
+            <span class="text-text font-medium font-mono" x-text="(() => { const v = document.getElementById('id_mortgage-principal')?.value; return v ? Number(v).toLocaleString('en-CA', {minimumFractionDigits: 0}) : '\u2014'; })()"></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-text-muted">{% trans "Rate" %}</span>
+            <span class="text-text font-medium font-mono" x-text="(document.getElementById('id_mortgage-annual_rate')?.value || '\u2014') + '%'"></span>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template x-if="hasCoOwner">
+      <div class="rounded-xl border border-border p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-medium uppercase tracking-wide text-text-muted">{% trans "Co-ownership" %}</h3>
+          <button type="button" @click="step = 5" class="text-xs text-primary-600 hover:text-primary-700 font-medium">{% trans "Edit" %}</button>
+        </div>
+        <div class="space-y-1 text-sm">
+          <div class="flex justify-between">
+            <span class="text-text-muted">{% trans "Co-owner" %}</span>
+            <span class="text-text font-medium" x-text="document.getElementById('id_co_owner_email')?.value || '\u2014'"></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-text-muted">{% trans "Their share" %}</span>
+            <span class="text-text font-medium" x-text="(document.getElementById('id_co_owner_share')?.value || '\u2014') + '%'"></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-text-muted">{% trans "Your share" %}</span>
+            <span class="text-text font-medium" x-text="getYourShare()"></span>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>

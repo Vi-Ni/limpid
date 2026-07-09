@@ -1,0 +1,68 @@
+{% load i18n %}
+
+<div data-step="2">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-text">{% trans "Where is it located?" %}</h2>
+    <p class="mt-2 text-text-muted">
+      {% trans "The address helps track your property and determines local tax rules." %}
+    </p>
+  </div>
+
+  <div class="space-y-5">
+    <div>
+      <label for="id_name" class="block text-sm font-medium text-text mb-1">
+        {{ form.name.label }}
+      </label>
+      {{ form.name }}
+      <p class="mt-1 text-xs text-text-faint">
+        {% trans "A friendly name to identify this property (e.g. \"Our first home\")." %}
+      </p>
+      {% if form.name.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.name.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div>
+      <label for="id_address" class="block text-sm font-medium text-text mb-1">
+        {{ form.address.label }}
+      </label>
+      {{ form.address }}
+      {% if form.address.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.address.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="id_city" class="block text-sm font-medium text-text mb-1">
+          {{ form.city.label }}
+        </label>
+        {{ form.city }}
+        {% if form.city.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.city.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="id_province" class="block text-sm font-medium text-text mb-1">
+          <span x-show="country !== 'FR'">{% trans "Province" %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "Département" %}</span>
+        </label>
+        {{ form.province }}
+        {% if form.province.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.province.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="id_postal_code" class="block text-sm font-medium text-text mb-1">
+          {{ form.postal_code.label }}
+        </label>
+        {{ form.postal_code }}
+        {% if form.postal_code.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.postal_code.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="id_currency" class="block text-sm font-medium text-text mb-1">
+          {{ form.currency.label }}
+        </label>
+        {{ form.currency }}
+        {% if form.currency.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.currency.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>

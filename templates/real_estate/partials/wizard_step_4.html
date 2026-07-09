@@ -1,0 +1,50 @@
+{% load i18n %}
+
+<div data-step="4">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-text">{% trans "What's it worth today?" %}</h2>
+    <p class="mt-2 text-text-muted">
+      {% trans "These fields are optional. If you know the current value, it helps us show your equity and appreciation over time." %}
+    </p>
+  </div>
+
+  <div class="mb-5 rounded-xl bg-bg-subtle px-4 py-3 text-sm text-text-muted">
+    {% trans "You can skip this step and add valuations later from the property detail page." %}
+  </div>
+
+  <div class="space-y-5">
+    <div>
+      <label for="id_current_valuation" class="block text-sm font-medium text-text mb-1">
+        {{ form.current_valuation.label }}
+      </label>
+      {{ form.current_valuation }}
+      <p class="mt-1 text-xs text-text-faint">
+        {% trans "Your best estimate of the property's current market value." %}
+      </p>
+      {% if form.current_valuation.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.current_valuation.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="id_valuation_date" class="block text-sm font-medium text-text mb-1">
+          {{ form.valuation_date.label }}
+        </label>
+        {{ form.valuation_date }}
+        {% if form.valuation_date.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.valuation_date.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="id_municipal_assessment" class="block text-sm font-medium text-text mb-1">
+          <span x-show="country !== 'FR'">{% trans "Municipal assessment" %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "Valeur cadastrale" %}</span>
+        </label>
+        {{ form.municipal_assessment }}
+        <p class="mt-1 text-xs text-text-faint">
+          <span x-show="country !== 'FR'">{% trans "From your municipal tax bill." %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "Valeur cadastrale de la taxe foncière." %}</span>
+        </p>
+        {% if form.municipal_assessment.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.municipal_assessment.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>

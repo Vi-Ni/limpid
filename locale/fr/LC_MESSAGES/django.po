@@ -3,1924 +3,2843 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-01 14:33-0500\n"
+"POT-Creation-Date: 2026-03-15 17:59-0400\n"
 "Language: fr\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 # ── Province names ──
+#: apps/accounts/models.py:8
 msgid "Alberta"
 msgstr "Alberta"
 
+#: apps/accounts/models.py:9
 msgid "British Columbia"
 msgstr "Colombie-Britannique"
 
+#: apps/accounts/models.py:10
 msgid "Manitoba"
 msgstr "Manitoba"
 
+#: apps/accounts/models.py:11
 msgid "New Brunswick"
 msgstr "Nouveau-Brunswick"
 
+#: apps/accounts/models.py:12
 msgid "Newfoundland and Labrador"
 msgstr "Terre-Neuve-et-Labrador"
 
+#: apps/accounts/models.py:13
 msgid "Nova Scotia"
 msgstr "Nouvelle-Écosse"
 
+#: apps/accounts/models.py:14
 msgid "Northwest Territories"
 msgstr "Territoires du Nord-Ouest"
 
+#: apps/accounts/models.py:15
 msgid "Nunavut"
 msgstr "Nunavut"
 
+#: apps/accounts/models.py:16
 msgid "Ontario"
 msgstr "Ontario"
 
+#: apps/accounts/models.py:17
 msgid "Prince Edward Island"
 msgstr "Île-du-Prince-Édouard"
 
+#: apps/accounts/models.py:18
 msgid "Quebec"
 msgstr "Québec"
 
+#: apps/accounts/models.py:19
 msgid "Saskatchewan"
 msgstr "Saskatchewan"
 
+#: apps/accounts/models.py:20
 msgid "Yukon"
 msgstr "Yukon"
 
 # ── Language names ──
+#: apps/accounts/models.py:24
 msgid "French"
 msgstr "Français"
 
+#: apps/accounts/models.py:25
 msgid "English"
 msgstr "Anglais"
 
+#: apps/accounts/models.py:47
 msgid "Risk score from 1 (conservative) to 10 (aggressive)."
 msgstr "Score de risque de 1 (conservateur) à 10 (agressif)."
 
 # ── Model fields ──
+#: apps/accounts/models.py:52
 msgid "user profile"
 msgstr "profil utilisateur"
 
+#: apps/accounts/models.py:53
 msgid "user profiles"
 msgstr "profils utilisateurs"
 
 # ── Risk profile labels ──
+#: apps/accounts/models.py:63 apps/accounts/services.py:89
 msgid "Conservative"
 msgstr "Conservateur"
 
+#: apps/accounts/models.py:65 apps/accounts/services.py:91
 msgid "Moderate"
 msgstr "Modéré"
 
+#: apps/accounts/models.py:66 apps/accounts/services.py:92
 msgid "Growth"
 msgstr "Croissance"
 
+#: apps/accounts/models.py:79
 msgid "risk quiz response"
 msgstr "réponse au questionnaire de risque"
 
+#: apps/accounts/models.py:80
 msgid "risk quiz responses"
 msgstr "réponses au questionnaire de risque"
 
 # ── Risk quiz questions ──
+#: apps/accounts/services.py:6
 msgid "How would you describe your investment knowledge?"
 msgstr "Comment décririez-vous vos connaissances en investissement ?"
 
+#: apps/accounts/services.py:8
 msgid "I'm a complete beginner"
 msgstr "Je suis un débutant complet"
 
+#: apps/accounts/services.py:9
 msgid "I know the basics (stocks, bonds, ETFs)"
 msgstr "Je connais les bases (actions, obligations, FNB)"
 
+#: apps/accounts/services.py:10
 msgid "I have intermediate knowledge and some experience"
 msgstr "J'ai des connaissances intermédiaires et un peu d'expérience"
 
+#: apps/accounts/services.py:11
 msgid "I'm experienced and understand most financial products"
-msgstr ""
-"J'ai de l'expérience et je comprends la plupart des produits financiers"
+msgstr "J'ai de l'expérience et je comprends la plupart des produits financiers"
 
+#: apps/accounts/services.py:16
 msgid "What is your investment time horizon?"
 msgstr "Quel est votre horizon de placement ?"
 
+#: apps/accounts/services.py:18
 msgid "Less than 2 years"
 msgstr "Moins de 2 ans"
 
+#: apps/accounts/services.py:19
 msgid "2 to 5 years"
 msgstr "2 à 5 ans"
 
+#: apps/accounts/services.py:20
 msgid "5 to 10 years"
 msgstr "5 à 10 ans"
 
+#: apps/accounts/services.py:21
 msgid "More than 10 years"
 msgstr "Plus de 10 ans"
 
+#: apps/accounts/services.py:26
 #, python-format
 msgid "If your portfolio lost 20% of its value in a month, what would you do?"
-msgstr ""
-"Si votre portefeuille perdait 20 % de sa valeur en un mois, que feriez-vous ?"
+msgstr "Si votre portefeuille perdait 20 % de sa valeur en un mois, que feriez-vous ?"
 
+#: apps/accounts/services.py:28
 msgid "Sell everything immediately"
 msgstr "Tout vendre immédiatement"
 
+#: apps/accounts/services.py:29
 msgid "Sell some to reduce risk"
 msgstr "Vendre une partie pour réduire le risque"
 
+#: apps/accounts/services.py:30
 msgid "Do nothing and wait for recovery"
 msgstr "Ne rien faire et attendre la reprise"
 
+#: apps/accounts/services.py:31
 msgid "Buy more at the lower price"
 msgstr "Acheter plus au prix réduit"
 
-msgid ""
-"How much of your portfolio could you afford to lose without impacting your "
-"lifestyle?"
-msgstr ""
-"Quelle part de votre portefeuille pourriez-vous perdre sans affecter votre "
-"mode de vie ?"
+#: apps/accounts/services.py:36
+msgid "How much of your portfolio could you afford to lose without impacting your lifestyle?"
+msgstr "Quelle part de votre portefeuille pourriez-vous perdre sans affecter votre mode de vie ?"
 
+#: apps/accounts/services.py:38
 msgid "None — I need all of it"
 msgstr "Rien — j'en ai besoin en totalité"
 
+#: apps/accounts/services.py:39
 msgid "Up to 10%"
 msgstr "Jusqu'à 10 %"
 
+#: apps/accounts/services.py:40
 msgid "Up to 25%"
 msgstr "Jusqu'à 25 %"
 
+#: apps/accounts/services.py:41
 msgid "More than 25%"
 msgstr "Plus de 25 %"
 
+#: apps/accounts/services.py:46
 msgid "How stable is your current income?"
 msgstr "À quel point votre revenu actuel est-il stable ?"
 
+#: apps/accounts/services.py:48
 msgid "Very unstable or no income"
 msgstr "Très instable ou aucun revenu"
 
+#: apps/accounts/services.py:49
 msgid "Somewhat unstable"
 msgstr "Assez instable"
 
+#: apps/accounts/services.py:50
 msgid "Stable with some variability"
 msgstr "Stable avec une certaine variabilité"
 
+#: apps/accounts/services.py:51
 msgid "Very stable (salaried, tenured, etc.)"
 msgstr "Très stable (salarié, permanent, etc.)"
 
+#: apps/accounts/services.py:56
 msgid "Which statement best describes your return expectations?"
 msgstr "Quel énoncé décrit le mieux vos attentes de rendement ?"
 
+#: apps/accounts/services.py:58
 msgid "I want to preserve my capital, even if returns are low"
 msgstr "Je veux préserver mon capital, même si les rendements sont faibles"
 
+#: apps/accounts/services.py:59
 msgid "I prefer steady, modest returns with low risk"
 msgstr "Je préfère des rendements modestes et stables avec peu de risque"
 
+#: apps/accounts/services.py:60
 msgid "I want a balance of growth and stability"
 msgstr "Je veux un équilibre entre croissance et stabilité"
 
+#: apps/accounts/services.py:61
 msgid "I want maximum growth, even if it means high volatility"
-msgstr ""
-"Je veux une croissance maximale, même si cela implique une forte volatilité"
+msgstr "Je veux une croissance maximale, même si cela implique une forte volatilité"
 
 # ── Risk profile descriptions ──
-msgid ""
-"You prefer stability and capital preservation. A conservative portfolio "
-"typically holds more bonds and GICs, with limited exposure to stocks. "
-"Returns may be lower, but so is the risk of losing money."
-msgstr ""
-"Vous préférez la stabilité et la préservation du capital. Un portefeuille "
-"conservateur détient généralement plus d'obligations et de CPG, avec une "
-"exposition limitée aux actions. Les rendements peuvent être plus faibles, "
-"mais le risque de perte l'est aussi."
+#: apps/accounts/services.py:99
+msgid "You prefer stability and capital preservation. A conservative portfolio typically holds more bonds and GICs, with limited exposure to stocks. Returns may be lower, but so is the risk of losing money."
+msgstr "Vous préférez la stabilité et la préservation du capital. Un portefeuille conservateur détient généralement plus d'obligations et de CPG, avec une exposition limitée aux actions. Les rendements peuvent être plus faibles, mais le risque de perte l'est aussi."
 
-msgid ""
-"You seek a balance between growth and safety. A moderate portfolio typically "
-"includes a mix of stocks and bonds, offering reasonable growth potential "
-"while managing downside risk."
-msgstr ""
-"Vous recherchez un équilibre entre croissance et sécurité. Un portefeuille "
-"modéré comprend généralement un mélange d'actions et d'obligations, offrant "
-"un potentiel de croissance raisonnable tout en gérant le risque de perte."
+#: apps/accounts/services.py:106
+msgid "You seek a balance between growth and safety. A moderate portfolio typically includes a mix of stocks and bonds, offering reasonable growth potential while managing downside risk."
+msgstr "Vous recherchez un équilibre entre croissance et sécurité. Un portefeuille modéré comprend généralement un mélange d'actions et d'obligations, offrant un potentiel de croissance raisonnable tout en gérant le risque de perte."
 
-msgid ""
-"You are comfortable with higher volatility in exchange for potentially "
-"higher returns. A growth portfolio is typically stock-heavy, which means "
-"larger swings but historically better long-term performance."
-msgstr ""
-"Vous êtes à l'aise avec une volatilité plus élevée en échange de rendements "
-"potentiellement supérieurs. Un portefeuille de croissance est généralement "
-"fortement composé d'actions, ce qui signifie des fluctuations plus "
-"importantes mais historiquement de meilleures performances à long terme."
+#: apps/accounts/services.py:112
+msgid "You are comfortable with higher volatility in exchange for potentially higher returns. A growth portfolio is typically stock-heavy, which means larger swings but historically better long-term performance."
+msgstr "Vous êtes à l'aise avec une volatilité plus élevée en échange de rendements potentiellement supérieurs. Un portefeuille de croissance est généralement fortement composé d'actions, ce qui signifie des fluctuations plus importantes mais historiquement de meilleures performances à long terme."
 
 # ── Onboarding ──
+#: apps/accounts/templates/accounts/onboarding.html:4
 msgid "Onboarding"
 msgstr "Configuration initiale"
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_1.html:3
 msgid "Welcome to Limpid!"
 msgstr "Bienvenue sur Limpid !"
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_1.html:4
 msgid "Let's set up your account. First, select your province."
 msgstr "Configurons votre compte. D'abord, sélectionnez votre province."
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_1.html:26
+#: apps/accounts/templates/accounts/partials/onboarding_step_2.html:26
+#: apps/accounts/templates/accounts/partials/quiz_step.html:33
+#: templates/real_estate/create.html:74
 msgid "Next"
 msgstr "Suivant"
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_2.html:3
 msgid "Language preference"
 msgstr "Préférence de langue"
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_2.html:4
 msgid "Choose your preferred language for the dashboard."
 msgstr "Choisissez votre langue préférée pour le tableau de bord."
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_3.html:3
 msgid "You're all set!"
 msgstr "Vous êtes prêt !"
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_3.html:4
 msgid "Here's a summary of your preferences:"
 msgstr "Voici un résumé de vos préférences :"
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_3.html:8
+#: templates/real_estate/partials/wizard_step_2.html:42
 msgid "Province"
 msgstr "Province"
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_3.html:12
 msgid "Language"
 msgstr "Langue"
 
+#: apps/accounts/templates/accounts/partials/onboarding_step_3.html:19
 msgid "Go to my dashboard"
 msgstr "Aller à mon tableau de bord"
 
+#: apps/accounts/templates/accounts/partials/quiz_result.html:3
 msgid "Your Risk Profile"
 msgstr "Votre profil de risque"
 
+#: apps/accounts/templates/accounts/partials/quiz_result.html:13
 msgid "What does this mean?"
 msgstr "Qu'est-ce que cela signifie ?"
 
-msgid ""
-"This is for educational purposes only and does not constitute financial "
-"advice."
-msgstr ""
-"Ceci est à des fins éducatives seulement et ne constitue pas un conseil "
-"financier."
+#: apps/accounts/templates/accounts/partials/quiz_result.html:18
+msgid "This is for educational purposes only and does not constitute financial advice."
+msgstr "Ceci est à des fins éducatives seulement et ne constitue pas un conseil financier."
 
+#: apps/accounts/templates/accounts/partials/quiz_result.html:24
 msgid "Back to profile"
 msgstr "Retour au profil"
 
+#: apps/accounts/templates/accounts/partials/quiz_result.html:28
 msgid "Retake the quiz"
 msgstr "Refaire le questionnaire"
 
+#: apps/accounts/templates/accounts/partials/quiz_step.html:6
+#: apps/education/templates/education/partials/quiz_feedback.html:6
+#: apps/education/templates/education/partials/quiz_question.html:6
 #, python-format
 msgid "Question %(current)s of %(total)s"
 msgstr "Question %(current)s de %(total)s"
 
+#: apps/accounts/templates/accounts/partials/quiz_step.html:31
+#: apps/education/templates/education/partials/quiz_feedback.html:51
 msgid "See results"
 msgstr "Voir les résultats"
 
+#: apps/accounts/templates/accounts/profile.html:4
+#: apps/accounts/templates/accounts/profile.html:8
+#: templates/components/nav.html:103
 msgid "Profile"
 msgstr "Profil"
 
 # ── Profile ──
+#: apps/accounts/templates/accounts/profile.html:11
 msgid "Account information"
 msgstr "Informations du compte"
 
+#: apps/accounts/templates/accounts/profile.html:14
 msgid "Email"
 msgstr "Courriel"
 
+#: apps/accounts/templates/accounts/profile.html:19
 msgid "Risk profile"
 msgstr "Profil de risque"
 
+#: apps/accounts/templates/accounts/profile.html:29
 msgid "Take the risk quiz"
 msgstr "Répondre au questionnaire de risque"
 
+#: apps/accounts/templates/accounts/profile.html:36
 msgid "Preferences"
 msgstr "Préférences"
 
+#: apps/accounts/templates/accounts/profile.html:54
+#: templates/real_estate/partials/expense_form.html:20
+#: templates/real_estate/partials/tax_form.html:20
+#: templates/real_estate/partials/valuation_form.html:20
 msgid "Save"
 msgstr "Enregistrer"
 
 # ── Risk quiz ──
+#: apps/accounts/templates/accounts/risk_quiz.html:4
 msgid "Risk Tolerance Quiz"
 msgstr "Questionnaire de tolérance au risque"
 
+#: apps/accounts/views.py:36
 msgid "Profile updated successfully."
 msgstr "Profil mis à jour avec succès."
 
 # ── Education models ──
+#: apps/education/models.py:16 apps/education/models.py:17
 msgid "lesson progress"
 msgstr "progression de leçon"
 
+#: apps/education/models.py:37
 msgid "quiz response"
 msgstr "réponse au quiz"
 
+#: apps/education/models.py:38
 msgid "quiz responses"
 msgstr "réponses au quiz"
 
+#: apps/education/models.py:57
 msgid "quiz completion"
 msgstr "complétion de quiz"
 
+#: apps/education/models.py:58
 msgid "quiz completions"
 msgstr "complétions de quiz"
 
 # ── Education / Learning Path ──
+#: apps/education/templates/education/lesson.html:10
+#: apps/education/templates/education/path.html:4
+#: apps/education/templates/education/path.html:8
+#: apps/education/templates/education/quiz.html:10
 msgid "Learning Path"
 msgstr "Parcours d'apprentissage"
 
+#: apps/education/templates/education/lesson.html:30
 msgid "Key terms"
 msgstr "Termes clés"
 
+#: apps/education/templates/education/lesson.html:53
 msgid "Retake quiz"
 msgstr "Refaire le quiz"
 
+#: apps/education/templates/education/lesson.html:56
 msgid "Start quiz"
 msgstr "Commencer le quiz"
 
+#: apps/education/templates/education/lesson.html:65
+#: apps/education/templates/education/partials/quiz_result.html:37
 msgid "Back to learning path"
 msgstr "Retour au parcours"
 
+#: apps/education/templates/education/partials/lesson_complete_button.html:10
 msgid "Completed"
 msgstr "Terminé"
 
+#: apps/education/templates/education/partials/lesson_complete_button.html:20
 msgid "Mark as complete"
 msgstr "Marquer comme terminé"
 
+#: apps/education/templates/education/partials/quiz_feedback.html:40
 msgid "Explanation"
 msgstr "Explication"
 
+#: apps/education/templates/education/partials/quiz_feedback.html:53
 msgid "Next question"
 msgstr "Question suivante"
 
+#: apps/education/templates/education/partials/quiz_question.html:30
 msgid "Submit answer"
 msgstr "Soumettre la réponse"
 
+#: apps/education/templates/education/partials/quiz_result.html:3
 msgid "Quiz Complete!"
 msgstr "Quiz terminé !"
 
+#: apps/education/templates/education/partials/quiz_result.html:17
 msgid "Excellent!"
 msgstr "Excellent !"
 
+#: apps/education/templates/education/partials/quiz_result.html:18
 msgid "You have a strong understanding of this lesson."
 msgstr "Vous avez une bonne compréhension de cette leçon."
 
+#: apps/education/templates/education/partials/quiz_result.html:21
 msgid "Good effort!"
 msgstr "Bon effort !"
 
+#: apps/education/templates/education/partials/quiz_result.html:22
 msgid "You got the basics. Review the lesson to strengthen your understanding."
-msgstr ""
-"Vous avez les bases. Révisez la leçon pour renforcer votre compréhension."
+msgstr "Vous avez les bases. Révisez la leçon pour renforcer votre compréhension."
 
+#: apps/education/templates/education/partials/quiz_result.html:25
 msgid "Keep learning!"
 msgstr "Continuez à apprendre !"
 
+#: apps/education/templates/education/partials/quiz_result.html:26
 msgid "Re-read the lesson and try again — progress comes from practice."
 msgstr "Relisez la leçon et réessayez — on progresse en pratiquant."
 
+#: apps/education/templates/education/partials/quiz_result.html:33
 msgid "Back to lesson"
 msgstr "Retour à la leçon"
 
+#: apps/education/templates/education/path.html:9
 msgid "A progressive curriculum to understand your investments."
 msgstr "Un programme progressif pour comprendre vos investissements."
 
+#: apps/education/templates/education/path.html:19
 #, python-format
 msgid "%(completed)s of %(total)s lessons completed"
 msgstr "%(completed)s leçons sur %(total)s complétées"
 
+#: apps/education/templates/education/quiz.html:4
+#: apps/education/templates/education/quiz.html:14
 msgid "Quiz"
 msgstr "Quiz"
 
+#: apps/impact/templates/impact/directory.html:4
+#: apps/impact/templates/impact/directory.html:7
+#: templates/components/nav.html:67
 msgid "Impact"
 msgstr "Impact"
 
+#: apps/impact/templates/impact/directory.html:8
 msgid "Impact directory coming soon."
 msgstr "Répertoire d'impact bientôt disponible."
 
+#: apps/market_data/models.py:7
 msgid "ETF"
 msgstr "FNB"
 
+#: apps/market_data/models.py:8
 msgid "Stock"
 msgstr "Action"
 
+#: apps/market_data/models.py:9
 msgid "Bond"
 msgstr "Obligation"
 
+#: apps/market_data/models.py:10
 msgid "GIC"
 msgstr "CPG"
 
+#: apps/market_data/models.py:11
 msgid "Cash"
 msgstr "Liquidités"
 
 # ── Market Data ──
+#: apps/market_data/models.py:30
 msgid "asset"
 msgstr "actif"
 
+#: apps/market_data/models.py:31
 msgid "assets"
 msgstr "actifs"
 
 # ── Portfolio ──
+#: apps/portfolio/models.py:19
 msgid "portfolio"
 msgstr "portefeuille"
 
+#: apps/portfolio/models.py:20
 msgid "portfolios"
 msgstr "portefeuilles"
 
+#: apps/portfolio/models.py:42
 msgid "holding"
 msgstr "position"
 
+#: apps/portfolio/models.py:43
 msgid "holdings"
 msgstr "positions"
 
+#: apps/portfolio/models.py:70 templates/portfolio/detail.html:90
 msgid "Buy"
 msgstr "Achat"
 
+#: apps/portfolio/models.py:71 templates/portfolio/detail.html:92
 msgid "Sell"
 msgstr "Vente"
 
+#: apps/portfolio/models.py:91
 msgid "transaction"
 msgstr "transaction"
 
+#: apps/portfolio/models.py:92
 msgid "transactions"
 msgstr "transactions"
 
+#: apps/portfolio/services.py:80
 msgid "My Sandbox Portfolio"
 msgstr "Mon portefeuille bac à sable"
 
+#: apps/portfolio/templates/portfolio/list.html:4
+#: apps/portfolio/templates/portfolio/list.html:7
+#: templates/components/nav.html:39 templates/portfolio/list.html:4
+#: templates/portfolio/list.html:8
 msgid "Portfolios"
 msgstr "Portefeuilles"
 
+#: apps/portfolio/templates/portfolio/list.html:8
 msgid "Portfolio management coming soon."
 msgstr "Gestion de portefeuille bientôt disponible."
 
 # ── Real Estate ──
+#: apps/real_estate/apps.py:8 templates/components/bottom_nav.html:32
+#: templates/components/nav.html:60 templates/real_estate/list.html:7
 msgid "Real Estate"
 msgstr "Immobilier"
 
+# ── Real Estate Field Tooltips ──
+#: apps/real_estate/forms.py:128
+msgid "The total price you paid for the property, before taxes and fees."
+msgstr "Le prix total payé pour la propriété, avant taxes et frais."
+
+#: apps/real_estate/forms.py:129
+msgid "The date the sale was finalized at the notary."
+msgstr "La date à laquelle la vente a été finalisée chez le notaire."
+
+#: apps/real_estate/forms.py:130
+msgid "Your best estimate of what the property is worth today."
+msgstr "Votre meilleure estimation de la valeur actuelle de la propriété."
+
+#: apps/real_estate/forms.py:131
+msgid "The date this valuation estimate was made."
+msgstr "La date à laquelle cette estimation a été faite."
+
+#: apps/real_estate/forms.py:133
+msgid "The cash amount you contributed toward the purchase. Used to calculate your ownership share if there are co-owners."
+msgstr "Le montant en argent que vous avez contribué à l'achat. Utilisé pour calculer votre part de propriété s'il y a des copropriétaires."
+
+#: apps/real_estate/forms.py:136
+msgid "The total amount borrowed from the lender. Usually the purchase price minus your down payment."
+msgstr "Le montant total emprunté au prêteur. Habituellement le prix d'achat moins votre mise de fonds."
+
+#: apps/real_estate/forms.py:137
+msgid "The yearly interest rate on your mortgage, as stated in your contract (e.g. 5.5)."
+msgstr "Le taux d'intérêt annuel de votre hypothèque, tel qu'indiqué dans votre contrat (ex. 5,5)."
+
+#: apps/real_estate/forms.py:138
+msgid "Fixed: rate stays the same for the term. Variable: rate can change with the market."
+msgstr "Fixe : le taux reste le même pendant le terme. Variable : le taux peut changer selon le marché."
+
+#: apps/real_estate/forms.py:139
+msgid "How often you make mortgage payments."
+msgstr "La fréquence à laquelle vous effectuez vos paiements hypothécaires."
+
+#: apps/real_estate/forms.py:140
+msgid "The date your first mortgage payment was due."
+msgstr "La date à laquelle votre premier paiement hypothécaire était dû."
+
+#: apps/real_estate/forms.py:141
+msgid "The email address your co-owner uses to log in to Limpid."
+msgstr "L'adresse courriel que votre copropriétaire utilise pour se connecter à Limpid."
+
+#: apps/real_estate/forms.py:142
+msgid "The cash amount your co-owner contributed toward the purchase."
+msgstr "Le montant en argent que votre copropriétaire a contribué à l'achat."
+
+#: apps/real_estate/forms.py:143
+msgid "The percentage of the property your co-owner will own. Your share will be the remainder."
+msgstr "Le pourcentage de la propriété que votre copropriétaire détiendra. Votre part sera le reste."
+
+#: apps/real_estate/forms.py:148
+msgid "Also called 'mutation tax'. A one-time tax paid to the municipality when you buy a property. Your notary should have the exact amount."
+msgstr "Aussi appelée « taxe de mutation ». Une taxe unique payée à la municipalité lors de l'achat d'une propriété. Votre notaire devrait avoir le montant exact."
+
+#: apps/real_estate/forms.py:151
+msgid "Legal fees paid to the notary for the purchase transaction."
+msgstr "Frais juridiques payés au notaire pour la transaction d'achat."
+
+#: apps/real_estate/forms.py:153
+msgid "The value assigned by your municipality for property tax purposes. Found on your municipal tax bill."
+msgstr "La valeur assignée par votre municipalité à des fins de taxe foncière. Se trouve sur votre compte de taxes municipales."
+
+#: apps/real_estate/forms.py:155
+msgid "Total number of years to fully pay off the mortgage. Most common in Canada: 25 years."
+msgstr "Nombre total d'années pour rembourser complètement l'hypothèque. Le plus courant au Canada : 25 ans."
+
+#: apps/real_estate/forms.py:156
+msgid "The length of your current mortgage contract before renewal. Most common in Canada: 5 years."
+msgstr "La durée de votre contrat hypothécaire actuel avant le renouvellement. Le plus courant au Canada : 5 ans."
+
+#: apps/real_estate/forms.py:158 apps/real_estate/tooltips.py:129
+msgid "If your down payment was less than 20%, you likely paid CMHC/Sagen/Canada Guaranty insurance. This premium is usually added to the mortgage principal."
+msgstr "Si votre mise de fonds était inférieure à 20 %, vous avez probablement payé une assurance SCHL/Sagen/Canada Guaranty. Cette prime est habituellement ajoutée au capital hypothécaire."
+
+# ── French form field tooltips ──
+#: apps/real_estate/forms.py:165
+#, python-format
+msgid "Total 'frais de notaire' paid at purchase. Includes transfer taxes (droits de mutation), notary fees, and administrative costs. Typically 7-8.5% for existing properties, 2-3% for new builds."
+msgstr "Total des « frais de notaire » payés à l'achat. Inclut les droits de mutation, les honoraires du notaire et les frais administratifs. Typiquement 7-8,5 % pour l'ancien, 2-3 % pour le neuf."
+
+#: apps/real_estate/forms.py:169
+msgid "Real estate agent fees paid at purchase, if any."
+msgstr "Frais d'agence immobilière payés à l'achat, le cas échéant."
+
+#: apps/real_estate/forms.py:171
+msgid "The cadastral rental value (valeur locative cadastrale) used to calculate taxe foncière. Found on your taxe foncière notice."
+msgstr "La valeur locative cadastrale utilisée pour calculer la taxe foncière. Se trouve sur votre avis de taxe foncière."
+
+#: apps/real_estate/forms.py:175
+msgid "Total mortgage duration in years. Most common in France: 20 or 25 years. Maximum allowed by regulation: 25 years."
+msgstr "Durée totale du prêt en années. Le plus courant en France : 20 ou 25 ans. Maximum autorisé par la réglementation : 25 ans."
+
+#: apps/real_estate/forms.py:179
+msgid "Annual rate for assurance emprunteur (e.g. 0.30 for 0.30%). Required by all French banks. Typical rates: 0.15-0.50% depending on age."
+msgstr "Taux annuel de l'assurance emprunteur (ex. 0,30 pour 0,30 %). Exigée par toutes les banques françaises. Taux typiques : 0,15-0,50 % selon l'âge."
+
+#: apps/real_estate/forms.py:197
+#: templates/real_estate/partials/wizard_step_5.html:14
 msgid "Your down payment"
 msgstr "Votre mise de fonds"
 
+#: apps/real_estate/forms.py:204
+#: templates/real_estate/partials/wizard_step_5.html:40
+msgid "Co-owner email"
+msgstr "Courriel du copropriétaire"
+
+#: apps/real_estate/forms.py:209
+#: templates/real_estate/partials/wizard_step_5.html:48
+msgid "Co-owner down payment"
+msgstr "Mise de fonds du copropriétaire"
+
+#: apps/real_estate/forms.py:216
+msgid "Co-owner ownership share (%)"
+msgstr "Part de propriété du copropriétaire (%)"
+
+# French form labels
+#: apps/real_estate/forms.py:273
+#: templates/real_estate/partials/wizard_step_2.html:43
+msgid "Département"
+msgstr "Département"
+
+#: apps/real_estate/forms.py:277
+#: templates/real_estate/partials/wizard_step_3.html:38
+msgid "Frais de notaire (achat)"
+msgstr "Frais de notaire (achat)"
+
+#: apps/real_estate/forms.py:278
+#: templates/real_estate/partials/wizard_step_3.html:51
+msgid "Frais d'agence (achat)"
+msgstr "Frais d'agence (achat)"
+
+#: apps/real_estate/forms.py:279
+#: templates/real_estate/partials/wizard_step_4.html:39
+msgid "Valeur cadastrale"
+msgstr "Valeur cadastrale"
+
+#: apps/real_estate/forms.py:327
+#: templates/real_estate/partials/wizard_step_6.html:63
+msgid "Loan duration (years)"
+msgstr "Durée du prêt (années)"
+
+# ── Real Estate — Property Taxes ──
+#: apps/real_estate/forms.py:369 apps/real_estate/models.py:318
+msgid "Municipal tax"
+msgstr "Taxe municipale"
+
+#: apps/real_estate/forms.py:369 apps/real_estate/models.py:319
+msgid "School tax"
+msgstr "Taxe scolaire"
+
+# French tax types
+#: apps/real_estate/forms.py:371 apps/real_estate/models.py:320
+msgid "Taxe foncière"
+msgstr "Taxe foncière"
+
+#: apps/real_estate/forms.py:372 apps/real_estate/models.py:321
+msgid "Taxe d'habitation"
+msgstr "Taxe d'habitation"
+
+#: apps/real_estate/forms.py:373 apps/real_estate/models.py:322
+msgid "IFI (wealth tax)"
+msgstr "IFI (impôt sur la fortune immobilière)"
+
+#: apps/real_estate/models.py:10
 msgid "House"
 msgstr "Maison"
 
+#: apps/real_estate/models.py:11
 msgid "Condo (divided co-ownership)"
 msgstr "Condo (copropriété divise)"
 
+#: apps/real_estate/models.py:12
 msgid "Condo (undivided co-ownership)"
 msgstr "Condo (copropriété indivise)"
 
+#: apps/real_estate/models.py:13
 msgid "Duplex"
 msgstr "Duplex"
 
+#: apps/real_estate/models.py:14
 msgid "Triplex"
 msgstr "Triplex"
 
+#: apps/real_estate/models.py:15
 msgid "Vacant land"
 msgstr "Terrain vacant"
 
+#: apps/real_estate/models.py:16
 msgid "Cottage / Secondary residence"
 msgstr "Chalet / Résidence secondaire"
 
+#: apps/real_estate/models.py:17
 msgid "Commercial property"
 msgstr "Propriété commerciale"
 
+#: apps/real_estate/models.py:21
 msgid "Primary residence"
 msgstr "Résidence principale"
 
+#: apps/real_estate/models.py:22
 msgid "Secondary residence"
 msgstr "Résidence secondaire"
 
+#: apps/real_estate/models.py:23
 msgid "Rental property"
 msgstr "Propriété locative"
 
+#: apps/real_estate/models.py:24
 msgid "Commercial"
 msgstr "Commercial"
 
+# ── Multi-currency ──
+#: apps/real_estate/models.py:28
+msgid "Canadian Dollar (CAD)"
+msgstr "Dollar canadien (CAD)"
+
+#: apps/real_estate/models.py:29
+msgid "Euro (EUR)"
+msgstr "Euro (EUR)"
+
+# ── France support ──
+# Country names
+#: apps/real_estate/models.py:33
+msgid "Canada"
+msgstr "Canada"
+
+#: apps/real_estate/models.py:34
+msgid "France"
+msgstr "France"
+
+#: apps/real_estate/models.py:37
 msgid "name"
 msgstr "nom"
 
+#: apps/real_estate/models.py:38
+msgid "country"
+msgstr "pays"
+
+#: apps/real_estate/models.py:39
 msgid "property type"
 msgstr "type de propriété"
 
+#: apps/real_estate/models.py:40
 msgid "usage"
 msgstr "usage"
 
+#: apps/real_estate/models.py:41
 msgid "address"
 msgstr "adresse"
 
+#: apps/real_estate/models.py:42
 msgid "city"
 msgstr "ville"
 
+#: apps/real_estate/models.py:43
 msgid "province"
 msgstr "province"
 
+#: apps/real_estate/models.py:44
 msgid "postal code"
 msgstr "code postal"
 
+#: apps/real_estate/models.py:45
+msgid "currency"
+msgstr "devise"
+
+#: apps/real_estate/models.py:47
 msgid "purchase price"
 msgstr "prix d'achat"
 
+#: apps/real_estate/models.py:48
 msgid "purchase date"
 msgstr "date d'achat"
 
+#: apps/real_estate/models.py:49
 msgid "welcome tax paid"
 msgstr "taxe de bienvenue payée"
 
+#: apps/real_estate/models.py:50
 msgid "notary fees at purchase"
 msgstr "frais de notaire à l'achat"
 
+#: apps/real_estate/models.py:52
 msgid "current valuation"
 msgstr "évaluation actuelle"
 
+#: apps/real_estate/models.py:53
 msgid "valuation date"
 msgstr "date d'évaluation"
 
+#: apps/real_estate/models.py:54
 msgid "municipal assessment"
 msgstr "évaluation municipale"
 
+#: apps/real_estate/models.py:66
 msgid "property"
 msgstr "propriété"
 
+#: apps/real_estate/models.py:67
 msgid "properties"
 msgstr "propriétés"
 
+#: apps/real_estate/models.py:95
 msgid "can edit property"
 msgstr "peut modifier la propriété"
 
+#: apps/real_estate/models.py:97
 msgid "Can this owner edit property details?"
 msgstr "Ce propriétaire peut-il modifier les détails de la propriété ?"
 
+#: apps/real_estate/models.py:99
 msgid "down payment contributed"
 msgstr "mise de fonds contribuée"
 
+#: apps/real_estate/models.py:104
 msgid "property ownership"
 msgstr "propriété foncière"
 
+#: apps/real_estate/models.py:112 apps/real_estate/models.py:159
+#: apps/real_estate/models.py:352
 msgid "start date"
 msgstr "date de début"
 
+#: apps/real_estate/models.py:113 apps/real_estate/models.py:353
 msgid "end date"
 msgstr "date de fin"
 
+#: apps/real_estate/models.py:114 apps/real_estate/models.py:211
+#: apps/real_estate/models.py:249 apps/real_estate/models.py:307
+#: apps/real_estate/models.py:354
 msgid "note"
 msgstr "note"
 
+#: apps/real_estate/models.py:127 apps/real_estate/models.py:375
 msgid "ownership share (%)"
 msgstr "part de propriété (%)"
 
+#: apps/real_estate/models.py:138
 msgid "Fixed"
 msgstr "Fixe"
 
+#: apps/real_estate/models.py:139
 msgid "Variable"
 msgstr "Variable"
 
+# French mortgage terms
+#: apps/real_estate/models.py:140
+msgid "Mixed (taux mixte)"
+msgstr "Mixte (taux mixte)"
+
+#: apps/real_estate/models.py:144
 msgid "Monthly"
 msgstr "Mensuel"
 
+#: apps/real_estate/models.py:145
 msgid "Bi-weekly"
 msgstr "Aux deux semaines"
 
+#: apps/real_estate/models.py:146
 msgid "Accelerated bi-weekly"
 msgstr "Aux deux semaines accéléré"
 
+#: apps/real_estate/models.py:150
 msgid "lender"
 msgstr "prêteur"
 
+#: apps/real_estate/models.py:151
 msgid "original principal"
 msgstr "capital initial"
 
+#: apps/real_estate/models.py:152
 msgid "annual interest rate (%)"
 msgstr "taux d'intérêt annuel (%)"
 
+#: apps/real_estate/models.py:153
 msgid "rate type"
 msgstr "type de taux"
 
+#: apps/real_estate/models.py:154
 msgid "amortization (years)"
 msgstr "amortissement (années)"
 
+#: apps/real_estate/models.py:155
 msgid "term (years)"
 msgstr "terme (années)"
 
+#: apps/real_estate/models.py:157
 msgid "payment frequency"
 msgstr "fréquence de paiement"
 
+#: apps/real_estate/models.py:160
 msgid "active"
 msgstr "actif"
 
+#: apps/real_estate/models.py:161
 msgid "mortgage insurance premium"
 msgstr "prime d'assurance hypothécaire"
 
+#: apps/real_estate/models.py:163
+msgid "borrower insurance rate (%)"
+msgstr "taux d'assurance emprunteur (%)"
+
+#: apps/real_estate/models.py:205
+msgid "new annual rate (%)"
+msgstr "nouveau taux annuel (%)"
+
+#: apps/real_estate/models.py:207
+msgid "new rate type"
+msgstr "nouveau type de taux"
+
+#: apps/real_estate/models.py:209 apps/real_estate/models.py:248
+msgid "effective date"
+msgstr "date d'effet"
+
+#: apps/real_estate/models.py:210
+msgid "simulation only"
+msgstr "simulation uniquement"
+
+#: apps/real_estate/models.py:215
+msgid "mortgage rate change"
+msgstr "changement de taux hypothécaire"
+
+#: apps/real_estate/models.py:216
+msgid "mortgage rate changes"
+msgstr "changements de taux hypothécaires"
+
+#: apps/real_estate/models.py:224
 msgid "payment number"
 msgstr "numéro de paiement"
 
+#: apps/real_estate/models.py:225
 msgid "payment date"
 msgstr "date de paiement"
 
+#: apps/real_estate/models.py:226
 msgid "total payment"
 msgstr "paiement total"
 
+#: apps/real_estate/models.py:227
 msgid "principal portion"
 msgstr "portion du capital"
 
+#: apps/real_estate/models.py:228
 msgid "interest portion"
 msgstr "portion des intérêts"
 
+#: apps/real_estate/models.py:229
 msgid "balance after payment"
 msgstr "solde après paiement"
 
+#: apps/real_estate/models.py:247
+msgid "monthly amount"
+msgstr "montant mensuel"
+
+#: apps/real_estate/models.py:254
+msgid "owner monthly payment"
+msgstr "paiement mensuel du propriétaire"
+
+#: apps/real_estate/models.py:255
+msgid "owner monthly payments"
+msgstr "paiements mensuels des propriétaires"
+
+#: apps/real_estate/models.py:263
 msgid "Renovation / Improvement"
 msgstr "Rénovation / Amélioration"
 
+#: apps/real_estate/models.py:264
 msgid "Repair / Maintenance"
 msgstr "Réparation / Entretien"
 
+#: apps/real_estate/models.py:265
 msgid "Property tax"
 msgstr "Taxe foncière"
 
+#: apps/real_estate/models.py:266 templates/real_estate/amortization.html:138
 msgid "Insurance"
 msgstr "Assurance"
 
+#: apps/real_estate/models.py:267
 msgid "Condo fees"
 msgstr "Frais de condo"
 
+# French expense types
+#: apps/real_estate/models.py:268
+msgid "Charges de copropriété"
+msgstr "Charges de copropriété"
+
+#: apps/real_estate/models.py:269
+msgid "Assurance emprunteur"
+msgstr "Assurance emprunteur"
+
+#: apps/real_estate/models.py:270
 msgid "Other"
 msgstr "Autre"
 
+#: apps/real_estate/models.py:274
 msgid "type"
 msgstr "type"
 
+#: apps/real_estate/models.py:275 apps/real_estate/models.py:418
 msgid "description"
 msgstr "description"
 
+#: apps/real_estate/models.py:276 apps/real_estate/models.py:328
 msgid "amount"
 msgstr "montant"
 
+#: apps/real_estate/models.py:277 apps/real_estate/models.py:305
 msgid "date"
 msgstr "date"
 
+#: apps/real_estate/models.py:279
 msgid "increases cost base"
 msgstr "augmente le coût de base"
 
+#: apps/real_estate/models.py:281
 msgid "Capital improvements increase the adjusted cost base for tax purposes."
 msgstr "Les améliorations augmentent le prix de base rajusté à des fins fiscales."
 
+#: apps/real_estate/models.py:283
+msgid "proof document link"
+msgstr "lien vers le justificatif"
+
+#: apps/real_estate/models.py:297
 msgid "Manual estimate"
 msgstr "Estimation manuelle"
 
+#: apps/real_estate/models.py:298
 msgid "Professional appraisal"
 msgstr "Évaluation professionnelle"
 
+#: apps/real_estate/models.py:299
+#: templates/real_estate/partials/wizard_step_4.html:38
 msgid "Municipal assessment"
 msgstr "Évaluation municipale"
 
+#: apps/real_estate/models.py:300
 msgid "Comparable sales"
 msgstr "Ventes comparables"
 
+#: apps/real_estate/models.py:304
 msgid "value"
 msgstr "valeur"
 
+#: apps/real_estate/models.py:306
 msgid "source"
 msgstr "source"
 
+#: apps/real_estate/models.py:326
+msgid "tax type"
+msgstr "type de taxe"
+
+#: apps/real_estate/models.py:327
+msgid "year"
+msgstr "année"
+
+#: apps/real_estate/models.py:333
+msgid "property tax"
+msgstr "taxe foncière"
+
+#: apps/real_estate/models.py:334
+msgid "property taxes"
+msgstr "taxes foncières"
+
+#: apps/real_estate/models.py:344
+msgid "monthly rent"
+msgstr "loyer mensuel"
+
+#: apps/real_estate/models.py:346
+msgid "agency fee (%)"
+msgstr "frais d'agence (%)"
+
+#: apps/real_estate/models.py:350
+msgid "Percentage taken by rental management agency"
+msgstr "Pourcentage prélevé par l'agence de gestion locative"
+
+#: apps/real_estate/models.py:358
+msgid "rental income"
+msgstr "revenu locatif"
+
+#: apps/real_estate/models.py:359
+msgid "rental incomes"
+msgstr "revenus locatifs"
+
+#: apps/real_estate/models.py:373
 msgid "invitee email"
 msgstr "courriel de l'invité"
 
+#: apps/real_estate/models.py:374
 msgid "down payment"
 msgstr "mise de fonds"
 
+# ── Notification verb labels ──
+#: apps/real_estate/models.py:386
+msgid "Invitation sent"
+msgstr "Invitation envoyée"
+
+#: apps/real_estate/models.py:387
+msgid "Invitation received"
+msgstr "Invitation reçue"
+
+#: apps/real_estate/models.py:388
+msgid "Invitation accepted"
+msgstr "Invitation acceptée"
+
+#: apps/real_estate/models.py:389
+msgid "Co-owner removed"
+msgstr "Copropriétaire retiré"
+
+#: apps/real_estate/models.py:390
+msgid "Expense added"
+msgstr "Dépense ajoutée"
+
+#: apps/real_estate/models.py:391
+msgid "Expense updated"
+msgstr "Dépense modifiée"
+
+#: apps/real_estate/models.py:392
+msgid "Expense deleted"
+msgstr "Dépense supprimée"
+
+#: apps/real_estate/models.py:393
+msgid "Tax added"
+msgstr "Taxe ajoutée"
+
+#: apps/real_estate/models.py:394
+msgid "Tax updated"
+msgstr "Taxe modifiée"
+
+#: apps/real_estate/models.py:395
+msgid "Tax deleted"
+msgstr "Taxe supprimée"
+
+#: apps/real_estate/models.py:396
+msgid "Valuation added"
+msgstr "Évaluation ajoutée"
+
+#: apps/real_estate/models.py:397
+msgid "Valuation updated"
+msgstr "Évaluation modifiée"
+
+#: apps/real_estate/models.py:398
+msgid "Valuation deleted"
+msgstr "Évaluation supprimée"
+
+#: apps/real_estate/models.py:399
+msgid "Property updated"
+msgstr "Propriété mise à jour"
+
+#: apps/real_estate/models.py:417
+msgid "action"
+msgstr "action"
+
+#: apps/real_estate/signals.py:26 apps/real_estate/views.py:453
+#, python-format
+msgid "invited you to co-own %(name)s (%(share)s%%)"
+msgstr "vous a invité à devenir copropriétaire de %(name)s (%(share)s%%)"
+
+# ── Educational tooltips (detail page) ──
+#: apps/real_estate/tooltips.py:5
+msgid "The estimated current market value of the entire property. This is what you'd expect to sell it for today."
+msgstr "La valeur marchande estimée de la propriété complète. C'est le prix auquel vous vous attendriez à la vendre aujourd'hui."
+
+#: apps/real_estate/tooltips.py:8
+msgid "The portion of the property you truly own — the value minus what you still owe on the mortgage. Think of it as your 'net worth' in this property."
+msgstr "La partie de la propriété qui vous appartient vraiment — la valeur moins ce que vous devez encore sur l'hypothèque. C'est votre « valeur nette » dans cette propriété."
+
+#: apps/real_estate/tooltips.py:12
+msgid "The remaining amount you owe to the bank. This decreases with each payment as you pay down the principal."
+msgstr "Le montant qu'il vous reste à rembourser à la banque. Il diminue à chaque paiement au fur et à mesure que vous remboursez le capital."
+
+#: apps/real_estate/tooltips.py:15
+#, python-format
+msgid "Your personal portion of the equity, based on your ownership percentage. If you own 50% of a property with $200k equity, your share is $100k."
+msgstr "Votre part personnelle de l'équité, basée sur votre pourcentage de propriété. Si vous possédez 50 % d'une propriété avec 200k$ d'équité, votre part est de 100k$."
+
+#: apps/real_estate/tooltips.py:19
+msgid "The total price you paid for the property when you bought it, before taxes and closing costs."
+msgstr "Le prix total payé pour la propriété lors de l'achat, avant taxes et frais de clôture."
+
+#: apps/real_estate/tooltips.py:22
+msgid "How much the property value has increased (or decreased) since you bought it. Calculated as: current value minus purchase price."
+msgstr "Combien la valeur de la propriété a augmenté (ou diminué) depuis l'achat. Calculé comme : valeur actuelle moins prix d'achat."
+
+#: apps/real_estate/tooltips.py:25
+msgid "Your portion of the total property value, based on your ownership percentage."
+msgstr "Votre part de la valeur totale de la propriété, selon votre pourcentage de propriété."
+
+#: apps/real_estate/tooltips.py:26
+msgid "Your portion of the remaining mortgage debt, based on your ownership percentage."
+msgstr "Votre part de la dette hypothécaire restante, selon votre pourcentage de propriété."
+
+#: apps/real_estate/tooltips.py:28
+msgid "The cash you contributed upfront when purchasing the property. A larger down payment means less mortgage debt and lower insurance costs."
+msgstr "L'argent que vous avez contribué à l'achat de la propriété. Une mise de fonds plus importante signifie moins de dette hypothécaire et des coûts d'assurance plus bas."
+
+#: apps/real_estate/tooltips.py:32
+msgid "The total amount of mortgage principal you've paid off so far. This is the portion of your payments that actually reduces your debt."
+msgstr "Le montant total de capital hypothécaire que vous avez remboursé à ce jour. C'est la portion de vos paiements qui réduit réellement votre dette."
+
+#: apps/real_estate/tooltips.py:36
+msgid "Your regular mortgage payment amount, including both principal and interest. Principal reduces your debt; interest is the cost of borrowing."
+msgstr "Votre paiement hypothécaire régulier, incluant le capital et les intérêts. Le capital réduit votre dette; les intérêts sont le coût de l'emprunt."
+
+#: apps/real_estate/tooltips.py:40
+msgid "How much you still owe on the mortgage. This decreases with each payment as you chip away at the principal."
+msgstr "Combien il vous reste à payer sur l'hypothèque. Ce montant diminue à chaque paiement au fur et à mesure que vous remboursez le capital."
+
+#: apps/real_estate/tooltips.py:43
+msgid "The assumed selling price. By default, this is your current property valuation. Adjust it to simulate different scenarios."
+msgstr "Le prix de vente supposé. Par défaut, c'est votre évaluation actuelle de la propriété. Ajustez-le pour simuler différents scénarios."
+
+#: apps/real_estate/tooltips.py:46
+msgid "The remaining amount owed on your mortgage at the time of sale."
+msgstr "Le montant restant dû sur votre hypothèque au moment de la vente."
+
+#: apps/real_estate/tooltips.py:47
+msgid "Sale price minus the remaining mortgage. This is what you'd have before paying selling costs."
+msgstr "Prix de vente moins l'hypothèque restante. C'est ce que vous auriez avant de payer les frais de vente."
+
+#: apps/real_estate/tooltips.py:48
+msgid "Legal fees for the sale transaction, paid to the notary who handles the paperwork."
+msgstr "Les frais juridiques pour la transaction de vente, payés au notaire qui gère la paperasse."
+
+#: apps/real_estate/tooltips.py:49
+msgid "All costs associated with selling: agent fees, notary fees, and taxes."
+msgstr "Tous les coûts associés à la vente : honoraires d'agent, frais de notaire et taxes."
+
+#: apps/real_estate/tooltips.py:51
+msgid "What you actually take home after selling — the sale price minus the mortgage and all selling costs. This is your real profit from the sale."
+msgstr "Ce que vous empochez réellement après la vente — le prix de vente moins l'hypothèque et tous les frais de vente. C'est votre vrai profit de la vente."
+
+#: apps/real_estate/tooltips.py:55
+msgid "A visual split of how much of the property value is yours (equity) vs. still owed to the bank."
+msgstr "Une répartition visuelle de la part de la valeur qui vous appartient (équité) vs. celle encore due à la banque."
+
+#: apps/real_estate/tooltips.py:58
+msgid "How your mortgage payments are split between principal (paying down debt) and interest (cost of borrowing)."
+msgstr "Comment vos paiements hypothécaires sont répartis entre le capital (remboursement de la dette) et les intérêts (coût de l'emprunt)."
+
+#: apps/real_estate/tooltips.py:61
+msgid "A breakdown of all expenses you've recorded by category — renovations, maintenance, insurance, etc."
+msgstr "Un détail de toutes les dépenses enregistrées par catégorie — rénovations, entretien, assurance, etc."
+
+#: apps/real_estate/tooltips.py:64
+msgid "Who owns this property and their respective share percentages. Shares can change when co-owners are added or removed."
+msgstr "Qui est propriétaire de ce bien et leurs pourcentages de parts respectifs. Les parts peuvent changer lorsque des copropriétaires sont ajoutés ou retirés."
+
+#: apps/real_estate/tooltips.py:67
+msgid "The bank or financial institution that provided your mortgage."
+msgstr "La banque ou l'institution financière qui vous a accordé votre hypothèque."
+
+#: apps/real_estate/tooltips.py:69
+msgid "Your personal equity — how much of the property's net value belongs to you. Calculated as: total equity multiplied by your ownership percentage."
+msgstr "Votre équité personnelle — la part de la valeur nette de la propriété qui vous appartient. Calculé comme : équité totale multipliée par votre pourcentage de propriété."
+
+#: apps/real_estate/tooltips.py:73
+msgid "The total amount of interest you've paid since the start of your mortgage. This is the cost of borrowing — it doesn't reduce your debt."
+msgstr "Le montant total d'intérêts payés depuis le début de votre hypothèque. C'est le coût de l'emprunt — ça ne réduit pas votre dette."
+
+#: apps/real_estate/tooltips.py:76
+msgid "The total amount you've paid to date, combining both principal and interest portions."
+msgstr "Le montant total payé à ce jour, combinant les portions de capital et d'intérêts."
+
+#: apps/real_estate/tooltips.py:78
+msgid "The total amount originally borrowed, including any mortgage insurance premium added to the loan."
+msgstr "Le montant total emprunté à l'origine, incluant toute prime d'assurance hypothécaire ajoutée au prêt."
+
+#: apps/real_estate/tooltips.py:80
+msgid "The yearly interest rate on your mortgage, as stated in your contract."
+msgstr "Le taux d'intérêt annuel de votre hypothèque, tel qu'indiqué dans votre contrat."
+
+#: apps/real_estate/tooltips.py:82
+msgid "The annual interest rate on your mortgage. Fixed means it stays the same for your term; variable means it can change with the market."
+msgstr "Le taux d'intérêt annuel de votre hypothèque. Fixe signifie qu'il reste le même pendant votre terme; variable signifie qu'il peut changer selon le marché."
+
+#: apps/real_estate/tooltips.py:86
+msgid "Your total monthly cost of owning this property — mortgage payment, taxes, recurring expenses, minus any rental income you receive."
+msgstr "Votre coût mensuel total de possession — paiement hypothécaire, taxes, charges récurrentes, moins les revenus locatifs perçus."
+
+#: apps/real_estate/tooltips.py:90
+msgid "The net monthly cost after subtracting rental income. A negative value means your rental income exceeds your ownership costs."
+msgstr "Le coût mensuel net après déduction des revenus locatifs. Une valeur négative signifie que vos revenus locatifs dépassent vos charges."
+
+#: apps/real_estate/tooltips.py:94
+msgid "Track interest rate changes over time — for mortgage renewals or to simulate what would happen if rates go up or down."
+msgstr "Suivez les changements de taux au fil du temps — pour les renouvellements ou pour simuler l'impact d'une hausse ou baisse de taux."
+
+#: apps/real_estate/tooltips.py:98
+msgid "Track rental income for this property. Agency fees are automatically deducted to calculate your net rental revenue."
+msgstr "Suivez les revenus locatifs de ce bien. Les frais d'agence sont automatiquement déduits pour calculer votre revenu locatif net."
+
+#: apps/real_estate/tooltips.py:102
+msgid "Customize how mortgage payments are split between co-owners. By default, payments follow the ownership percentage."
+msgstr "Personnalisez la répartition des paiements hypothécaires entre copropriétaires. Par défaut, les paiements suivent le pourcentage de propriété."
+
+#: apps/real_estate/tooltips.py:106
+msgid "Each owner's share based on down payment contributions. This reflects who put in more cash upfront when buying."
+msgstr "La part de chaque propriétaire basée sur la mise de fonds. Cela reflète qui a investi le plus au moment de l'achat."
+
+#: apps/real_estate/tooltips.py:110
+msgid "Each owner's share based on total contributions — down payment, mortgage principal paid, and expenses. This evolves over time."
+msgstr "La part de chaque propriétaire basée sur les contributions totales — mise de fonds, capital hypothécaire remboursé et dépenses. Cela évolue dans le temps."
+
+#: apps/real_estate/tooltips.py:117
+msgid "The total number of years to fully pay off the mortgage. In Canada, 25 years is the most common amortization period."
+msgstr "Le nombre total d'années pour rembourser complètement l'hypothèque. Au Canada, 25 ans est la période d'amortissement la plus courante."
+
+#: apps/real_estate/tooltips.py:121
+#, python-format
+msgid "The real estate agent's fee, typically 4-6% of the sale price in Canada. This includes applicable sales taxes (GST/QST)."
+msgstr "Les honoraires de l'agent immobilier, typiquement 4-6 % du prix de vente au Canada. Cela inclut les taxes de vente applicables (TPS/TVQ)."
+
+#: apps/real_estate/tooltips.py:125
+#, python-format
+msgid "If this isn't your primary residence, you may owe tax on the profit. In Canada, 50% of the capital gain is taxable at your marginal rate."
+msgstr "Si ce n'est pas votre résidence principale, vous pourriez devoir payer de l'impôt sur le profit. Au Canada, 50 % du gain en capital est imposable à votre taux marginal."
+
+# ── French-specific tooltips ──
+#: apps/real_estate/tooltips.py:136
+msgid "The total duration of your mortgage in years. In France, 20 or 25 years is most common. Maximum allowed: 25 years."
+msgstr "La durée totale de votre prêt immobilier en années. En France, 20 ou 25 ans est le plus courant. Maximum autorisé : 25 ans."
+
+#: apps/real_estate/tooltips.py:140
+msgid "The real estate agent's fee, typically 3-6% of the sale price in France. This includes 20% TVA."
+msgstr "Les honoraires de l'agent immobilier, typiquement 3-6 % du prix de vente en France. TVA de 20 % incluse."
+
+#: apps/real_estate/tooltips.py:143
+#, python-format
+msgid "If this isn't your primary residence, you owe plus-value tax on the profit: 19% income tax + 17.2% social contributions. Abatements apply based on how long you've owned the property — full IR exemption after 22 years, full social exemption after 30."
+msgstr "Si ce n'est pas votre résidence principale, vous devez la taxe sur la plus-value : 19 % d'impôt sur le revenu + 17,2 % de prélèvements sociaux. Des abattements s'appliquent selon la durée de détention — exonération totale d'IR après 22 ans, exonération totale des prélèvements sociaux après 30 ans."
+
+#: apps/real_estate/tooltips.py:148
+msgid "Assurance emprunteur — mandatory insurance covering death, disability, and job loss. Paid monthly on top of your mortgage payment. Typical rate: 0.15-0.50% per year of the loan amount."
+msgstr "Assurance emprunteur — assurance obligatoire couvrant décès, invalidité et perte d'emploi. Payée mensuellement en plus de votre mensualité de prêt. Taux typique : 0,15-0,50 % par an du montant emprunté."
+
+#: apps/real_estate/tooltips.py:152
+msgid "The 'frais de notaire' include transfer taxes (droits de mutation), notary fees, and administrative costs. For existing properties: 7-8.5% of the price. For new builds: 2-3% (VAT is included in the purchase price instead)."
+msgstr "Les « frais de notaire » incluent les droits de mutation, les honoraires du notaire et les frais administratifs. Pour l'ancien : 7-8,5 % du prix. Pour le neuf : 2-3 % (la TVA est incluse dans le prix d'achat)."
+
+#: apps/real_estate/tooltips.py:157
+msgid "Annual property tax paid to the municipality. Based on the cadastral value and local tax rates. Varies widely by location."
+msgstr "Taxe annuelle payée à la commune. Basée sur la valeur cadastrale et les taux locaux. Varie considérablement selon l'emplacement."
+
+#: apps/real_estate/tooltips.py:161
+msgid "Abolished for all primary residences since 2023. Still applies to secondary residences, with possible surcharges in high-demand areas."
+msgstr "Supprimée pour toutes les résidences principales depuis 2023. S'applique toujours aux résidences secondaires, avec d'éventuelles majorations dans les zones tendues."
+
+#: apps/real_estate/tooltips.py:165
+msgid "Wealth tax on real estate (Impot sur la Fortune Immobiliere). Applies if your total net real estate exceeds 1,300,000 EUR. Primary residence benefits from a 30% valuation abatement."
+msgstr "Impôt sur la fortune immobilière (IFI). S'applique si votre patrimoine immobilier net total dépasse 1 300 000 €. La résidence principale bénéficie d'un abattement de 30 % sur sa valeur."
+
+#: apps/real_estate/views.py:132 apps/real_estate/views.py:953
+#: templates/real_estate/detail.html:59
+msgid "Equity"
+msgstr "Équité"
+
+#: apps/real_estate/views.py:132 apps/real_estate/views.py:953
+msgid "Remaining mortgage"
+msgstr "Hypothèque restante"
+
+#: apps/real_estate/views.py:150 apps/real_estate/views.py:971
+#: templates/real_estate/amortization.html:76
+#: templates/real_estate/detail.html:122
+msgid "Principal paid"
+msgstr "Capital remboursé"
+
+#: apps/real_estate/views.py:151 apps/real_estate/views.py:972
+#: templates/real_estate/amortization.html:80
+msgid "Interest paid"
+msgstr "Intérêts payés"
+
+#: apps/real_estate/views.py:152 apps/real_estate/views.py:973
+msgid "Remaining principal"
+msgstr "Capital restant"
+
+#: apps/real_estate/views.py:169 apps/real_estate/views.py:990
+msgid "No expenses"
+msgstr "Aucune dépense"
+
+#: apps/real_estate/views.py:190
+#, python-format
+msgid "%(pct)s%% of value"
+msgstr "%(pct)s%% de la valeur"
+
+#: apps/real_estate/views.py:241
+msgid "updated property details"
+msgstr "a mis à jour les détails de la propriété"
+
+# ── Notification description templates ──
+#: apps/real_estate/views.py:276
+#, python-format
+msgid "added expense \"%(desc)s\" (%(amount)s)"
+msgstr "a ajouté la dépense « %(desc)s » (%(amount)s)"
+
+#: apps/real_estate/views.py:304
+#, python-format
+msgid "added valuation of %(value)s"
+msgstr "a ajouté une évaluation de %(value)s"
+
+#: apps/real_estate/views.py:403 apps/real_estate/views.py:660
+msgid "A tax entry for this type and year already exists."
+msgstr "Une entrée de taxe pour ce type et cette année existe déjà."
+
+#: apps/real_estate/views.py:410
+#, python-format
+msgid "added %(type)s tax for %(year)s (%(amount)s)"
+msgstr "a ajouté la taxe %(type)s pour %(year)s (%(amount)s)"
+
+#: apps/real_estate/views.py:479
+#, python-format
+msgid "invited %(email)s as co-owner"
+msgstr "a invité %(email)s comme copropriétaire"
+
+#: apps/real_estate/views.py:482
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr "Invitation envoyée à %(email)s."
 
+#: apps/real_estate/views.py:493
 msgid "This invitation is for a different email address."
 msgstr "Cette invitation est destinée à une autre adresse courriel."
 
+#: apps/real_estate/views.py:518 apps/real_estate/views.py:547
+msgid "accepted co-ownership invitation"
+msgstr "a accepté l'invitation de copropriété"
+
+#: apps/real_estate/views.py:520
 #, python-format
 msgid "You are now a co-owner of %(name)s."
 msgstr "Vous êtes maintenant copropriétaire de %(name)s."
 
+#: apps/real_estate/views.py:611
+#, python-format
+msgid "updated expense \"%(desc)s\" (%(amount)s)"
+msgstr "a modifié la dépense « %(desc)s » (%(amount)s)"
+
+#: apps/real_estate/views.py:633
+#, python-format
+msgid "deleted expense \"%(desc)s\" (%(amount)s)"
+msgstr "a supprimé la dépense « %(desc)s » (%(amount)s)"
+
+#: apps/real_estate/views.py:671
+#, python-format
+msgid "updated %(type)s tax for %(year)s"
+msgstr "a modifié la taxe %(type)s pour %(year)s"
+
+#: apps/real_estate/views.py:691
+#, python-format
+msgid "deleted %(type)s tax for %(year)s (%(amount)s)"
+msgstr "a supprimé la taxe %(type)s pour %(year)s (%(amount)s)"
+
+#: apps/real_estate/views.py:722
+#, python-format
+msgid "updated valuation to %(value)s on %(date)s"
+msgstr "a modifié l'évaluation à %(value)s le %(date)s"
+
+#: apps/real_estate/views.py:741
+#, python-format
+msgid "deleted valuation of %(value)s on %(date)s"
+msgstr "a supprimé l'évaluation de %(value)s le %(date)s"
+
+#: apps/real_estate/views.py:768
+msgid "You cannot remove yourself."
+msgstr "Vous ne pouvez pas vous retirer vous-même."
+
+#: apps/real_estate/views.py:785
+#, python-format
+msgid "%(name)s removed"
+msgstr "%(name)s retiré"
+
+#: apps/real_estate/views.py:803
+#, python-format
+msgid "removed you from %(name)s"
+msgstr "vous a retiré de %(name)s"
+
+#: apps/real_estate/views.py:809
+#, python-format
+msgid "removed %(name)s from this property"
+msgstr "a retiré %(name)s de cette propriété"
+
+# ── Remove co-owner success messages ──
+#: apps/real_estate/views.py:814
+#, python-format
+msgid "%(name)s has been removed from %(property)s."
+msgstr "%(name)s a été retiré de %(property)s."
+
+#: apps/real_estate/views.py:844
+msgid "Property deleted."
+msgstr "Propriété supprimée."
+
+#: apps/real_estate/views.py:892
+msgid "Rental income updated"
+msgstr "Revenu locatif mis à jour"
+
+#: apps/real_estate/views.py:1038 apps/real_estate/views.py:1100
+msgid "Auto-calculated from co-owner's payment"
+msgstr "Calculé automatiquement à partir du paiement du copropriétaire"
+
+#: apps/real_estate/views.py:1042 apps/real_estate/views.py:1104
+msgid "Payment split updated"
+msgstr "Répartition des paiements mise à jour"
+
+#: apps/real_estate/views.py:1141
+msgid "Payment split deleted"
+msgstr "Répartition des paiements supprimée"
+
+#: apps/scenarios/templates/scenarios/lab.html:4
+#: apps/scenarios/templates/scenarios/lab.html:7
+#: templates/components/nav.html:53
 msgid "Scenarios"
 msgstr "Scénarios"
 
+#: apps/scenarios/templates/scenarios/lab.html:8
 msgid "Scenario lab coming soon."
 msgstr "Laboratoire de scénarios bientôt disponible."
 
+#: templates/account/login.html:4 templates/account/login.html:46
+#: templates/account/signup.html:56 templates/components/bottom_nav.html:53
+#: templates/components/nav.html:114
 msgid "Login"
 msgstr "Connexion"
 
 # ── Auth templates ──
+#: templates/account/login.html:14
 msgid "Welcome back"
 msgstr "Bon retour"
 
+#: templates/account/login.html:15
 msgid "Sign in to your account"
 msgstr "Connectez-vous à votre compte"
 
+#: templates/account/login.html:51
 msgid "Don't have an account?"
 msgstr "Vous n'avez pas de compte ?"
 
+#: templates/account/login.html:53 templates/account/signup.html:4
+#: templates/account/signup.html:49 templates/components/nav.html:117
 msgid "Sign up"
 msgstr "S'inscrire"
 
-msgid "Create your account"
-msgstr "Créez votre compte"
-
-msgid "Get started with Limpid"
-msgstr "Commencez avec Limpid"
-
+#: templates/account/logout.html:4 templates/account/logout.html:14
+#: templates/account/logout.html:20 templates/components/nav.html:108
 msgid "Logout"
 msgstr "Déconnexion"
 
+#: templates/account/logout.html:15
 msgid "Are you sure you want to log out?"
 msgstr "Êtes-vous sûr de vouloir vous déconnecter ?"
 
+#: templates/account/logout.html:26 templates/pages/404.html:17
+#: templates/pages/500.html:31
 msgid "Back to home"
 msgstr "Retour à l'accueil"
 
+#: templates/account/signup.html:14
+msgid "Create your account"
+msgstr "Créez votre compte"
+
+#: templates/account/signup.html:15
+msgid "Get started with Limpid"
+msgstr "Commencez avec Limpid"
+
+#: templates/account/signup.html:54
 msgid "Already have an account?"
 msgstr "Vous avez déjà un compte ?"
 
+#: templates/base.html:9
 msgid "Educational investment dashboard for beginners"
 msgstr "Tableau de bord éducatif d'investissement pour débutants"
 
+#: templates/components/bottom_nav.html:3
 msgid "Mobile navigation"
 msgstr "Navigation mobile"
 
 # ── Navigation ──
+#: templates/components/bottom_nav.html:9 templates/components/nav.html:20
 msgid "Home"
 msgstr "Accueil"
 
 # ── Dashboard ──
+#: templates/components/bottom_nav.html:17 templates/components/nav.html:28
+#: templates/pages/dashboard.html:4 templates/pages/dashboard.html:8
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
+#: templates/components/bottom_nav.html:25 templates/components/nav.html:46
 msgid "Learn"
 msgstr "Apprendre"
 
-msgid ""
-"This tool is for educational purposes only. It does not constitute financial "
-"advice."
-msgstr ""
-"Cet outil est à des fins éducatives seulement. Il ne constitue pas un "
-"conseil financier."
+#: templates/components/bottom_nav.html:47
+msgid "Alerts"
+msgstr "Alertes"
 
-msgid "Dismiss"
-msgstr "Fermer"
+#: templates/components/disclaimer_banner.html:7
+msgid "Educational tool — not financial advice."
+msgstr "Outil éducatif — pas un conseil financier."
 
+#: templates/components/footer.html:6
 msgid "Educational tool, not financial advice."
 msgstr "Outil éducatif, pas un conseil financier."
 
+#: templates/components/footer.html:9
 msgid "About"
 msgstr "À propos"
 
+#: templates/components/nav.html:15
 msgid "Main navigation"
 msgstr "Navigation principale"
 
+# ── Notifications ──
+#: templates/components/nav.html:85 templates/real_estate/notifications.html:7
+msgid "Notifications"
+msgstr "Notifications"
+
+#: templates/components/progress_bar.html:4
 #, python-format
 msgid "Step %(current)s of %(total)s"
 msgstr "Étape %(current)s de %(total)s"
 
 # ── Tooltip ──
+#: templates/components/tooltip.html:39
 msgid "Got it"
 msgstr "Compris"
 
+#: templates/pages/404.html:4 templates/pages/404.html:15
 msgid "Page not found"
 msgstr "Page introuvable"
 
+#: templates/pages/404.html:16
 msgid "The page you are looking for does not exist."
 msgstr "La page que vous cherchez n'existe pas."
 
+#: templates/pages/500.html:7 templates/pages/500.html:29
 msgid "Server error"
 msgstr "Erreur serveur"
 
+#: templates/pages/500.html:30
 msgid "Something went wrong. Please try again later."
 msgstr "Quelque chose s'est mal passé. Veuillez réessayer plus tard."
 
+#: templates/pages/dashboard.html:16 templates/portfolio/detail.html:17
 msgid "Total value"
 msgstr "Valeur totale"
 
+#: templates/pages/dashboard.html:28
 msgid "Total cost"
 msgstr "Coût total"
 
+#: templates/pages/dashboard.html:29 templates/portfolio/detail.html:36
 msgid "Gain / Loss"
 msgstr "Gain / Perte"
 
+#: templates/pages/dashboard.html:37 templates/portfolio/detail.html:63
 msgid "Allocation"
 msgstr "Répartition"
 
+#: templates/pages/dashboard.html:49
 msgid "Exposures"
 msgstr "Expositions"
 
+#: templates/pages/dashboard.html:51
 msgid "Geography"
 msgstr "Géographie"
 
+#: templates/pages/dashboard.html:68
 msgid "Sectors"
 msgstr "Secteurs"
 
+#: templates/pages/dashboard.html:89
 msgid "Clarity Score"
 msgstr "Score de clarté"
 
+#: templates/pages/dashboard.html:93
 #, python-format
 msgid "%(learned)s of %(total)s asset types understood"
 msgstr "%(learned)s type(s) d'actif compris sur %(total)s"
 
+#: templates/pages/dashboard.html:103
 msgid "Continue learning"
 msgstr "Continuer à apprendre"
 
+#: templates/pages/dashboard.html:109
 msgid "Next lesson"
 msgstr "Prochaine leçon"
 
+#: templates/pages/dashboard.html:112
 msgid "Level"
 msgstr "Niveau"
 
+#: templates/pages/dashboard.html:116
 msgid "Start lesson"
 msgstr "Commencer la leçon"
 
+#: templates/pages/dashboard.html:121
 msgid "All lessons completed!"
 msgstr "Toutes les leçons sont terminées !"
 
+#: templates/pages/dashboard.html:122
 msgid "You've finished all available lessons."
 msgstr "Vous avez terminé toutes les leçons disponibles."
 
+#: templates/pages/home.html:4 templates/pages/home.html:12
 msgid "Understand before you invest"
 msgstr "Comprendre avant d'investir"
 
-msgid ""
-"Radical transparency and a progressive learning path — so you always know "
-"what you hold, what it costs, and what you need to learn."
-msgstr ""
-"Transparence radicale et parcours pédagogique progressif — pour toujours "
-"savoir ce que vous détenez, ce que ça coûte et ce que vous devez apprendre."
+#: templates/pages/home.html:15
+msgid "Radical transparency and a progressive learning path — so you always know what you hold, what it costs, and what you need to learn."
+msgstr "Transparence radicale et parcours pédagogique progressif — pour toujours savoir ce que vous détenez, ce que ça coûte et ce que vous devez apprendre."
 
+#: templates/pages/home.html:20
 msgid "My dashboard"
 msgstr "Mon tableau de bord"
 
+#: templates/pages/home.html:24
 msgid "Get started"
 msgstr "Commencer"
 
+#: templates/pages/home.html:27
 msgid "Start learning"
 msgstr "Commencer à apprendre"
 
+#: templates/pages/home.html:42
 msgid "Total transparency"
 msgstr "Transparence totale"
 
+#: templates/pages/home.html:43
 msgid "See every fee, every holding, every risk — nothing hidden."
 msgstr "Voyez chaque frais, chaque titre, chaque risque — rien de caché."
 
+#: templates/pages/home.html:54
 msgid "Learn at your pace"
 msgstr "Apprenez à votre rythme"
 
+#: templates/pages/home.html:55
 msgid "A progressive learning path that grows with your understanding."
-msgstr ""
-"Un parcours d'apprentissage progressif qui grandit avec votre compréhension."
+msgstr "Un parcours d'apprentissage progressif qui grandit avec votre compréhension."
 
+#: templates/pages/home.html:66
 msgid "No advice, ever"
 msgstr "Aucun conseil, jamais"
 
+#: templates/pages/home.html:67
 msgid "We help you understand — we never tell you what to do with your money."
-msgstr ""
-"Nous vous aidons à comprendre — nous ne vous disons jamais quoi faire avec "
-"votre argent."
+msgstr "Nous vous aidons à comprendre — nous ne vous disons jamais quoi faire avec votre argent."
 
+#: templates/pages/home.html:75
 msgid "How it works"
 msgstr "Comment ça marche"
 
+#: templates/pages/home.html:79
 msgid "Define your profile"
 msgstr "Définissez votre profil"
 
+#: templates/pages/home.html:80
 msgid "Answer a few questions about your goals and risk tolerance."
-msgstr ""
-"Répondez à quelques questions sur vos objectifs et votre tolérance au risque."
+msgstr "Répondez à quelques questions sur vos objectifs et votre tolérance au risque."
 
+#: templates/pages/home.html:84
 msgid "Explore a portfolio"
 msgstr "Explorez un portefeuille"
 
+#: templates/pages/home.html:85
 msgid "Import or build a sandbox portfolio to explore."
 msgstr "Importez ou créez un portefeuille bac à sable à explorer."
 
+#: templates/pages/home.html:89
 msgid "Understand everything"
 msgstr "Comprenez tout"
 
+#: templates/pages/home.html:90
 msgid "Holdings, fees, risks, impact — understand what you own."
 msgstr "Titres, frais, risques, impact — comprenez ce que vous détenez."
 
 # ── Styleguide ──
+#: templates/pages/styleguide.html:4 templates/pages/styleguide.html:9
 msgid "Design System Styleguide"
 msgstr "Guide de style du design system"
 
+#: templates/portfolio/detail.html:11 templates/portfolio/list.html:19
 msgid "Sandbox"
 msgstr "Bac à sable"
 
 # ── Portfolio Detail ──
+#: templates/portfolio/detail.html:25
 msgid "Holdings"
 msgstr "Positions"
 
+#: templates/portfolio/detail.html:30 templates/portfolio/detail.html:78
 msgid "Ticker"
 msgstr "Symbole"
 
+#: templates/portfolio/detail.html:31
+#: templates/real_estate/partials/wizard_step_7.html:40
 msgid "Name"
 msgstr "Nom"
 
+#: templates/portfolio/detail.html:32 templates/portfolio/detail.html:79
 msgid "Qty"
 msgstr "Qté"
 
+#: templates/portfolio/detail.html:33
 msgid "Avg cost"
 msgstr "Coût moy."
 
+#: templates/portfolio/detail.html:34 templates/portfolio/detail.html:80
+#: templates/real_estate/partials/wizard_step_7.html:61
 msgid "Price"
 msgstr "Prix"
 
+#: templates/portfolio/detail.html:35
 msgid "Market value"
 msgstr "Valeur marchande"
 
+#: templates/portfolio/detail.html:37
 msgid "Weight"
 msgstr "Poids"
 
+#: templates/portfolio/detail.html:71
 msgid "Recent transactions"
 msgstr "Transactions récentes"
 
+#: templates/portfolio/detail.html:76
+#: templates/real_estate/amortization.html:132
+#: templates/real_estate/partials/expense_list.html:8
+#: templates/real_estate/partials/wizard_step_7.html:65
 msgid "Date"
 msgstr "Date"
 
+#: templates/portfolio/detail.html:77
+#: templates/real_estate/partials/expense_list.html:9
+#: templates/real_estate/partials/tax_list.html:9
+#: templates/real_estate/partials/wizard_step_7.html:23
 msgid "Type"
 msgstr "Type"
 
+#: templates/portfolio/detail.html:81
 msgid "Fees"
 msgstr "Frais"
 
+#: templates/portfolio/detail.html:102
 msgid "No transactions yet."
 msgstr "Aucune transaction pour le moment."
 
-msgid "No portfolios yet."
-msgstr "Aucun portefeuille pour le moment."
+#: templates/portfolio/list.html:24
+msgid "No portfolios yet"
+msgstr "Aucun portefeuille pour le moment"
 
+#: templates/portfolio/list.html:24
 msgid "Create your first portfolio to start tracking your investments."
 msgstr "Créez votre premier portefeuille pour suivre vos investissements."
 
 # ── Real Estate Templates ──
+#: templates/real_estate/amortization.html:8
 msgid "Amortization Schedule"
 msgstr "Tableau d'amortissement"
 
+#: templates/real_estate/amortization.html:12
+#: templates/real_estate/ownership_periods.html:12
 msgid "Back to property"
 msgstr "Retour à la propriété"
 
+#: templates/real_estate/amortization.html:16
 msgid "Summary"
 msgstr "Résumé"
 
+#: templates/real_estate/amortization.html:20
+#: templates/real_estate/detail.html:135
 msgid "Monthly payment"
 msgstr "Paiement mensuel"
 
+#: templates/real_estate/amortization.html:27
 msgid "Total interest paid"
 msgstr "Intérêts totaux payés"
 
+#: templates/real_estate/amortization.html:34
 msgid "Total paid to date"
 msgstr "Total payé à ce jour"
 
+#: templates/real_estate/amortization.html:43
 msgid "Original principal"
 msgstr "Capital initial"
 
+#: templates/real_estate/amortization.html:50
 msgid "Annual rate"
 msgstr "Taux annuel"
 
+#: templates/real_estate/amortization.html:57
+#: templates/real_estate/detail.html:138
 msgid "Amortization"
 msgstr "Amortissement"
 
+#: templates/real_estate/amortization.html:60
+#: templates/real_estate/detail.html:138
+#: templates/real_estate/partials/sale_estimate.html:24
 msgid "years"
 msgstr "ans"
 
-msgid "Payment Schedule"
-msgstr "Calendrier de paiements"
+#: templates/real_estate/amortization.html:67
+msgid "Per-Owner Summary"
+msgstr "Résumé par propriétaire"
 
-msgid "Payment"
-msgstr "Paiement"
+#: templates/real_estate/amortization.html:84
+msgid "Total paid"
+msgstr "Total payé"
 
+#: templates/real_estate/amortization.html:88
+msgid "Contribution"
+msgstr "Contribution"
+
+#: templates/real_estate/amortization.html:99
+msgid "Paid to Date"
+msgstr "Payé à ce jour"
+
+#: templates/real_estate/amortization.html:106
+#: templates/real_estate/amortization.html:135
+#: templates/real_estate/partials/wizard_step_7.html:79
 msgid "Principal"
 msgstr "Capital"
 
+#: templates/real_estate/amortization.html:110
+#: templates/real_estate/amortization.html:136
 msgid "Interest"
 msgstr "Intérêts"
 
-msgid "Balance"
-msgstr "Solde"
+#: templates/real_estate/amortization.html:114
+#: templates/real_estate/detail.html:33
+msgid "Total"
+msgstr "Total"
 
-msgid "Add a property"
-msgstr "Ajouter une propriété"
+#: templates/real_estate/amortization.html:126
+msgid "Payment Schedule"
+msgstr "Calendrier de paiements"
 
-msgid "Property details"
-msgstr "Détails de la propriété"
-
-msgid "Your contribution"
-msgstr "Votre contribution"
-
-msgid "I have a co-owner"
-msgstr "J'ai un copropriétaire"
-
-msgid "Co-owner email"
-msgstr "Courriel du copropriétaire"
-
-msgid "Co-owner down payment"
-msgstr "Mise de fonds du copropriétaire"
-
-msgid "Co-owner ownership share (%)"
-msgstr "Part de propriété du copropriétaire (%)"
-
-msgid "Your share"
-msgstr "Votre part"
-
-msgid "The email address your co-owner uses to log in to Limpid."
-msgstr "L'adresse courriel que votre copropriétaire utilise pour se connecter à Limpid."
-
-msgid "The cash amount your co-owner contributed toward the purchase."
-msgstr "Le montant en argent que votre copropriétaire a contribué à l'achat."
-
-msgid ""
-"The percentage of the property your co-owner will own. Your share will be "
-"the remainder."
-msgstr ""
-"Le pourcentage de la propriété que votre copropriétaire détiendra. Votre "
-"part sera le reste."
-
-msgid "Mortgage (optional)"
-msgstr "Hypothèque (optionnel)"
-
-msgid "Create property"
-msgstr "Créer la propriété"
-
-msgid "Cancel"
-msgstr "Annuler"
-
-msgid "Edit"
-msgstr "Modifier"
-
-msgid "Property Value"
-msgstr "Valeur de la propriété"
-
-msgid "Purchase price"
-msgstr "Prix d'achat"
-
-msgid "Appreciation"
-msgstr "Plus-value"
-
-msgid "Mortgage balance"
-msgstr "Solde hypothécaire"
-
-msgid "Equity"
-msgstr "Équité"
-
-msgid "Your Share"
-msgstr "Votre part"
-
-msgid "Your equity"
-msgstr "Votre équité"
-
-msgid "Your valuation share"
-msgstr "Votre part de la valeur"
-
-msgid "Your mortgage share"
-msgstr "Votre part de l'hypothèque"
-
-msgid "Down payment"
-msgstr "Mise de fonds"
-
-msgid "Principal paid"
-msgstr "Capital remboursé"
-
-msgid "Ownership"
-msgstr "Propriétaires"
-
-msgid "Invite co-owner"
-msgstr "Inviter un copropriétaire"
-
-msgid "Mortgage"
-msgstr "Hypothèque"
-
-msgid "Lender"
-msgstr "Prêteur"
-
+#: templates/real_estate/amortization.html:133
+#: templates/real_estate/detail.html:132
+#: templates/real_estate/partials/wizard_step_7.html:83
 msgid "Rate"
 msgstr "Taux"
 
+#: templates/real_estate/amortization.html:134
+msgid "Payment"
+msgstr "Paiement"
+
+#: templates/real_estate/amortization.html:140
+msgid "Balance"
+msgstr "Solde"
+
+#: templates/real_estate/amortization.html:181
+msgid "Contribution Evolution"
+msgstr "Évolution des contributions"
+
+#: templates/real_estate/amortization.html:186
+#: templates/real_estate/partials/tax_list.html:8
+msgid "Year"
+msgstr "Année"
+
+#: templates/real_estate/confirm_delete_property.html:7
+msgid "Delete property"
+msgstr "Supprimer la propriété"
+
+#: templates/real_estate/confirm_delete_property.html:9
+#, python-format
+msgid "Are you sure you want to delete <strong>%(name)s</strong>? This will permanently remove all associated mortgages, expenses, valuations, taxes, and co-ownership data."
+msgstr "Êtes-vous sûr de vouloir supprimer <strong>%(name)s</strong> ? Cela supprimera définitivement toutes les hypothèques, dépenses, estimations, taxes et données de copropriété associées."
+
+#: templates/real_estate/confirm_delete_property.html:11
+msgid "This action cannot be undone."
+msgstr "Cette action est irréversible."
+
+#: templates/real_estate/confirm_delete_property.html:15
+msgid "Delete permanently"
+msgstr "Supprimer définitivement"
+
+#: templates/real_estate/confirm_delete_property.html:16
+#: templates/real_estate/confirm_remove_owner.html:23
+#: templates/real_estate/create.html:86 templates/real_estate/edit.html:69
+#: templates/real_estate/invite.html:29
+#: templates/real_estate/partials/expense_form.html:25
+#: templates/real_estate/partials/rate_change_form.html:17
+#: templates/real_estate/partials/rental_income_form.html:17
+#: templates/real_estate/partials/tax_form.html:25
+#: templates/real_estate/partials/valuation_form.html:25
+msgid "Cancel"
+msgstr "Annuler"
+
+# ── Remove co-owner ──
+#: templates/real_estate/confirm_remove_owner.html:7
+msgid "Remove Co-owner"
+msgstr "Retirer le copropriétaire"
+
+#: templates/real_estate/confirm_remove_owner.html:9
+#, python-format
+msgid ""
+"\n"
+"        Are you sure you want to remove <strong>%(name)s</strong> from <strong>%(property)s</strong>?\n"
+"        "
+msgstr ""
+"\n"
+"        Êtes-vous sûr de vouloir retirer <strong>%(name)s</strong> de <strong>%(property)s</strong> ?\n"
+"        "
+
+#: templates/real_estate/confirm_remove_owner.html:14
+msgid "Their ownership share will be redistributed among remaining owners. This action cannot be undone."
+msgstr "Sa part de propriété sera redistribuée entre les propriétaires restants. Cette action est irréversible."
+
+#: templates/real_estate/confirm_remove_owner.html:20
+msgid "Remove"
+msgstr "Retirer"
+
+#: templates/real_estate/create.html:10
+msgid "Step <span x-text=\"step\"></span> of <span x-text=\"totalSteps\"></span>"
+msgstr "Étape <span x-text=\"step\"></span> de <span x-text=\"totalSteps\"></span>"
+
+#: templates/real_estate/create.html:16
+msgid "Back"
+msgstr "Retour"
+
+#: templates/real_estate/create.html:79
+msgid "Create property"
+msgstr "Créer la propriété"
+
+#: templates/real_estate/detail.html:16
+msgid "Show in"
+msgstr "Afficher en"
+
+#: templates/real_estate/detail.html:18
+msgid "Convert to"
+msgstr "Convertir en"
+
+#: templates/real_estate/detail.html:23
+#: templates/real_estate/partials/expense_list.html:34
+#: templates/real_estate/partials/owner_payments_form.html:16
+#: templates/real_estate/partials/tax_list.html:28
+#: templates/real_estate/partials/valuation_history.html:18
+#: templates/real_estate/partials/wizard_step_7.html:15
+#: templates/real_estate/partials/wizard_step_7.html:36
+#: templates/real_estate/partials/wizard_step_7.html:57
+#: templates/real_estate/partials/wizard_step_7.html:75
+#: templates/real_estate/partials/wizard_step_7.html:94
+msgid "Edit"
+msgstr "Modifier"
+
+# ── CRUD actions ──
+#: templates/real_estate/detail.html:24
+#: templates/real_estate/partials/expense_list.html:41
+#: templates/real_estate/partials/owner_payments_form.html:20
+#: templates/real_estate/partials/rate_change_list.html:16
+#: templates/real_estate/partials/rental_income_list.html:17
+#: templates/real_estate/partials/tax_list.html:35
+#: templates/real_estate/partials/valuation_history.html:25
+msgid "Delete"
+msgstr "Supprimer"
+
+#: templates/real_estate/detail.html:39
+msgid "My share"
+msgstr "Ma part"
+
+#: templates/real_estate/detail.html:48 templates/real_estate/list.html:22
+msgid "Value"
+msgstr "Valeur"
+
+#: templates/real_estate/detail.html:53
+msgid "Your value"
+msgstr "Votre valeur"
+
+#: templates/real_estate/detail.html:65 templates/real_estate/list.html:26
+msgid "Your equity"
+msgstr "Votre équité"
+
+#: templates/real_estate/detail.html:71 templates/real_estate/detail.html:128
+#: templates/real_estate/edit.html:30
+#: templates/real_estate/partials/monthly_cost.html:7
+#: templates/real_estate/partials/monthly_cost.html:12
+#: templates/real_estate/partials/wizard_step_7.html:74
+msgid "Mortgage"
+msgstr "Hypothèque"
+
+#: templates/real_estate/detail.html:75
+msgid "Your mortgage"
+msgstr "Votre hypothèque"
+
+#: templates/real_estate/detail.html:80 templates/real_estate/list.html:31
+msgid "Monthly cost"
+msgstr "Coût mensuel"
+
+#: templates/real_estate/detail.html:85
+msgid "My monthly cost"
+msgstr "Mon coût mensuel"
+
+#: templates/real_estate/detail.html:97
+msgid "Monthly Cost"
+msgstr "Coût mensuel"
+
+# ── Detail page labels ──
+#: templates/real_estate/detail.html:107
+msgid "Details"
+msgstr "Détails"
+
+#: templates/real_estate/detail.html:110
+msgid "Purchase price"
+msgstr "Prix d'achat"
+
+#: templates/real_estate/detail.html:113
+msgid "Appreciation"
+msgstr "Plus-value"
+
+#: templates/real_estate/detail.html:116
+msgid "Your valuation share"
+msgstr "Votre part de la valeur"
+
+#: templates/real_estate/detail.html:118
+msgid "Your mortgage share"
+msgstr "Votre part de l'hypothèque"
+
+#: templates/real_estate/detail.html:120
+msgid "Down payment"
+msgstr "Mise de fonds"
+
+#: templates/real_estate/detail.html:130
+msgid "Lender"
+msgstr "Prêteur"
+
+#: templates/real_estate/detail.html:137
 msgid "Remaining balance"
 msgstr "Solde restant"
 
+#: templates/real_estate/detail.html:142
 msgid "View full amortization schedule"
 msgstr "Voir le tableau d'amortissement complet"
 
+#: templates/real_estate/detail.html:148
+msgid "Rate Changes"
+msgstr "Changements de taux"
+
+#: templates/real_estate/detail.html:157
+msgid "+ Add rate change"
+msgstr "+ Ajouter un changement de taux"
+
+#: templates/real_estate/detail.html:166
+msgid "Payment Split"
+msgstr "Répartition des paiements"
+
+#: templates/real_estate/detail.html:179
+msgid "Mortgage Evolution"
+msgstr "Évolution de l'hypothèque"
+
+#: templates/real_estate/detail.html:186
+msgid "Rental Income"
+msgstr "Revenus locatifs"
+
+#: templates/real_estate/detail.html:195
+msgid "+ Add rental income"
+msgstr "+ Ajouter un revenu locatif"
+
+# French detail page
+#: templates/real_estate/detail.html:204
+msgid "Taxes & Charges"
+msgstr "Impôts et charges"
+
+#: templates/real_estate/detail.html:206
+msgid "Property Taxes"
+msgstr "Taxes foncières"
+
+#: templates/real_estate/detail.html:216
+msgid "+ Add tax"
+msgstr "+ Ajouter une taxe"
+
+#: templates/real_estate/detail.html:223
+msgid "Expenses & Renovations"
+msgstr "Dépenses et rénovations"
+
+#: templates/real_estate/detail.html:232
+msgid "+ Add expense"
+msgstr "+ Ajouter une dépense"
+
+#: templates/real_estate/detail.html:239
+msgid "Valuation History"
+msgstr "Historique d'évaluation"
+
+#: templates/real_estate/detail.html:248
+msgid "+ Add valuation"
+msgstr "+ Ajouter une évaluation"
+
+#: templates/real_estate/detail.html:255
 msgid "If I sell today..."
 msgstr "Si je vends aujourd'hui..."
 
+#: templates/real_estate/detail.html:258
+#: templates/real_estate/partials/sale_estimate.html:5
 msgid "Sale price"
 msgstr "Prix de vente"
 
+#: templates/real_estate/detail.html:270
 #, python-format
 msgid "Commission (%%)"
 msgstr "Commission (%%)"
 
-msgid "Expenses & Renovations"
-msgstr "Dépenses et rénovations"
+#: templates/real_estate/detail.html:292
+msgid "Ownership"
+msgstr "Propriétaires"
 
-msgid "+ Add expense"
-msgstr "+ Ajouter une dépense"
+#: templates/real_estate/detail.html:311
+msgid "At purchase"
+msgstr "À l'achat"
 
-msgid "Valuation History"
-msgstr "Historique d'évaluation"
-
-msgid "+ Add valuation"
-msgstr "+ Ajouter une évaluation"
-
-msgid "Edit property"
-msgstr "Modifier la propriété"
-
-msgid "Save changes"
-msgstr "Enregistrer les modifications"
-
-msgid "Invite a co-owner"
-msgstr "Inviter un copropriétaire"
-
-msgid "Invitation"
-msgstr "Invitation"
-
-msgid "Send invitation"
-msgstr "Envoyer l'invitation"
-
-msgid "+ Add property"
-msgstr "+ Ajouter une propriété"
-
-msgid "Value"
-msgstr "Valeur"
-
-msgid "No properties yet."
-msgstr "Aucune propriété pour le moment."
-
-msgid "Add your first property"
-msgstr "Ajoutez votre première propriété"
-
-msgid "Ownership Periods"
-msgstr "Périodes de propriété"
-
-msgid "No ownership periods defined. Equal split is assumed."
-msgstr "Aucune période de propriété définie. Un partage égal est présumé."
-
-msgid "Add"
-msgstr "Ajouter"
-
-msgid "Description"
-msgstr "Description"
-
-msgid "Amount"
-msgstr "Montant"
-
-msgid "No expenses recorded."
-msgstr "Aucune dépense enregistrée."
-
-msgid "Gross equity"
-msgstr "Équité brute"
-
-msgid "Agent commission (incl. tax)"
-msgstr "Commission de l'agent (taxes incl.)"
-
-msgid "Notary fees"
-msgstr "Frais de notaire"
-
-msgid "Capital gains tax (est.)"
-msgstr "Impôt sur le gain en capital (est.)"
-
-msgid "Total costs"
-msgstr "Coûts totaux"
-
-msgid "Net proceeds"
-msgstr "Produit net"
-
-msgid "Per owner"
-msgstr "Par propriétaire"
-
-msgid "No valuation history."
-msgstr "Aucun historique d'évaluation."
-
-# ── Real Estate Field Tooltips ──
-msgid "The total price you paid for the property, before taxes and fees."
-msgstr "Le prix total payé pour la propriété, avant taxes et frais."
-
-msgid "The date the sale was finalized at the notary."
-msgstr "La date à laquelle la vente a été finalisée chez le notaire."
-
-msgid ""
-"Also called 'mutation tax'. A one-time tax paid to the municipality when you "
-"buy a property. Your notary should have the exact amount."
-msgstr ""
-"Aussi appelée « taxe de mutation ». Une taxe unique payée à la municipalité "
-"lors de l'achat d'une propriété. Votre notaire devrait avoir le montant exact."
-
-msgid "Legal fees paid to the notary for the purchase transaction."
-msgstr "Frais juridiques payés au notaire pour la transaction d'achat."
-
-msgid "Your best estimate of what the property is worth today."
-msgstr "Votre meilleure estimation de la valeur actuelle de la propriété."
-
-msgid "The date this valuation estimate was made."
-msgstr "La date à laquelle cette estimation a été faite."
-
-msgid ""
-"The value assigned by your municipality for property tax purposes. Found on "
-"your municipal tax bill."
-msgstr ""
-"La valeur assignée par votre municipalité à des fins de taxe foncière. Se "
-"trouve sur votre compte de taxes municipales."
-
-msgid ""
-"The cash amount you contributed toward the purchase. Used to calculate your "
-"ownership share if there are co-owners."
-msgstr ""
-"Le montant en argent que vous avez contribué à l'achat. Utilisé pour "
-"calculer votre part de propriété s'il y a des copropriétaires."
-
-msgid ""
-"The total amount borrowed from the lender. Usually the purchase price minus "
-"your down payment."
-msgstr ""
-"Le montant total emprunté au prêteur. Habituellement le prix d'achat moins "
-"votre mise de fonds."
-
-msgid ""
-"The yearly interest rate on your mortgage, as stated in your contract (e.g. "
-"5.5)."
-msgstr ""
-"Le taux d'intérêt annuel de votre hypothèque, tel qu'indiqué dans votre "
-"contrat (ex. 5,5)."
-
-msgid ""
-"Fixed: rate stays the same for the term. Variable: rate can change with the "
-"market."
-msgstr ""
-"Fixe : le taux reste le même pendant le terme. Variable : le taux peut "
-"changer selon le marché."
-
-msgid ""
-"Total number of years to fully pay off the mortgage. Most common in Canada: "
-"25 years."
-msgstr ""
-"Nombre total d'années pour rembourser complètement l'hypothèque. Le plus "
-"courant au Canada : 25 ans."
-
-msgid ""
-"The length of your current mortgage contract before renewal. Most common in "
-"Canada: 5 years."
-msgstr ""
-"La durée de votre contrat hypothécaire actuel avant le renouvellement. Le "
-"plus courant au Canada : 5 ans."
-
-msgid "How often you make mortgage payments."
-msgstr "La fréquence à laquelle vous effectuez vos paiements hypothécaires."
-
-msgid "The date your first mortgage payment was due."
-msgstr "La date à laquelle votre premier paiement hypothécaire était dû."
-
-msgid ""
-"If your down payment was less than 20%, you likely paid CMHC/Sagen/Canada "
-"Guaranty insurance. This premium is usually added to the mortgage principal."
-msgstr ""
-"Si votre mise de fonds était inférieure à 20 %, vous avez probablement payé "
-"une assurance SCHL/Sagen/Canada Guaranty. Cette prime est habituellement "
-"ajoutée au capital hypothécaire."
-
-# ── Real Estate — Property Taxes ──
-msgid "Municipal tax"
-msgstr "Taxe municipale"
-
-msgid "School tax"
-msgstr "Taxe scolaire"
-
-msgid "tax type"
-msgstr "type de taxe"
-
-msgid "year"
-msgstr "année"
-
-msgid "property tax"
-msgstr "taxe foncière"
-
-msgid "property taxes"
-msgstr "taxes foncières"
-
-msgid "Property Taxes"
-msgstr "Taxes foncières"
-
-msgid "+ Add tax"
-msgstr "+ Ajouter une taxe"
-
-msgid "No taxes recorded."
-msgstr "Aucune taxe enregistrée."
-
-msgid "A tax entry for this type and year already exists."
-msgstr "Une entrée de taxe pour ce type et cette année existe déjà."
-
-msgid "Year"
-msgstr "Année"
-
-# ── Real Estate — Charts ──
-msgid "Equity Breakdown"
-msgstr "Répartition de l'équité"
-
-msgid "Payment Breakdown"
-msgstr "Répartition des paiements"
-
-msgid "Expenses by Type"
-msgstr "Dépenses par type"
-
-msgid "Remaining mortgage"
-msgstr "Hypothèque restante"
-
-msgid "Interest paid"
-msgstr "Intérêts payés"
-
-msgid "Remaining principal"
-msgstr "Capital restant"
-
-msgid "No expenses"
-msgstr "Aucune dépense"
+#: templates/real_estate/detail.html:315
+msgid "At end"
+msgstr "À terme"
 
 # ── Real Estate — Co-owners & Invitations ──
+#: templates/real_estate/detail.html:330 templates/real_estate/edit.html:57
 msgid "Pending"
 msgstr "En attente"
 
+#: templates/real_estate/detail.html:341
+msgid "Invite co-owner"
+msgstr "Inviter un copropriétaire"
+
+#: templates/real_estate/edit.html:6
+msgid "Edit property"
+msgstr "Modifier la propriété"
+
+#: templates/real_estate/edit.html:10
+msgid "Property details"
+msgstr "Détails de la propriété"
+
+#: templates/real_estate/edit.html:49
 msgid "Co-owners"
 msgstr "Copropriétaires"
 
-# ── Notifications ──
-msgid "Notifications"
-msgstr "Notifications"
+#: templates/real_estate/edit.html:66
+msgid "Save changes"
+msgstr "Enregistrer les modifications"
 
+#: templates/real_estate/invite.html:7
+msgid "Invite a co-owner"
+msgstr "Inviter un copropriétaire"
+
+#: templates/real_estate/invite.html:11
+msgid "Invitation"
+msgstr "Invitation"
+
+#: templates/real_estate/invite.html:26
+msgid "Send invitation"
+msgstr "Envoyer l'invitation"
+
+#: templates/real_estate/list.html:9
+msgid "+ Add property"
+msgstr "+ Ajouter une propriété"
+
+#: templates/real_estate/list.html:48
+msgid "No properties yet"
+msgstr "Aucune propriété"
+
+#: templates/real_estate/list.html:48
+msgid "Add your first property to start tracking your real estate patrimony."
+msgstr "Ajoutez votre première propriété pour commencer le suivi de votre patrimoine immobilier."
+
+#: templates/real_estate/list.html:48
+msgid "Add your first property"
+msgstr "Ajoutez votre première propriété"
+
+#: templates/real_estate/notifications.html:13
 msgid "Mark all as read"
 msgstr "Tout marquer comme lu"
 
+#: templates/real_estate/notifications.html:32
+#: templates/real_estate/notifications.html:66
+msgid "ago"
+msgstr "il y a"
+
+#: templates/real_estate/notifications.html:39
+msgid "Accept"
+msgstr "Accepter"
+
+#: templates/real_estate/notifications.html:44
+msgid "Decline this invitation?"
+msgstr "Refuser cette invitation ?"
+
+#: templates/real_estate/notifications.html:46
+msgid "Decline"
+msgstr "Refuser"
+
+#: templates/real_estate/notifications.html:78
 msgid "No notifications yet."
 msgstr "Aucune notification."
 
+#: templates/real_estate/notifications.html:78
 msgid "You'll see activity from your co-owned properties here."
 msgstr "L'activité de vos propriétés en copropriété apparaîtra ici."
 
-msgid "ago"
-msgstr ""
+#: templates/real_estate/ownership_periods.html:8
+msgid "Ownership Periods"
+msgstr "Périodes de propriété"
 
-msgid "action"
-msgstr "action"
+#: templates/real_estate/ownership_periods.html:28
+msgid "No ownership periods defined. Equal split is assumed."
+msgstr "Aucune période de propriété définie. Un partage égal est présumé."
 
-# ── Notification verb labels ──
-msgid "Invitation sent"
-msgstr "Invitation envoyée"
+# ── Real Estate — Charts ──
+#: templates/real_estate/partials/charts_sidebar.html:3
+msgid "Equity Breakdown"
+msgstr "Répartition de l'équité"
 
-msgid "Invitation accepted"
-msgstr "Invitation acceptée"
+#: templates/real_estate/partials/charts_sidebar.html:7
+msgid "Payment Breakdown"
+msgstr "Répartition des paiements"
 
-msgid "Co-owner removed"
-msgstr "Copropriétaire retiré"
+#: templates/real_estate/partials/charts_sidebar.html:11
+msgid "Expenses by Type"
+msgstr "Dépenses par type"
 
-msgid "Expense added"
-msgstr "Dépense ajoutée"
+#: templates/real_estate/partials/expense_form.html:20
+#: templates/real_estate/partials/rental_income_form.html:16
+#: templates/real_estate/partials/valuation_form.html:20
+msgid "Add"
+msgstr "Ajouter"
 
-msgid "Expense updated"
-msgstr "Dépense modifiée"
+#: templates/real_estate/partials/expense_list.html:10
+msgid "Description"
+msgstr "Description"
 
-msgid "Expense deleted"
-msgstr "Dépense supprimée"
+#: templates/real_estate/partials/expense_list.html:11
+#: templates/real_estate/partials/tax_list.html:10
+msgid "Amount"
+msgstr "Montant"
 
-msgid "Tax added"
-msgstr "Taxe ajoutée"
+#: templates/real_estate/partials/expense_list.html:12
+msgid "Proof"
+msgstr "Justificatif"
 
-msgid "Tax updated"
-msgstr "Taxe modifiée"
+#: templates/real_estate/partials/expense_list.html:26
+msgid "View"
+msgstr "Voir"
 
-msgid "Tax deleted"
-msgstr "Taxe supprimée"
-
-msgid "Valuation added"
-msgstr "Évaluation ajoutée"
-
-msgid "Valuation updated"
-msgstr "Évaluation modifiée"
-
-msgid "Valuation deleted"
-msgstr "Évaluation supprimée"
-
-msgid "Property updated"
-msgstr "Propriété mise à jour"
-
-# ── CRUD actions ──
-msgid "Delete"
-msgstr "Supprimer"
-
-msgid "Remove"
-msgstr "Retirer"
-
+#: templates/real_estate/partials/expense_list.html:39
 msgid "Delete this expense?"
 msgstr "Supprimer cette dépense ?"
 
-msgid "Delete this tax entry?"
-msgstr "Supprimer cette taxe ?"
+#: templates/real_estate/partials/expense_list.html:51
+msgid "No expenses recorded."
+msgstr "Aucune dépense enregistrée."
 
-msgid "Delete this valuation?"
-msgstr "Supprimer cette évaluation ?"
-
-# ── Remove co-owner ──
-msgid "Remove Co-owner"
-msgstr "Retirer le copropriétaire"
-
-msgid "You cannot remove yourself."
-msgstr "Vous ne pouvez pas vous retirer vous-même."
-
-msgid "Their ownership share will be redistributed among remaining owners. This action cannot be undone."
-msgstr "Sa part de propriété sera redistribuée entre les propriétaires restants. Cette action est irréversible."
-
-# ── Notification description templates ──
+#: templates/real_estate/partials/invitation_response.html:5
 #, python-format
-msgid "added expense \"%(desc)s\" (%(amount)s)"
-msgstr "a ajouté la dépense « %(desc)s » (%(amount)s)"
-
-#, python-format
-msgid "updated expense \"%(desc)s\" (%(amount)s)"
-msgstr "a modifié la dépense « %(desc)s » (%(amount)s)"
-
-#, python-format
-msgid "deleted expense \"%(desc)s\" (%(amount)s)"
-msgstr "a supprimé la dépense « %(desc)s » (%(amount)s)"
-
-#, python-format
-msgid "added %(type)s tax for %(year)s (%(amount)s)"
-msgstr "a ajouté la taxe %(type)s pour %(year)s (%(amount)s)"
-
-#, python-format
-msgid "updated %(type)s tax for %(year)s"
-msgstr "a modifié la taxe %(type)s pour %(year)s"
-
-#, python-format
-msgid "deleted %(type)s tax for %(year)s (%(amount)s)"
-msgstr "a supprimé la taxe %(type)s pour %(year)s (%(amount)s)"
-
-#, python-format
-msgid "added valuation of %(value)s"
-msgstr "a ajouté une évaluation de %(value)s"
-
-#, python-format
-msgid "updated valuation to %(value)s on %(date)s"
-msgstr "a modifié l'évaluation à %(value)s le %(date)s"
-
-#, python-format
-msgid "deleted valuation of %(value)s on %(date)s"
-msgstr "a supprimé l'évaluation de %(value)s le %(date)s"
-
-#, python-format
-msgid "invited %(email)s as co-owner"
-msgstr "a invité %(email)s comme copropriétaire"
-
-msgid "accepted co-ownership invitation"
-msgstr "a accepté l'invitation de copropriété"
-
-#, python-format
-msgid "removed you from %(name)s"
-msgstr "vous a retiré de %(name)s"
-
-#, python-format
-msgid "removed %(name)s from this property"
-msgstr "a retiré %(name)s de cette propriété"
-
-msgid "updated property details"
-msgstr "a mis à jour les détails de la propriété"
-
-# ── Remove co-owner success messages ──
-#, python-format
-msgid "%(name)s has been removed from %(property)s."
-msgstr "%(name)s a été retiré de %(property)s."
-
-#, python-format
-msgid "%(name)s removed"
-msgstr "%(name)s retiré"
-
-# ── Educational tooltips (detail page) ──
-msgid ""
-"The estimated current market value of the entire property. This is what "
-"you'd expect to sell it for today."
-msgstr ""
-"La valeur marchande estimée de la propriété complète. C'est le prix auquel "
-"vous vous attendriez à la vendre aujourd'hui."
-
-msgid ""
-"The portion of the property you truly own — the value minus what you still "
-"owe on the mortgage. Think of it as your 'net worth' in this property."
-msgstr ""
-"La partie de la propriété qui vous appartient vraiment — la valeur moins ce "
-"que vous devez encore sur l'hypothèque. C'est votre « valeur nette » dans "
-"cette propriété."
-
-msgid ""
-"The remaining amount you owe to the bank. This decreases with each payment "
-"as you pay down the principal."
-msgstr ""
-"Le montant qu'il vous reste à rembourser à la banque. Il diminue à chaque "
-"paiement au fur et à mesure que vous remboursez le capital."
-
-msgid ""
-"Your personal portion of the equity, based on your ownership percentage. If "
-"you own 50% of a property with $200k equity, your share is $100k."
-msgstr ""
-"Votre part personnelle de l'équité, basée sur votre pourcentage de "
-"propriété. Si vous possédez 50 % d'une propriété avec 200k$ d'équité, votre "
-"part est de 100k$."
-
-msgid ""
-"The total price you paid for the property when you bought it, before taxes "
-"and closing costs."
-msgstr ""
-"Le prix total payé pour la propriété lors de l'achat, avant taxes et frais "
-"de clôture."
-
-msgid ""
-"How much the property value has increased (or decreased) since you bought "
-"it. Calculated as: current value minus purchase price."
-msgstr ""
-"Combien la valeur de la propriété a augmenté (ou diminué) depuis l'achat. "
-"Calculé comme : valeur actuelle moins prix d'achat."
-
-msgid ""
-"Your portion of the total property value, based on your ownership percentage."
-msgstr ""
-"Votre part de la valeur totale de la propriété, selon votre pourcentage de "
-"propriété."
-
-msgid ""
-"Your portion of the remaining mortgage debt, based on your ownership "
-"percentage."
-msgstr ""
-"Votre part de la dette hypothécaire restante, selon votre pourcentage de "
-"propriété."
-
-msgid ""
-"The cash you contributed upfront when purchasing the property. A larger down "
-"payment means less mortgage debt and lower insurance costs."
-msgstr ""
-"L'argent que vous avez contribué à l'achat de la propriété. Une mise de "
-"fonds plus importante signifie moins de dette hypothécaire et des coûts "
-"d'assurance plus bas."
-
-msgid ""
-"The total amount of mortgage principal you've paid off so far. This is the "
-"portion of your payments that actually reduces your debt."
-msgstr ""
-"Le montant total de capital hypothécaire que vous avez remboursé à ce jour. "
-"C'est la portion de vos paiements qui réduit réellement votre dette."
-
-msgid ""
-"Your regular mortgage payment amount, including both principal and interest. "
-"Principal reduces your debt; interest is the cost of borrowing."
-msgstr ""
-"Votre paiement hypothécaire régulier, incluant le capital et les intérêts. "
-"Le capital réduit votre dette; les intérêts sont le coût de l'emprunt."
-
-msgid ""
-"How much you still owe on the mortgage. This decreases with each payment as "
-"you chip away at the principal."
-msgstr ""
-"Combien il vous reste à payer sur l'hypothèque. Ce montant diminue à chaque "
-"paiement au fur et à mesure que vous remboursez le capital."
-
-msgid ""
-"The total number of years to fully pay off the mortgage. In Canada, 25 "
-"years is the most common amortization period."
-msgstr ""
-"Le nombre total d'années pour rembourser complètement l'hypothèque. Au "
-"Canada, 25 ans est la période d'amortissement la plus courante."
-
-msgid ""
-"The annual interest rate on your mortgage. Fixed means it stays the same "
-"for your term; variable means it can change with the market."
-msgstr ""
-"Le taux d'intérêt annuel de votre hypothèque. Fixe signifie qu'il reste le "
-"même pendant votre terme; variable signifie qu'il peut changer selon le "
-"marché."
-
-msgid ""
-"The assumed selling price. By default, this is your current property "
-"valuation. Adjust it to simulate different scenarios."
-msgstr ""
-"Le prix de vente supposé. Par défaut, c'est votre évaluation actuelle de "
-"la propriété. Ajustez-le pour simuler différents scénarios."
-
-msgid ""
-"The remaining amount owed on your mortgage at the time of sale."
-msgstr ""
-"Le montant restant dû sur votre hypothèque au moment de la vente."
-
-msgid ""
-"Sale price minus the remaining mortgage. This is what you'd have before "
-"paying selling costs."
-msgstr ""
-"Prix de vente moins l'hypothèque restante. C'est ce que vous auriez avant "
-"de payer les frais de vente."
-
-msgid ""
-"The real estate agent's fee, typically 4-6% of the sale price in Canada. "
-"This includes applicable sales taxes (GST/QST)."
-msgstr ""
-"Les honoraires de l'agent immobilier, typiquement 4-6 % du prix de vente "
-"au Canada. Cela inclut les taxes de vente applicables (TPS/TVQ)."
-
-msgid ""
-"Legal fees for the sale transaction, paid to the notary who handles the "
-"paperwork."
-msgstr ""
-"Les frais juridiques pour la transaction de vente, payés au notaire qui "
-"gère la paperasse."
-
-msgid ""
-"If this isn't your primary residence, you may owe tax on the profit. In "
-"Canada, 50% of the capital gain is taxable at your marginal rate."
-msgstr ""
-"Si ce n'est pas votre résidence principale, vous pourriez devoir payer de "
-"l'impôt sur le profit. Au Canada, 50 % du gain en capital est imposable à "
-"votre taux marginal."
-
-msgid ""
-"All costs associated with selling: agent fees, notary fees, and taxes."
-msgstr ""
-"Tous les coûts associés à la vente : honoraires d'agent, frais de notaire "
-"et taxes."
-
-msgid ""
-"What you actually take home after selling — the sale price minus the "
-"mortgage and all selling costs. This is your real profit from the sale."
-msgstr ""
-"Ce que vous empochez réellement après la vente — le prix de vente moins "
-"l'hypothèque et tous les frais de vente. C'est votre vrai profit de la "
-"vente."
-
-msgid ""
-"A visual split of how much of the property value is yours (equity) vs. "
-"still owed to the bank."
-msgstr ""
-"Une répartition visuelle de la part de la valeur qui vous appartient "
-"(équité) vs. celle encore due à la banque."
-
-msgid ""
-"How your mortgage payments are split between principal (paying down debt) "
-"and interest (cost of borrowing)."
-msgstr ""
-"Comment vos paiements hypothécaires sont répartis entre le capital "
-"(remboursement de la dette) et les intérêts (coût de l'emprunt)."
-
-msgid ""
-"A breakdown of all expenses you've recorded by category — renovations, "
-"maintenance, insurance, etc."
-msgstr ""
-"Un détail de toutes les dépenses enregistrées par catégorie — rénovations, "
-"entretien, assurance, etc."
-
-msgid ""
-"Who owns this property and their respective share percentages. Shares can "
-"change when co-owners are added or removed."
-msgstr ""
-"Qui est propriétaire de ce bien et leurs pourcentages de parts respectifs. "
-"Les parts peuvent changer lorsque des copropriétaires sont ajoutés ou "
-"retirés."
-
-msgid ""
-"The bank or financial institution that provided your mortgage."
-msgstr ""
-"La banque ou l'institution financière qui vous a accordé votre hypothèque."
-
-msgid ""
-"Your personal equity — how much of the property's net value belongs to "
-"you. Calculated as: total equity multiplied by your ownership percentage."
-msgstr ""
-"Votre équité personnelle — la part de la valeur nette de la propriété qui "
-"vous appartient. Calculé comme : équité totale multipliée par votre "
-"pourcentage de propriété."
-
-msgid ""
-"The total amount of interest you've paid since the start of your mortgage. "
-"This is the cost of borrowing — it doesn't reduce your debt."
-msgstr ""
-"Le montant total d'intérêts payés depuis le début de votre hypothèque. "
-"C'est le coût de l'emprunt — ça ne réduit pas votre dette."
-
-msgid ""
-"The total amount you've paid to date, combining both principal and interest "
-"portions."
-msgstr ""
-"Le montant total payé à ce jour, combinant les portions de capital et "
-"d'intérêts."
-
-msgid ""
-"The total amount originally borrowed, including any mortgage insurance "
-"premium added to the loan."
-msgstr ""
-"Le montant total emprunté à l'origine, incluant toute prime d'assurance "
-"hypothécaire ajoutée au prêt."
-
-msgid ""
-"The yearly interest rate on your mortgage, as stated in your contract."
-msgstr ""
-"Le taux d'intérêt annuel de votre hypothèque, tel qu'indiqué dans votre "
-"contrat."
-
-msgid "Based on down payments"
-msgstr "Basé sur les mises de fonds"
-
-# ── Detail page labels ──
-msgid "Details"
-msgstr "Détails"
-
-msgid "Commission (%)"
-msgstr "Commission (%)"
-
-# ── Multi-currency ──
-msgid "Canadian Dollar (CAD)"
-msgstr "Dollar canadien (CAD)"
-
-msgid "Euro (EUR)"
-msgstr "Euro (EUR)"
-
-msgid "currency"
-msgstr "devise"
-
-msgid "Show in"
-msgstr "Afficher en"
-
-msgid "Convert to"
-msgstr "Convertir en"
-
-# ── France support ──
-
-# Country names
-msgid "Canada"
-msgstr "Canada"
-
-msgid "France"
-msgstr "France"
-
-msgid "country"
-msgstr "pays"
-
-# French tax types
-msgid "Taxe foncière"
-msgstr "Taxe foncière"
-
-msgid "Taxe d'habitation"
-msgstr "Taxe d'habitation"
-
-msgid "IFI (wealth tax)"
-msgstr "IFI (impôt sur la fortune immobilière)"
-
-# French expense types
-msgid "Charges de copropriété"
-msgstr "Charges de copropriété"
-
-msgid "Assurance emprunteur"
-msgstr "Assurance emprunteur"
-
-# French mortgage terms
-msgid "Mixed (taux mixte)"
-msgstr "Mixte (taux mixte)"
-
-msgid "borrower insurance rate (%)"
-msgstr "taux d'assurance emprunteur (%)"
-
-msgid "Loan duration (years)"
-msgstr "Durée du prêt (années)"
-
-msgid "Amortization (years)"
-msgstr "Amortissement (années)"
-
-# French form labels
-msgid "Département"
-msgstr "Département"
-
-msgid "Frais de notaire (achat)"
-msgstr "Frais de notaire (achat)"
-
-msgid "Frais d'agence (achat)"
-msgstr "Frais d'agence (achat)"
-
-msgid "Valeur cadastrale"
-msgstr "Valeur cadastrale"
-
-msgid "Welcome tax paid"
-msgstr "Taxe de bienvenue payée"
-
-msgid "Notary fees at purchase"
-msgstr "Frais de notaire à l'achat"
+msgid "You are now a co-owner of <strong>%(name)s</strong>."
+msgstr "Vous êtes maintenant copropriétaire de <strong>%(name)s</strong>."
+
+#: templates/real_estate/partials/invitation_response.html:6
+msgid "View property"
+msgstr "Voir la propriété"
+
+# ── Notification verb labels ──
+#: templates/real_estate/partials/invitation_response.html:10
+msgid "Invitation declined."
+msgstr "Invitation refusée."
+
+#: templates/real_estate/partials/monthly_cost.html:19
+#: templates/real_estate/partials/monthly_cost.html:24
+msgid "Taxes (monthly)"
+msgstr "Taxes (mensuelles)"
+
+#: templates/real_estate/partials/monthly_cost.html:32
+#: templates/real_estate/partials/monthly_cost.html:37
+msgid "Recurring expenses"
+msgstr "Charges récurrentes"
+
+#: templates/real_estate/partials/monthly_cost.html:47
+#: templates/real_estate/partials/monthly_cost.html:56
+msgid "Rental income (net)"
+msgstr "Revenus locatifs (net)"
+
+#: templates/real_estate/partials/monthly_cost.html:67
+msgid "Net monthly cost"
+msgstr "Coût mensuel net"
+
+#: templates/real_estate/partials/monthly_cost.html:77
+msgid "Your net monthly cost"
+msgstr "Votre coût mensuel net"
+
+#: templates/real_estate/partials/owner_payments_form.html:10
+#: templates/real_estate/partials/rental_income_list.html:9
+msgid "mo"
+msgstr "mois"
+
+#: templates/real_estate/partials/owner_payments_form.html:11
+#: templates/real_estate/partials/rate_change_list.html:10
+#: templates/real_estate/partials/rental_income_list.html:11
+msgid "from"
+msgstr "depuis"
+
+#: templates/real_estate/partials/owner_payments_form.html:19
+msgid "Delete this payment split?"
+msgstr "Supprimer cette répartition ?"
+
+#: templates/real_estate/partials/owner_payments_form.html:40
+msgid "Update payment split"
+msgstr "Modifier la répartition"
+
+#: templates/real_estate/partials/owner_payments_form.html:40
+msgid "Set payment split"
+msgstr "Définir la répartition"
+
+#: templates/real_estate/partials/rate_change_form.html:16
+msgid "Add rate change"
+msgstr "Ajouter un changement de taux"
+
+#: templates/real_estate/partials/rate_change_list.html:11
+msgid "Simulation"
+msgstr "Simulation"
+
+#: templates/real_estate/partials/rate_change_list.html:14
+msgid "Delete this rate change?"
+msgstr "Supprimer ce changement de taux ?"
+
+#: templates/real_estate/partials/rate_change_list.html:22
+msgid "No rate changes scheduled."
+msgstr "Aucun changement de taux prévu."
+
+#: templates/real_estate/partials/rental_income_list.html:10
+msgid "agency"
+msgstr "agence"
+
+#: templates/real_estate/partials/rental_income_list.html:15
+msgid "Delete this rental income?"
+msgstr "Supprimer ce revenu locatif ?"
+
+#: templates/real_estate/partials/rental_income_list.html:23
+msgid "No rental income recorded."
+msgstr "Aucun revenu locatif enregistré."
+
+#: templates/real_estate/partials/sale_estimate.html:7
+msgid "Mortgage balance"
+msgstr "Solde hypothécaire"
+
+#: templates/real_estate/partials/sale_estimate.html:9
+msgid "Gross equity"
+msgstr "Équité brute"
+
+#: templates/real_estate/partials/sale_estimate.html:12
+msgid "Agent commission (incl. tax)"
+msgstr "Commission de l'agent (taxes incl.)"
+
+#: templates/real_estate/partials/sale_estimate.html:14
+msgid "Notary fees"
+msgstr "Frais de notaire"
+
+#: templates/real_estate/partials/sale_estimate.html:17
+msgid "Capital gains tax (est.)"
+msgstr "Impôt sur le gain en capital (est.)"
 
 # French sale simulation
+#: templates/real_estate/partials/sale_estimate.html:23
 msgid "Holding period"
 msgstr "Durée de détention"
 
-msgid "Income tax (19%)"
-msgstr "Impôt sur le revenu (19 %)"
+#: templates/real_estate/partials/sale_estimate.html:27
+#, python-format
+msgid "Income tax (19%%)"
+msgstr "Impôt sur le revenu (19 %%)"
 
-msgid "Social contributions (17.2%)"
-msgstr "Prélèvements sociaux (17,2 %)"
+#: templates/real_estate/partials/sale_estimate.html:31
+#, python-format
+msgid "Social contributions (17.2%%)"
+msgstr "Prélèvements sociaux (17,2 %%)"
 
+#: templates/real_estate/partials/sale_estimate.html:36
 msgid "Surtax"
 msgstr "Surtaxe"
 
+#: templates/real_estate/partials/sale_estimate.html:41
 msgid "IR abatement"
 msgstr "Abattement IR"
 
+#: templates/real_estate/partials/sale_estimate.html:45
 msgid "Social abatement"
 msgstr "Abattement prélèvements sociaux"
 
-# French detail page
-msgid "Taxes & Charges"
-msgstr "Impôts et charges"
+#: templates/real_estate/partials/sale_estimate.html:52
+msgid "Total costs"
+msgstr "Coûts totaux"
 
-# ── French-specific tooltips ──
+#: templates/real_estate/partials/sale_estimate.html:57
+msgid "Net proceeds"
+msgstr "Produit net"
 
-msgid ""
-"The total duration of your mortgage in years. In France, 20 or 25 years is "
-"most common. Maximum allowed: 25 years."
-msgstr ""
-"La durée totale de votre prêt immobilier en années. En France, 20 ou 25 ans "
-"est le plus courant. Maximum autorisé : 25 ans."
+#: templates/real_estate/partials/sale_estimate.html:68
+msgid "Per owner"
+msgstr "Par propriétaire"
 
-msgid ""
-"The real estate agent's fee, typically 3-6% of the sale price in France. "
-"This includes 20% TVA."
-msgstr ""
-"Les honoraires de l'agent immobilier, typiquement 3-6 % du prix de vente en "
-"France. TVA de 20 % incluse."
+#: templates/real_estate/partials/tax_list.html:33
+msgid "Delete this tax entry?"
+msgstr "Supprimer cette taxe ?"
 
-msgid ""
-"If this isn't your primary residence, you owe plus-value tax on the profit: "
-"19% income tax + 17.2% social contributions. Abatements apply based on how "
-"long you've owned the property — full IR exemption after 22 years, full "
-"social exemption after 30."
-msgstr ""
-"Si ce n'est pas votre résidence principale, vous devez la taxe sur la "
-"plus-value : 19 % d'impôt sur le revenu + 17,2 % de prélèvements sociaux. "
-"Des abattements s'appliquent selon la durée de détention — exonération "
-"totale d'IR après 22 ans, exonération totale des prélèvements sociaux après "
-"30 ans."
+#: templates/real_estate/partials/tax_list.html:45
+msgid "No taxes recorded."
+msgstr "Aucune taxe enregistrée."
 
-msgid ""
-"Assurance emprunteur — mandatory insurance covering death, disability, and "
-"job loss. Paid monthly on top of your mortgage payment. Typical rate: "
-"0.15-0.50% per year of the loan amount."
-msgstr ""
-"Assurance emprunteur — assurance obligatoire couvrant décès, invalidité et "
-"perte d'emploi. Payée mensuellement en plus de votre mensualité de prêt. "
-"Taux typique : 0,15-0,50 % par an du montant emprunté."
+#: templates/real_estate/partials/valuation_history.html:23
+msgid "Delete this valuation?"
+msgstr "Supprimer cette évaluation ?"
 
-msgid ""
-"The 'frais de notaire' include transfer taxes (droits de mutation), notary "
-"fees, and administrative costs. For existing properties: 7-8.5% of the "
-"price. For new builds: 2-3% (VAT is included in the purchase price instead)."
-msgstr ""
-"Les « frais de notaire » incluent les droits de mutation, les honoraires du "
-"notaire et les frais administratifs. Pour l'ancien : 7-8,5 % du prix. Pour "
-"le neuf : 2-3 % (la TVA est incluse dans le prix d'achat)."
+#: templates/real_estate/partials/valuation_history.html:33
+msgid "No valuations recorded."
+msgstr "Aucune évaluation enregistrée."
 
-msgid ""
-"Annual property tax paid to the municipality. Based on the cadastral value "
-"and local tax rates. Varies widely by location."
-msgstr ""
-"Taxe annuelle payée à la commune. Basée sur la valeur cadastrale et les "
-"taux locaux. Varie considérablement selon l'emplacement."
+#: templates/real_estate/partials/wizard_step_1.html:5
+msgid "What kind of property?"
+msgstr "Quel type de bien ?"
 
-msgid ""
-"Abolished for all primary residences since 2023. Still applies to secondary "
-"residences, with possible surcharges in high-demand areas."
-msgstr ""
-"Supprimée pour toutes les résidences principales depuis 2023. S'applique "
-"toujours aux résidences secondaires, avec d'éventuelles majorations dans "
-"les zones tendues."
+#: templates/real_estate/partials/wizard_step_1.html:7
+msgid "Start by telling us the basics. The country determines tax rules, mortgage calculations, and which fields we'll ask about."
+msgstr "Commençons par les bases. Le pays détermine les règles fiscales, les calculs hypothécaires et les champs à renseigner."
 
-msgid ""
-"Wealth tax on real estate (Impot sur la Fortune Immobiliere). Applies if "
-"your total net real estate exceeds 1,300,000 EUR. Primary residence benefits "
-"from a 30% valuation abatement."
-msgstr ""
-"Impôt sur la fortune immobilière (IFI). S'applique si votre patrimoine "
-"immobilier net total dépasse 1 300 000 €. La résidence principale bénéficie "
-"d'un abattement de 30 % sur sa valeur."
+#: templates/real_estate/partials/wizard_step_1.html:38
+msgid "Primary residences are exempt from capital gains tax when sold."
+msgstr "Les résidences principales sont exonérées de l'impôt sur les gains en capital lors de la vente."
 
-# ── French form field tooltips ──
+#: templates/real_estate/partials/wizard_step_2.html:5
+msgid "Where is it located?"
+msgstr "Où se situe-t-il ?"
 
-msgid ""
-"Total 'frais de notaire' paid at purchase. Includes transfer taxes (droits "
-"de mutation), notary fees, and administrative costs. Typically 7-8.5% for "
-"existing properties, 2-3% for new builds."
-msgstr ""
-"Total des « frais de notaire » payés à l'achat. Inclut les droits de "
-"mutation, les honoraires du notaire et les frais administratifs. "
-"Typiquement 7-8,5 % pour l'ancien, 2-3 % pour le neuf."
+#: templates/real_estate/partials/wizard_step_2.html:7
+msgid "The address helps track your property and determines local tax rules."
+msgstr "L'adresse permet de suivre votre bien et de déterminer les règles fiscales locales."
 
-msgid "Real estate agent fees paid at purchase, if any."
-msgstr "Frais d'agence immobilière payés à l'achat, le cas échéant."
+#: templates/real_estate/partials/wizard_step_2.html:18
+msgid "A friendly name to identify this property (e.g. \\"
+msgstr "Un nom pour identifier facilement ce bien (ex. \\"
 
-msgid ""
-"The cadastral rental value (valeur locative cadastrale) used to calculate "
-"taxe foncière. Found on your taxe foncière notice."
-msgstr ""
-"La valeur locative cadastrale utilisée pour calculer la taxe foncière. "
-"Se trouve sur votre avis de taxe foncière."
+#: templates/real_estate/partials/wizard_step_3.html:5
+msgid "Purchase details"
+msgstr "Détails de l'achat"
 
-msgid ""
-"Total mortgage duration in years. Most common in France: 20 or 25 years. "
-"Maximum allowed by regulation: 25 years."
-msgstr ""
-"Durée totale du prêt en années. Le plus courant en France : 20 ou 25 ans. "
-"Maximum autorisé par la réglementation : 25 ans."
+#: templates/real_estate/partials/wizard_step_3.html:7
+msgid "These details help calculate your equity, tax obligations, and cost of ownership over time."
+msgstr "Ces informations permettent de calculer votre équité, vos obligations fiscales et vos coûts de possession."
 
-msgid ""
-"Annual rate for assurance emprunteur (e.g. 0.30 for 0.30%). Required by all "
-"French banks. Typical rates: 0.15-0.50% depending on age."
-msgstr ""
-"Taux annuel de l'assurance emprunteur (ex. 0,30 pour 0,30 %). Exigée par "
-"toutes les banques françaises. Taux typiques : 0,15-0,50 % selon l'âge."
+# ── Real Estate Field Tooltips ──
+#: templates/real_estate/partials/wizard_step_3.html:18
+msgid "The total price you paid (or agreed to pay) for the property."
+msgstr "Le prix total que vous avez payé (ou convenu de payer) pour le bien."
+
+#: templates/real_estate/partials/wizard_step_3.html:29
+msgid "Used to calculate holding period for capital gains tax."
+msgstr "Utilisé pour calculer la durée de détention pour l'impôt sur les plus-values."
+
+#: templates/real_estate/partials/wizard_step_3.html:37
+msgid "Welcome tax paid"
+msgstr "Taxe de bienvenue payée"
+
+#: templates/real_estate/partials/wizard_step_3.html:42
+msgid "One-time municipal tax on property transfer."
+msgstr "Taxe municipale unique sur le transfert de propriété."
+
+#: templates/real_estate/partials/wizard_step_3.html:43
+#, python-format
+msgid "Typically 7-8%% of the purchase price for existing properties."
+msgstr "Généralement 7-8%% du prix d'achat pour les biens existants."
+
+#: templates/real_estate/partials/wizard_step_3.html:50
+msgid "Notary fees at purchase"
+msgstr "Frais de notaire à l'achat"
+
+#: templates/real_estate/partials/wizard_step_4.html:5
+msgid "What's it worth today?"
+msgstr "Quelle est sa valeur actuelle ?"
+
+#: templates/real_estate/partials/wizard_step_4.html:7
+msgid "These fields are optional. If you know the current value, it helps us show your equity and appreciation over time."
+msgstr "Ces champs sont facultatifs. Si vous connaissez la valeur actuelle, cela nous permet d'afficher votre équité et l'appréciation dans le temps."
+
+#: templates/real_estate/partials/wizard_step_4.html:12
+msgid "You can skip this step and add valuations later from the property detail page."
+msgstr "Vous pouvez passer cette étape et ajouter des évaluations plus tard depuis la page du bien."
+
+#: templates/real_estate/partials/wizard_step_4.html:22
+msgid "Your best estimate of the property's current market value."
+msgstr "Votre meilleure estimation de la valeur marchande actuelle du bien."
+
+#: templates/real_estate/partials/wizard_step_4.html:43
+msgid "From your municipal tax bill."
+msgstr "Figurant sur votre avis d'imposition municipale."
+
+#: templates/real_estate/partials/wizard_step_4.html:44
+msgid "Valeur cadastrale de la taxe foncière."
+msgstr "Valeur cadastrale de la taxe foncière."
+
+#: templates/real_estate/partials/wizard_step_5.html:5
+msgid "Who owns this property?"
+msgstr "Qui est propriétaire ?"
+
+#: templates/real_estate/partials/wizard_step_5.html:7
+msgid "Your down payment is used to calculate the initial mortgage amount and your ownership share if you have a co-owner."
+msgstr "Votre mise de fonds sert à calculer le montant initial du prêt et votre part de propriété en cas de copropriété."
+
+#: templates/real_estate/partials/wizard_step_5.html:18
+msgid "The amount you put down at purchase. This reduces the mortgage principal."
+msgstr "Le montant versé à l'achat. Cela réduit le capital du prêt."
+
+#: templates/real_estate/partials/wizard_step_5.html:30
+msgid "I have a co-owner"
+msgstr "J'ai un copropriétaire"
+
+#: templates/real_estate/partials/wizard_step_5.html:35
+msgid "We'll send them an invitation. They can accept and see the property from their own account."
+msgstr "Nous leur enverrons une invitation. Ils pourront accepter et voir le bien depuis leur propre compte."
+
+#: templates/real_estate/partials/wizard_step_5.html:56
+#, python-format
+msgid "Co-owner share (%%)"
+msgstr "Part du copropriétaire (%%)"
+
+#: templates/real_estate/partials/wizard_step_5.html:60
+#, python-format
+msgid "Percentage of ownership for the co-owner (1-99%%). Your share:"
+msgstr "Pourcentage de propriété du copropriétaire (1-99%%). Votre part :"
+
+#: templates/real_estate/partials/wizard_step_6.html:5
+msgid "How is it financed?"
+msgstr "Comment est-il financé ?"
+
+#: templates/real_estate/partials/wizard_step_6.html:7
+msgid "If you have a mortgage, fill in the details below. This lets us generate your full amortization schedule and track equity over time."
+msgstr "Si vous avez un prêt hypothécaire, remplissez les détails ci-dessous. Cela nous permet de générer votre tableau d'amortissement complet et de suivre votre équité."
+
+#: templates/real_estate/partials/wizard_step_6.html:12
+msgid "No mortgage? Skip this step — you can always add one later."
+msgstr "Pas de prêt ? Passez cette étape — vous pourrez en ajouter un plus tard."
+
+#: templates/real_estate/partials/wizard_step_6.html:31
+msgid "Auto-calculated from purchase price minus down payments."
+msgstr "Calculé automatiquement à partir du prix d'achat moins les mises de fonds."
+
+#: templates/real_estate/partials/wizard_step_6.html:44
+msgid "Canadian fixed rates use semi-annual compounding."
+msgstr "Les taux fixes canadiens utilisent la capitalisation semestrielle."
+
+#: templates/real_estate/partials/wizard_step_6.html:45
+msgid "French rates use simple monthly compounding."
+msgstr "Les taux français utilisent la capitalisation mensuelle simple."
+
+#: templates/real_estate/partials/wizard_step_6.html:62
+msgid "Amortization (years)"
+msgstr "Amortissement (années)"
+
+#: templates/real_estate/partials/wizard_step_6.html:67
+msgid "Typically 25 years in Canada."
+msgstr "Généralement 25 ans au Canada."
+
+#: templates/real_estate/partials/wizard_step_6.html:68
+msgid "Typically 20-25 years in France."
+msgstr "Généralement 20-25 ans en France."
+
+#: templates/real_estate/partials/wizard_step_6.html:79
+msgid "Typically 5 years. You'll renew at a new rate when the term ends."
+msgstr "Généralement 5 ans. Vous renouvellerez à un nouveau taux à la fin du terme."
+
+#: templates/real_estate/partials/wizard_step_6.html:100
+msgid "Usually the same as your purchase date."
+msgstr "Généralement la même que votre date d'achat."
+
+#: templates/real_estate/partials/wizard_step_6.html:112
+#, python-format
+msgid "CMHC/Sagen/Canada Guaranty insurance. Required if down payment is less than 20%%. Auto-calculated."
+msgstr "Assurance SCHL/Sagen/Garantie Canada. Requise si la mise de fonds est inférieure à 20%%. Calculée automatiquement."
+
+#: templates/real_estate/partials/wizard_step_6.html:123
+#, python-format
+msgid "Annual rate (%%) for assurance emprunteur. Typically 0.15-0.50%%. Added monthly on top of your mortgage payment."
+msgstr "Taux annuel (%%) pour l'assurance emprunteur. Généralement 0,15-0,50%%. Ajouté mensuellement en plus de votre paiement hypothécaire."
+
+#: templates/real_estate/partials/wizard_step_7.html:5
+msgid "Review your property"
+msgstr "Vérifiez votre bien"
+
+#: templates/real_estate/partials/wizard_step_7.html:7
+msgid "Check that everything looks right before creating your property."
+msgstr "Vérifiez que tout est correct avant de créer votre bien."
+
+#: templates/real_estate/partials/wizard_step_7.html:14
+msgid "Property"
+msgstr "Propriété"
+
+#: templates/real_estate/partials/wizard_step_7.html:19
+msgid "Country"
+msgstr "Pays"
+
+#: templates/real_estate/partials/wizard_step_7.html:27
+msgid "Usage"
+msgstr "Usage"
+
+#: templates/real_estate/partials/wizard_step_7.html:35
+msgid "Location"
+msgstr "Emplacement"
+
+#: templates/real_estate/partials/wizard_step_7.html:44
+msgid "Address"
+msgstr "Adresse"
+
+#: templates/real_estate/partials/wizard_step_7.html:48
+msgid "City"
+msgstr "Ville"
+
+#: templates/real_estate/partials/wizard_step_7.html:56
+msgid "Purchase"
+msgstr "Achat"
+
+#: templates/real_estate/partials/wizard_step_7.html:93
+msgid "Co-ownership"
+msgstr "Copropriété"
+
+#: templates/real_estate/partials/wizard_step_7.html:98
+msgid "Co-owner"
+msgstr "Copropriétaire"
+
+#: templates/real_estate/partials/wizard_step_7.html:102
+msgid "Their share"
+msgstr "Leur part"
+
+#: templates/real_estate/partials/wizard_step_7.html:106
+msgid "Your share"
+msgstr "Votre part"
+
+#~ msgid "Add a property"
+#~ msgstr "Ajouter une propriété"
+
+#~ msgid "Mortgage (optional)"
+#~ msgstr "Hypothèque (optionnel)"
+
+#~ msgid "Based on down payments"
+#~ msgstr "Basé sur les mises de fonds"
+
+#~ msgid "Show total"
+#~ msgstr "Afficher le total"
+
+#~ msgid "Show my share"
+#~ msgstr "Afficher ma part"
+
+#~ msgid "Hide per-owner"
+#~ msgstr "Masquer par propriétaire"
+
+#~ msgid "Show per-owner"
+#~ msgstr "Afficher par propriétaire"
+
+#~ msgid "Ownership Breakdown"
+#~ msgstr "Répartition de la propriété"
+
+#~ msgid "Owner"
+#~ msgstr "Propriétaire"
+
+#~ msgid "Current"
+#~ msgstr "Actuel"
+
+#~ msgid "This tool is for educational purposes only. It does not constitute financial advice."
+#~ msgstr "Cet outil est à des fins éducatives seulement. Il ne constitue pas un conseil financier."
+
+#~ msgid "Dismiss"
+#~ msgstr "Fermer"
+
+#~ msgid "Property Value"
+#~ msgstr "Valeur de la propriété"
+
+#~ msgid "Your Share"
+#~ msgstr "Votre part"
+
+#~ msgid "No valuation history."
+#~ msgstr "Aucun historique d'évaluation."
+
+#~ msgid "Commission (%)"
+#~ msgstr "Commission (%)"

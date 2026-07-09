@@ -15,6 +15,18 @@ window.Alpine = Alpine;
 
 // Chart auto-initialization after HTMX swaps
 import { initCharts } from "./charts/allocation.js";
+import { initEvolutionCharts } from "./charts/evolution.js";
 
-document.addEventListener("DOMContentLoaded", initCharts);
-document.addEventListener("htmx:afterSwap", initCharts);
+function initAllCharts() {
+  initCharts();
+  initEvolutionCharts();
+}
+
+document.addEventListener("DOMContentLoaded", initAllCharts);
+document.addEventListener("htmx:afterSettle", (event) => {
+  initAllCharts();
+  // Re-initialize Alpine.js components in swapped content
+  if (event.detail.elt) {
+    Alpine.initTree(event.detail.elt);
+  }
+});

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-limpid py-6 animate-enter">
+  <div class="max-w-md mx-auto">
+    {% include "components/card_start.html" with title=_("Delete property") variant="warning" %}
+      <p class="text-sm text-text mb-4">
+        {% blocktrans with name=property.name %}Are you sure you want to delete <strong>{{ name }}</strong>? This will permanently remove all associated mortgages, expenses, valuations, taxes, and co-ownership data.{% endblocktrans %}
+      </p>
+      <p class="text-sm text-danger-600 font-medium mb-4">{% trans "This action cannot be undone." %}</p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="flex items-center gap-3">
+          <button type="submit" class="btn-danger">{% trans "Delete permanently" %}</button>
+          <a href="{% url 'real_estate:detail' property.pk %}" class="btn-ghost">{% trans "Cancel" %}</a>
+        </div>
+      </form>
+    {% include "components/card_end.html" %}
+  </div>
+</div>
+{% endblock %}

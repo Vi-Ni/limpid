@@ -1,0 +1,128 @@
+{% load i18n %}
+
+<div data-step="6">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-text">{% trans "How is it financed?" %}</h2>
+    <p class="mt-2 text-text-muted">
+      {% trans "If you have a mortgage, fill in the details below. This lets us generate your full amortization schedule and track equity over time." %}
+    </p>
+  </div>
+
+  <div class="mb-5 rounded-xl bg-bg-subtle px-4 py-3 text-sm text-text-muted">
+    {% trans "No mortgage? Skip this step — you can always add one later." %}
+  </div>
+
+  <div class="space-y-5">
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="id_mortgage-lender" class="block text-sm font-medium text-text mb-1">
+          {{ mortgage_form.lender.label }}
+        </label>
+        {{ mortgage_form.lender }}
+        {% if mortgage_form.lender.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.lender.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="id_mortgage-principal" class="block text-sm font-medium text-text mb-1">
+          {{ mortgage_form.principal.label }}
+        </label>
+        {{ mortgage_form.principal }}
+        <p class="mt-1 text-xs text-text-faint">
+          {% trans "Auto-calculated from purchase price minus down payments." %}
+        </p>
+        {% if mortgage_form.principal.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.principal.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="id_mortgage-annual_rate" class="block text-sm font-medium text-text mb-1">
+          {{ mortgage_form.annual_rate.label }}
+        </label>
+        {{ mortgage_form.annual_rate }}
+        <p class="mt-1 text-xs text-text-faint">
+          <span x-show="country !== 'FR'">{% trans "Canadian fixed rates use semi-annual compounding." %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "French rates use simple monthly compounding." %}</span>
+        </p>
+        {% if mortgage_form.annual_rate.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.annual_rate.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="id_mortgage-rate_type" class="block text-sm font-medium text-text mb-1">
+          {{ mortgage_form.rate_type.label }}
+        </label>
+        {{ mortgage_form.rate_type }}
+        {% if mortgage_form.rate_type.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.rate_type.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="id_mortgage-amortization_years" class="block text-sm font-medium text-text mb-1">
+          <span x-show="country !== 'FR'">{% trans "Amortization (years)" %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "Loan duration (years)" %}</span>
+        </label>
+        {{ mortgage_form.amortization_years }}
+        <p class="mt-1 text-xs text-text-faint">
+          <span x-show="country !== 'FR'">{% trans "Typically 25 years in Canada." %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "Typically 20-25 years in France." %}</span>
+        </p>
+        {% if mortgage_form.amortization_years.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.amortization_years.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div x-show="country !== 'FR'" x-cloak>
+        <label for="id_mortgage-term_years" class="block text-sm font-medium text-text mb-1">
+          {{ mortgage_form.term_years.label }}
+        </label>
+        {{ mortgage_form.term_years }}
+        <p class="mt-1 text-xs text-text-faint">
+          {% trans "Typically 5 years. You'll renew at a new rate when the term ends." %}
+        </p>
+        {% if mortgage_form.term_years.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.term_years.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="id_mortgage-payment_frequency" class="block text-sm font-medium text-text mb-1">
+          {{ mortgage_form.payment_frequency.label }}
+        </label>
+        {{ mortgage_form.payment_frequency }}
+        {% if mortgage_form.payment_frequency.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.payment_frequency.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="id_mortgage-start_date" class="block text-sm font-medium text-text mb-1">
+          {{ mortgage_form.start_date.label }}
+        </label>
+        {{ mortgage_form.start_date }}
+        <p class="mt-1 text-xs text-text-faint">
+          {% trans "Usually the same as your purchase date." %}
+        </p>
+        {% if mortgage_form.start_date.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.start_date.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+
+    <div x-show="country !== 'FR'" x-cloak>
+      <label for="id_mortgage-insurance_premium" class="block text-sm font-medium text-text mb-1">
+        {{ mortgage_form.insurance_premium.label }}
+      </label>
+      {{ mortgage_form.insurance_premium }}
+      <p class="mt-1 text-xs text-text-faint">
+        {% trans "CMHC/Sagen/Canada Guaranty insurance. Required if down payment is less than 20%. Auto-calculated." %}
+      </p>
+      {% if mortgage_form.insurance_premium.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.insurance_premium.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div x-show="country === 'FR'" x-cloak>
+      <label for="id_mortgage-borrower_insurance_rate" class="block text-sm font-medium text-text mb-1">
+        {{ mortgage_form.borrower_insurance_rate.label }}
+      </label>
+      {{ mortgage_form.borrower_insurance_rate }}
+      <p class="mt-1 text-xs text-text-faint">
+        {% trans "Annual rate (%) for assurance emprunteur. Typically 0.15-0.50%. Added monthly on top of your mortgage payment." %}
+      </p>
+      {% if mortgage_form.borrower_insurance_rate.errors %}<p class="mt-1 text-xs text-danger-600">{{ mortgage_form.borrower_insurance_rate.errors.0 }}</p>{% endif %}
+    </div>
+  </div>
+</div>

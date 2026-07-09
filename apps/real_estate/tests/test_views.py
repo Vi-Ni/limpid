@@ -7,6 +7,8 @@ from django.test import Client
 
 from apps.real_estate.models import (
     Mortgage,
+    MortgageRateChange,
+    OwnerMonthlyPayment,
     OwnershipPeriod,
     OwnershipPeriodShare,
     Property,
@@ -16,6 +18,7 @@ from apps.real_estate.models import (
     PropertyOwnership,
     PropertyTax,
     PropertyValuation,
+    RentalIncome,
 )
 from apps.real_estate.services import get_current_ownership_shares
 
@@ -815,3 +818,506 @@ class TestFrenchSaleSimulatorView:
     def test_sale_simulator_renders(self, client, french_prop, french_mortgage):
         response = client.get(f"/real-estate/{french_prop.pk}/sale-simulator/?sale_price=350000&commission=5")
         assert response.status_code == 200
+
+
+# ── Delete Property ─────────────────────────────────────────
+
+
+class TestDeleteProperty:
+    def test_confirmation_page(self, client, prop):
+        response = client.get(f"/real-estate/{prop.pk}/delete/")
+        assert response.status_code == 200
+        assert b"Delete" in response.content or b"Supprimer" in response.content
+
+    def test_admin_can_delete(self, client, prop):
+        response = client.post(f"/real-estate/{prop.pk}/delete/")
+        assert response.status_code == 302
+        assert not Property.objects.filter(pk=prop.pk).exists()
+
+    def test_non_admin_forbidden(self, prop, user2):
+        PropertyOwnership.objects.create(user=user2, property=prop, is_admin=False)
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        response = c.post(f"/real-estate/{prop.pk}/delete/")
+        assert response.status_code == 403
+        assert Property.objects.filter(pk=prop.pk).exists()
+
+    def test_non_owner_404(self, user2, prop):
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        response = c.get(f"/real-estate/{prop.pk}/delete/")
+        assert response.status_code == 404
+
+
+# ── Rate Change Views ───────────────────────────────────────
+
+
+class TestRateChangeViews:
+    def test_add_rate_change(self, client, prop, mortgage):
+        response = client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/rate-change/",
+            {
+                "new_annual_rate": "4.500",
+                "new_rate_type": "fixed",
+                "effective_date": "2026-01-01",
+            },
+        )
+        assert response.status_code == 200
+        assert MortgageRateChange.objects.filter(mortgage=mortgage).count() == 1
+
+    def test_get_rate_change_form(self, client, prop, mortgage):
+        response = client.get(f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/rate-change/")
+        assert response.status_code == 200
+
+    def test_delete_rate_change(self, client, prop, mortgage):
+        rc = MortgageRateChange.objects.create(
+            mortgage=mortgage, new_annual_rate=Decimal("4.500"), effective_date=date(2026, 1, 1)
+        )
+        response = client.delete(f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/rate-change/{rc.pk}/delete/")
+        assert response.status_code == 200
+        assert not MortgageRateChange.objects.filter(pk=rc.pk).exists()
+
+
+# ── Rental Income Views ─────────────────────────────────────
+
+
+class TestRentalIncomeViews:
+    def test_add_rental_income(self, client, prop):
+        response = client.post(
+            f"/real-estate/{prop.pk}/rental-income/",
+            {
+                "monthly_rent": "1500",
+                "agency_fee_pct": "0",
+                "start_date": "2025-01-01",
+            },
+        )
+        assert response.status_code == 200
+        assert RentalIncome.objects.filter(real_estate=prop).count() == 1
+
+    def test_get_rental_income_form(self, client, prop):
+        response = client.get(f"/real-estate/{prop.pk}/rental-income/")
+        assert response.status_code == 200
+
+    def test_delete_rental_income(self, client, prop):
+        ri = RentalIncome.objects.create(real_estate=prop, monthly_rent=Decimal("1500"), start_date=date(2025, 1, 1))
+        response = client.delete(f"/real-estate/{prop.pk}/rental-income/{ri.pk}/delete/")
+        assert response.status_code == 200
+        assert not RentalIncome.objects.filter(pk=ri.pk).exists()
+
+
+# ── Monthly Cost Views ──────────────────────────────────────
+
+
+class TestMonthlyCostViews:
+    def test_monthly_cost_partial(self, client, prop, mortgage):
+        response = client.get(f"/real-estate/{prop.pk}/monthly-cost/")
+        assert response.status_code == 200
+
+    def test_monthly_cost_mine(self, client, prop, mortgage):
+        response = client.get(f"/real-estate/{prop.pk}/monthly-cost/?mine=1")
+        assert response.status_code == 200
+
+
+# ── Charts Partial View ──────────────────────────────────────
+
+
+class TestChartsPartialView:
+    def test_charts_partial(self, client, prop, mortgage):
+        response = client.get(f"/real-estate/{prop.pk}/charts/")
+        assert response.status_code == 200
+        assert b"data-chart" in response.content
+
+    def test_charts_partial_no_mortgage(self, client, prop):
+        response = client.get(f"/real-estate/{prop.pk}/charts/")
+        assert response.status_code == 200
+
+    def test_charts_partial_non_owner_404(self, user2, prop):
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        response = c.get(f"/real-estate/{prop.pk}/charts/")
+        assert response.status_code == 404
+
+
+# ── HX-Trigger Headers ──────────────────────────────────────
+
+
+class TestHXTriggerHeaders:
+    def test_add_expense_triggers(self, client, prop):
+        response = client.post(
+            f"/real-estate/{prop.pk}/expense/",
+            {"expense_type": "renovation", "description": "Test", "amount": "100", "date": "2024-01-01"},
+        )
+        assert response.status_code == 200
+        assert response["HX-Trigger"] == "expenses-changed"
+
+    def test_delete_expense_triggers(self, client, prop, expense):
+        response = client.delete(f"/real-estate/{prop.pk}/expense/{expense.pk}/delete/")
+        assert response["HX-Trigger"] == "expenses-changed"
+
+    def test_edit_expense_triggers(self, client, prop, expense):
+        response = client.post(
+            f"/real-estate/{prop.pk}/expense/{expense.pk}/edit/",
+            {"expense_type": "renovation", "description": "Updated", "amount": "200", "date": "2024-06-01"},
+        )
+        assert response["HX-Trigger"] == "expenses-changed"
+
+    def test_add_tax_triggers(self, client, prop):
+        response = client.post(
+            f"/real-estate/{prop.pk}/tax/",
+            {"tax_type": "municipal", "year": "2025", "amount": "3000"},
+        )
+        assert response["HX-Trigger"] == "taxes-changed"
+
+    def test_edit_tax_triggers(self, client, prop, tax):
+        response = client.post(
+            f"/real-estate/{prop.pk}/tax/{tax.pk}/edit/",
+            {"tax_type": "municipal", "year": "2025", "amount": "3800"},
+        )
+        assert response["HX-Trigger"] == "taxes-changed"
+
+    def test_delete_tax_triggers(self, client, prop, tax):
+        response = client.delete(f"/real-estate/{prop.pk}/tax/{tax.pk}/delete/")
+        assert response["HX-Trigger"] == "taxes-changed"
+
+    def test_add_rate_change_triggers(self, client, prop, mortgage):
+        response = client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/rate-change/",
+            {"new_annual_rate": "4.500", "new_rate_type": "fixed", "effective_date": "2026-01-01"},
+        )
+        assert response["HX-Trigger"] == "mortgage-changed"
+
+    def test_delete_rate_change_triggers(self, client, prop, mortgage):
+        rc = MortgageRateChange.objects.create(
+            mortgage=mortgage, new_annual_rate=Decimal("4.500"), effective_date=date(2026, 1, 1)
+        )
+        response = client.delete(f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/rate-change/{rc.pk}/delete/")
+        assert response["HX-Trigger"] == "mortgage-changed"
+
+    def test_add_rental_income_triggers(self, client, prop):
+        response = client.post(
+            f"/real-estate/{prop.pk}/rental-income/",
+            {"monthly_rent": "1500", "agency_fee_pct": "0", "start_date": "2025-01-01"},
+        )
+        assert response["HX-Trigger"] == "rental-changed"
+
+    def test_delete_rental_income_triggers(self, client, prop):
+        ri = RentalIncome.objects.create(real_estate=prop, monthly_rent=Decimal("1500"), start_date=date(2025, 1, 1))
+        response = client.delete(f"/real-estate/{prop.pk}/rental-income/{ri.pk}/delete/")
+        assert response["HX-Trigger"] == "rental-changed"
+
+
+# ── Invitation Notifications ────────────────────────────────
+
+
+class TestInvitationNotifications:
+    def test_invite_creates_notification_for_existing_user(self, client, prop, user2):
+        client.post(
+            f"/real-estate/{prop.pk}/invite/",
+            {"email": "bob@test.com", "down_payment": "50000"},
+        )
+        assert PropertyNotification.objects.filter(recipient=user2, verb="invitation_received").exists()
+
+    def test_invite_no_notification_for_unknown_email(self, client, prop):
+        client.post(
+            f"/real-estate/{prop.pk}/invite/",
+            {"email": "unknown@test.com", "down_payment": "0"},
+        )
+        assert not PropertyNotification.objects.filter(verb="invitation_received").exists()
+
+    def test_notification_links_to_invitation(self, client, prop, user2):
+        client.post(
+            f"/real-estate/{prop.pk}/invite/",
+            {"email": "bob@test.com", "down_payment": "50000"},
+        )
+        notif = PropertyNotification.objects.get(recipient=user2, verb="invitation_received")
+        assert notif.invitation is not None
+        assert notif.invitation.email == "bob@test.com"
+
+    def test_accept_invitation_htmx(self, prop, user, user2):
+        invitation = PropertyInvitation.objects.create(
+            property=prop,
+            invited_by=user,
+            email="bob@test.com",
+            down_payment=Decimal("50000"),
+            share_pct=Decimal("40"),
+            token="htmx-accept-token",
+        )
+        PropertyNotification.objects.create(
+            recipient=user2,
+            property=prop,
+            actor=user,
+            verb="invitation_received",
+            description="test",
+            invitation=invitation,
+        )
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        response = c.post(f"/real-estate/invitation/{invitation.pk}/accept/")
+        assert response.status_code == 200
+        invitation.refresh_from_db()
+        assert invitation.accepted
+        assert PropertyOwnership.objects.filter(user=user2, property=prop).exists()
+        notif = PropertyNotification.objects.get(recipient=user2, invitation=invitation)
+        assert notif.is_read
+
+    def test_decline_invitation_htmx(self, prop, user, user2):
+        invitation = PropertyInvitation.objects.create(
+            property=prop,
+            invited_by=user,
+            email="bob@test.com",
+            down_payment=Decimal("0"),
+            share_pct=Decimal("50"),
+            token="htmx-decline-token",
+        )
+        PropertyNotification.objects.create(
+            recipient=user2,
+            property=prop,
+            actor=user,
+            verb="invitation_received",
+            description="test",
+            invitation=invitation,
+        )
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        response = c.post(f"/real-estate/invitation/{invitation.pk}/decline/")
+        assert response.status_code == 200
+        assert not PropertyInvitation.objects.filter(pk=invitation.pk).exists()
+
+    def test_wrong_user_cannot_accept(self, prop, user, user2):
+        invitation = PropertyInvitation.objects.create(
+            property=prop,
+            invited_by=user,
+            email="someone@else.com",
+            token="wrong-user-token",
+        )
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        response = c.post(f"/real-estate/invitation/{invitation.pk}/accept/")
+        assert response.status_code == 403
+
+    def test_login_signal_creates_notifications(self, prop, user, user2):
+        PropertyInvitation.objects.create(
+            property=prop,
+            invited_by=user,
+            email="bob@test.com",
+            share_pct=Decimal("40"),
+            token="signal-test-token",
+        )
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        assert PropertyNotification.objects.filter(recipient=user2, verb="invitation_received").exists()
+
+    def test_login_signal_no_duplicate(self, prop, user, user2):
+        invitation = PropertyInvitation.objects.create(
+            property=prop,
+            invited_by=user,
+            email="bob@test.com",
+            share_pct=Decimal("40"),
+            token="no-dup-token",
+        )
+        PropertyNotification.objects.create(
+            recipient=user2,
+            property=prop,
+            actor=user,
+            verb="invitation_received",
+            description="already exists",
+            invitation=invitation,
+        )
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        assert (
+            PropertyNotification.objects.filter(
+                recipient=user2, verb="invitation_received", invitation=invitation
+            ).count()
+            == 1
+        )
+
+
+# ── Payment split auto-calc ──────────────────────────────────
+
+
+class TestPaymentSplitAutoCalc:
+    @pytest.fixture
+    def two_owner_prop(self, user, user2, prop, mortgage):
+        o2 = PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        period = prop.ownership_periods.first()
+        period.shares.all().delete()
+        o1 = prop.ownerships.get(user=user)
+        OwnershipPeriodShare.objects.create(period=period, owner=o1, share_pct=Decimal("60"))
+        OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("40"))
+        return prop, mortgage, o1, o2
+
+    def test_auto_creates_other_owner_payment(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        response = client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
+            {
+                "owner": o1.pk,
+                "monthly_amount": "1000",
+                "effective_date": "2020-01-01",
+            },
+        )
+        assert response.status_code == 200
+        # Auto-created payment for other owner
+        other_payment = OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2).first()
+        assert other_payment is not None
+        expected = mortgage.monthly_payment - Decimal("1000")
+        assert abs(other_payment.monthly_amount - expected) < Decimal("0.01")
+
+    def test_auto_updates_existing_payment(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        # First submission
+        client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
+            {
+                "owner": o1.pk,
+                "monthly_amount": "1000",
+                "effective_date": "2020-01-01",
+            },
+        )
+        # Second submission with different amount
+        client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
+            {
+                "owner": o1.pk,
+                "monthly_amount": "1200",
+                "effective_date": "2020-01-01",
+            },
+        )
+        # Should update, not duplicate
+        payments = OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2, effective_date=date(2020, 1, 1))
+        assert payments.count() == 1
+        expected = mortgage.monthly_payment - Decimal("1200")
+        assert abs(payments.first().monthly_amount - expected) < Decimal("0.01")
+
+
+# ── Payment split edit/delete ──────────────────────────────
+
+
+class TestPaymentSplitEditDelete:
+    @pytest.fixture
+    def two_owner_prop(self, user, user2, prop, mortgage):
+        o2 = PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        period = prop.ownership_periods.first()
+        period.shares.all().delete()
+        o1 = prop.ownerships.get(user=user)
+        OwnershipPeriodShare.objects.create(period=period, owner=o1, share_pct=Decimal("60"))
+        OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("40"))
+        return prop, mortgage, o1, o2
+
+    def test_edit_owner_payment_get(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        payment = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        response = client.get(f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payment/{payment.pk}/edit/")
+        assert response.status_code == 200
+
+    def test_edit_owner_payment_post(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        payment = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        response = client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payment/{payment.pk}/edit/",
+            {
+                "owner": o1.pk,
+                "monthly_amount": "1300",
+                "effective_date": "2020-01-01",
+            },
+        )
+        assert response.status_code == 200
+        payment.refresh_from_db()
+        assert payment.monthly_amount == Decimal("1300")
+        # Auto-calc for other owner
+        other_payment = OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2).first()
+        assert other_payment is not None
+        expected = mortgage.monthly_payment - Decimal("1300")
+        assert abs(other_payment.monthly_amount - expected) < Decimal("0.01")
+
+    def test_delete_owner_payment(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        payment = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        response = client.delete(f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payment/{payment.pk}/delete/")
+        assert response.status_code == 200
+        assert not OwnerMonthlyPayment.objects.filter(pk=payment.pk).exists()
+
+    def test_delete_owner_payment_wrong_method(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        payment = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        response = client.get(f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payment/{payment.pk}/delete/")
+        assert response.status_code == 405
+
+
+class TestPropertyCreateWizard:
+    def test_create_page_renders_wizard(self, client):
+        response = client.get("/real-estate/create/")
+        assert response.status_code == 200
+        assert b"wizardForm" in response.content
+        assert b"data-step" in response.content
+
+    def test_wizard_form_still_submits(self, client):
+        data = {
+            "name": "Wizard Property",
+            "country": "CA",
+            "property_type": "house",
+            "usage": "primary",
+            "currency": "CAD",
+            "address": "456 Wizard St",
+            "city": "Montreal",
+            "province": "QC",
+            "postal_code": "H1A 1A1",
+            "purchase_price": "500000",
+            "purchase_date": "2024-01-01",
+            "welcome_tax_paid": "5000",
+            "notary_fees_purchase": "1800",
+            "current_valuation": "550000",
+            "valuation_date": "2024-06-01",
+            "down_payment": "100000",
+            "mortgage-lender": "Test Bank",
+            "mortgage-principal": "400000",
+            "mortgage-annual_rate": "5.5",
+            "mortgage-rate_type": "fixed",
+            "mortgage-amortization_years": "25",
+            "mortgage-term_years": "5",
+            "mortgage-payment_frequency": "monthly",
+            "mortgage-start_date": "2024-01-01",
+            "mortgage-insurance_premium": "0",
+        }
+        response = client.post("/real-estate/create/", data)
+        assert response.status_code == 302
+
+    def test_wizard_form_submits_without_valuation(self, client):
+        data = {
+            "name": "No Valuation Property",
+            "country": "CA",
+            "property_type": "condo",
+            "usage": "primary",
+            "currency": "CAD",
+            "address": "789 Skip St",
+            "city": "Toronto",
+            "province": "ON",
+            "postal_code": "M1A 1A1",
+            "purchase_price": "300000",
+            "purchase_date": "2024-06-01",
+            "down_payment": "60000",
+            "mortgage-principal": "",
+        }
+        response = client.post("/real-estate/create/", data)
+        assert response.status_code == 302
+        p = Property.objects.get(name="No Valuation Property")
+        assert p.current_valuation is None
+        assert p.valuation_date is None
+
+
+@pytest.mark.django_db
+class TestMonthlyCostStatCard:
+    def test_detail_page_shows_monthly_cost_card(self, client, prop, mortgage):
+        response = client.get(f"/real-estate/{prop.pk}/")
+        assert response.status_code == 200
+        content = response.content.decode()
+        assert "monthly_cost" in content

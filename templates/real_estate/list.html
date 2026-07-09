@@ -26,6 +26,12 @@
             <span class="text-sm text-text-muted">{% trans "Your equity" %}</span>
             <span class="font-semibold text-primary-600 font-mono">{% show_money item.snapshot.your_equity item.property.currency %}</span>
           </div>
+          {% if item.monthly_cost.total_monthly %}
+          <div class="flex items-baseline justify-between">
+            <span class="text-sm text-text-muted">{% trans "Monthly cost" %}</span>
+            <span class="text-sm font-mono tabular-nums {% if item.monthly_cost.total_monthly > 0 %}text-danger-600{% else %}text-success-600{% endif %}">{% show_money item.monthly_cost.total_monthly item.property.currency %}</span>
+          </div>
+          {% endif %}
         </div>
         <div class="flex items-center gap-2 mt-5">
           {% include "components/badge.html" with label=item.property.get_property_type_display variant="info" %}

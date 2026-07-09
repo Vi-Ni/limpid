@@ -82,6 +82,34 @@ TERM_TOOLTIPS = {
         "The annual interest rate on your mortgage. "
         "Fixed means it stays the same for your term; variable means it can change with the market."
     ),
+    "monthly_cost": _(
+        "Your total monthly cost of owning this property — mortgage payment, taxes, recurring expenses, "
+        "minus any rental income you receive."
+    ),
+    "net_monthly_cost": _(
+        "The net monthly cost after subtracting rental income. A negative value means "
+        "your rental income exceeds your ownership costs."
+    ),
+    "rate_change": _(
+        "Track interest rate changes over time — for mortgage renewals or to simulate "
+        "what would happen if rates go up or down."
+    ),
+    "rental_income": _(
+        "Track rental income for this property. Agency fees are automatically deducted "
+        "to calculate your net rental revenue."
+    ),
+    "payment_split": _(
+        "Customize how mortgage payments are split between co-owners. "
+        "By default, payments follow the ownership percentage."
+    ),
+    "at_purchase": _(
+        "Each owner's share based on down payment contributions. "
+        "This reflects who put in more cash upfront when buying."
+    ),
+    "at_end": _(
+        "Each owner's share based on total contributions — down payment, "
+        "mortgage principal paid, and expenses. This evolves over time."
+    ),
 }
 
 TERM_TOOLTIPS_CA = {

@@ -1,0 +1,68 @@
+{% load i18n %}
+
+<div data-step="5">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-text">{% trans "Who owns this property?" %}</h2>
+    <p class="mt-2 text-text-muted">
+      {% trans "Your down payment is used to calculate the initial mortgage amount and your ownership share if you have a co-owner." %}
+    </p>
+  </div>
+
+  <div class="space-y-5">
+    <div>
+      <label for="id_down_payment" class="block text-sm font-medium text-text mb-1">
+        {% trans "Your down payment" %}
+      </label>
+      {{ form.down_payment }}
+      <p class="mt-1 text-xs text-text-faint">
+        {% trans "The amount you put down at purchase. This reduces the mortgage principal." %}
+      </p>
+      {% if form.down_payment.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.down_payment.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div class="rounded-xl border border-border p-4">
+      <label class="flex cursor-pointer items-center gap-3">
+        <div class="relative">
+          <input type="checkbox" class="sr-only peer" x-model="hasCoOwner">
+          <div class="h-5 w-9 rounded-full bg-border peer-checked:bg-primary-600 transition"></div>
+          <div class="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition peer-checked:translate-x-4"></div>
+        </div>
+        <span class="text-sm font-medium text-text">{% trans "I have a co-owner" %}</span>
+      </label>
+
+      <div x-show="hasCoOwner" x-cloak x-transition class="mt-5 space-y-5 border-t border-border pt-5">
+        <p class="text-sm text-text-muted">
+          {% trans "We'll send them an invitation. They can accept and see the property from their own account." %}
+        </p>
+
+        <div>
+          <label for="id_co_owner_email" class="block text-sm font-medium text-text mb-1">
+            {% trans "Co-owner email" %}
+          </label>
+          {{ form.co_owner_email }}
+          {% if form.co_owner_email.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_email.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+          <label for="id_co_owner_down_payment" class="block text-sm font-medium text-text mb-1">
+            {% trans "Co-owner down payment" %}
+          </label>
+          {{ form.co_owner_down_payment }}
+          {% if form.co_owner_down_payment.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_down_payment.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+          <label for="id_co_owner_share" class="block text-sm font-medium text-text mb-1">
+            {% trans "Co-owner share (%)" %}
+          </label>
+          {{ form.co_owner_share }}
+          <p class="mt-1 text-xs text-text-faint">
+            {% trans "Percentage of ownership for the co-owner (1-99%). Your share:" %}
+            <span class="font-medium text-text" x-text="getYourShare()"></span>
+          </p>
+          {% if form.co_owner_share.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.co_owner_share.errors.0 }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

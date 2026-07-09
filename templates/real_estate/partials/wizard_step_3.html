@@ -1,0 +1,58 @@
+{% load i18n %}
+
+<div data-step="3">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-text">{% trans "Purchase details" %}</h2>
+    <p class="mt-2 text-text-muted">
+      {% trans "These details help calculate your equity, tax obligations, and cost of ownership over time." %}
+    </p>
+  </div>
+
+  <div class="space-y-5">
+    <div>
+      <label for="id_purchase_price" class="block text-sm font-medium text-text mb-1">
+        {{ form.purchase_price.label }}
+      </label>
+      {{ form.purchase_price }}
+      <p class="mt-1 text-xs text-text-faint">
+        {% trans "The total price you paid (or agreed to pay) for the property." %}
+      </p>
+      {% if form.purchase_price.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.purchase_price.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div>
+      <label for="id_purchase_date" class="block text-sm font-medium text-text mb-1">
+        {{ form.purchase_date.label }}
+      </label>
+      {{ form.purchase_date }}
+      <p class="mt-1 text-xs text-text-faint">
+        {% trans "Used to calculate holding period for capital gains tax." %}
+      </p>
+      {% if form.purchase_date.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.purchase_date.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="id_welcome_tax_paid" class="block text-sm font-medium text-text mb-1">
+          <span x-show="country !== 'FR'">{% trans "Welcome tax paid" %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "Frais de notaire (achat)" %}</span>
+        </label>
+        {{ form.welcome_tax_paid }}
+        <p class="mt-1 text-xs text-text-faint">
+          <span x-show="country !== 'FR'">{% trans "One-time municipal tax on property transfer." %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "Typically 7-8% of the purchase price for existing properties." %}</span>
+        </p>
+        {% if form.welcome_tax_paid.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.welcome_tax_paid.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="id_notary_fees_purchase" class="block text-sm font-medium text-text mb-1">
+          <span x-show="country !== 'FR'">{% trans "Notary fees at purchase" %}</span>
+          <span x-show="country === 'FR'" x-cloak>{% trans "Frais d'agence (achat)" %}</span>
+        </label>
+        {{ form.notary_fees_purchase }}
+        {% if form.notary_fees_purchase.errors %}<p class="mt-1 text-xs text-danger-600">{{ form.notary_fees_purchase.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>

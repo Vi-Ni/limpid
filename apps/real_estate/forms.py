@@ -3,7 +3,17 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.forms import TAILWIND_SELECT_CLASS
 
-from .models import Mortgage, Property, PropertyExpense, PropertyInvitation, PropertyTax, PropertyValuation
+from .models import (
+    Mortgage,
+    MortgageRateChange,
+    OwnerMonthlyPayment,
+    Property,
+    PropertyExpense,
+    PropertyInvitation,
+    PropertyTax,
+    PropertyValuation,
+    RentalIncome,
+)
 
 TAILWIND_INPUT_CLASS = "input"
 
@@ -255,6 +265,14 @@ class PropertyForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name in ("purchase_date", "valuation_date"):
             self.fields[field_name].localize = False
+        for field_name in (
+            "current_valuation",
+            "valuation_date",
+            "municipal_assessment",
+            "welcome_tax_paid",
+            "notary_fees_purchase",
+        ):
+            self.fields[field_name].required = False
 
         country = self._get_country()
         if country == "FR":
@@ -320,13 +338,16 @@ class MortgageForm(forms.ModelForm):
 class ExpenseForm(forms.ModelForm):
     class Meta:
         model = PropertyExpense
-        fields = ["expense_type", "description", "amount", "date", "increases_acb"]
+        fields = ["expense_type", "description", "amount", "date", "increases_acb", "proof_link"]
         widgets = {
             "expense_type": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
             "description": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "amount": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
             "date": forms.DateInput(format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}),
             "increases_acb": forms.CheckboxInput(attrs={"class": TAILWIND_CHECKBOX_CLASS}),
+            "proof_link": forms.URLInput(
+                attrs={"class": TAILWIND_INPUT_CLASS, "placeholder": "https://drive.google.com/..."}
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -383,3 +404,58 @@ class InviteCoOwnerForm(forms.ModelForm):
             "email": forms.EmailInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "down_payment": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
         }
+
+
+class RateChangeForm(forms.ModelForm):
+    class Meta:
+        model = MortgageRateChange
+        fields = ["new_annual_rate", "new_rate_type", "effective_date", "is_simulation", "note"]
+        widgets = {
+            "new_annual_rate": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.001"}),
+            "new_rate_type": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "effective_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
+            "is_simulation": forms.CheckboxInput(attrs={"class": TAILWIND_CHECKBOX_CLASS}),
+            "note": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["effective_date"].localize = False
+
+
+class RentalIncomeForm(forms.ModelForm):
+    class Meta:
+        model = RentalIncome
+        fields = ["monthly_rent", "agency_fee_pct", "start_date", "end_date", "note"]
+        widgets = {
+            "monthly_rent": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
+            "agency_fee_pct": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
+            "start_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
+            "end_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
+            "note": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["start_date"].localize = False
+        self.fields["end_date"].localize = False
+        self.fields["end_date"].required = False
+
+
+class OwnerMonthlyPaymentForm(forms.ModelForm):
+    class Meta:
+        model = OwnerMonthlyPayment
+        fields = ["owner", "monthly_amount", "effective_date", "note"]
+        widgets = {
+            "owner": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "monthly_amount": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
+            "effective_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
+            "note": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+        }
+
+    def __init__(self, *args, prop=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["effective_date"].localize = False
+        if prop:
+            self.fields["owner"].queryset = prop.ownerships.all()
+            self.fields["owner"].label_from_instance = lambda o: o.user.get_full_name() or o.user.username

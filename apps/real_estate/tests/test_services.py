@@ -6,24 +6,32 @@ from django.contrib.auth import get_user_model
 
 from apps.real_estate.models import (
     Mortgage,
+    MortgageRateChange,
+    OwnerMonthlyPayment,
     OwnershipPeriod,
     OwnershipPeriodShare,
     Property,
     PropertyExpense,
     PropertyNotification,
     PropertyOwnership,
+    PropertyTax,
+    RentalIncome,
 )
 from apps.real_estate.services import (
     _calculate_acb,
     _calculate_french_capital_gains_tax,
     _calculate_french_surtax,
+    calculate_monthly_cost,
     calculate_monthly_payment,
     calculate_monthly_rate,
     estimate_sale_proceeds,
     generate_amortization_schedule,
+    generate_evolution_chart_data,
+    generate_per_owner_amortization,
     get_current_ownership_shares,
     get_owner_contributions,
     get_owner_snapshot,
+    get_ownership_comparison,
     get_property_snapshot,
     get_remaining_balance,
     get_total_paid,
@@ -690,3 +698,347 @@ class TestFrenchSaleSimulation:
         estimate = estimate_sale_proceeds(p, sale_price=Decimal("250000"))
         assert estimate["capital_gains_tax"] > Decimal("0")
         assert "capital_gains_details" in estimate
+
+
+# ── Rate changes in amortization ─────────────────────────────
+
+
+class TestAmortizationWithRateChanges:
+    @pytest.fixture
+    def rate_change(self, mortgage):
+        return MortgageRateChange.objects.create(
+            mortgage=mortgage,
+            new_annual_rate=Decimal("4.000"),
+            new_rate_type="fixed",
+            effective_date=date(2025, 1, 1),
+        )
+
+    def test_schedule_uses_original_rate_before_change(self, mortgage, rate_change):
+        schedule = generate_amortization_schedule(mortgage)
+        jan_2020 = next(e for e in schedule if e["date"].year == 2020 and e["date"].month == 2)
+        feb_2025 = next(e for e in schedule if e["date"].year == 2025 and e["date"].month == 2)
+        assert feb_2025["interest"] < jan_2020["interest"]
+
+    def test_schedule_recalculates_payment_after_change(self, mortgage, rate_change):
+        schedule = generate_amortization_schedule(mortgage)
+        before = next(e for e in schedule if e["date"] == date(2024, 12, 1))
+        after = next(e for e in schedule if e["date"] == date(2025, 2, 1))
+        assert after["total_payment"] < before["total_payment"]
+
+    def test_schedule_ends_at_zero_balance(self, mortgage, rate_change):
+        schedule = generate_amortization_schedule(mortgage)
+        assert schedule[-1]["balance"] == Decimal("0")
+
+    def test_no_rate_changes_same_as_original(self, mortgage):
+        schedule = generate_amortization_schedule(mortgage)
+        assert schedule[0]["interest"] > schedule[0]["principal"]
+
+    def test_simulation_flag_included(self, mortgage):
+        MortgageRateChange.objects.create(
+            mortgage=mortgage,
+            new_annual_rate=Decimal("6.000"),
+            effective_date=date(2025, 6, 1),
+            is_simulation=True,
+        )
+        schedule = generate_amortization_schedule(mortgage)
+        assert schedule[-1]["balance"] == Decimal("0")
+
+
+# ── Monthly cost ─────────────────────────────────────────────
+
+
+class TestMonthlyCost:
+    @pytest.fixture
+    def prop_with_taxes(self, prop, mortgage):
+        PropertyTax.objects.create(property=prop, tax_type="municipal", year=2025, amount=Decimal("4200"))
+        PropertyTax.objects.create(property=prop, tax_type="school", year=2025, amount=Decimal("600"))
+        return prop
+
+    def test_monthly_cost_basic(self, prop_with_taxes, mortgage):
+        result = calculate_monthly_cost(prop_with_taxes)
+        assert "mortgage_payment" in result
+        assert "taxes_monthly" in result
+        assert "total_monthly" in result
+        assert result["taxes_monthly"] == Decimal("400.00")
+
+    def test_monthly_cost_with_rental_income(self, prop, mortgage):
+        prop.usage = "rental"
+        prop.save()
+        RentalIncome.objects.create(
+            real_estate=prop,
+            monthly_rent=Decimal("2000"),
+            agency_fee_pct=Decimal("10"),
+            start_date=date(2020, 1, 1),
+        )
+        result = calculate_monthly_cost(prop)
+        assert result["rental_income"] == Decimal("2000.00")
+        assert result["rental_net"] == Decimal("1800.00")
+        assert result["total_monthly"] < result["mortgage_payment"] + result["taxes_monthly"]
+
+    def test_monthly_cost_no_mortgage(self, prop):
+        prop.mortgages.all().delete()
+        result = calculate_monthly_cost(prop)
+        assert result["mortgage_payment"] == Decimal("0")
+
+    def test_monthly_cost_owner_share(self, prop_with_taxes, mortgage, user):
+        result = calculate_monthly_cost(prop_with_taxes, for_user=user)
+        assert "your_total_monthly" in result
+
+
+# ── Evolution chart data ─────────────────────────────────────
+
+
+class TestEvolutionChartData:
+    def test_generates_monthly_series(self, mortgage):
+        data = generate_evolution_chart_data(mortgage)
+        assert "labels" in data
+        assert "principal_series" in data
+        assert "interest_series" in data
+        assert "balance_series" in data
+        assert len(data["labels"]) > 0
+        assert len(data["principal_series"]) == len(data["labels"])
+
+    def test_principal_eventually_exceeds_interest(self, mortgage):
+        data = generate_evolution_chart_data(mortgage)
+        crossover_found = False
+        for p, i in zip(data["principal_series"], data["interest_series"], strict=True):
+            if p > i:
+                crossover_found = True
+                break
+        assert crossover_found
+
+    def test_balance_decreases(self, mortgage):
+        data = generate_evolution_chart_data(mortgage)
+        assert data["balance_series"][0] > data["balance_series"][-1]
+        assert data["balance_series"][-1] == 0
+
+
+# ── Ownership comparison ─────────────────────────────────────
+
+
+class TestOwnershipComparison:
+    def test_single_owner(self, prop, user, mortgage):
+        period = OwnershipPeriod.objects.create(property=prop, start_date=date(2020, 1, 1))
+        ownership = prop.ownerships.get(user=user)
+        OwnershipPeriodShare.objects.create(period=period, owner=ownership, share_pct=Decimal("100"))
+        result = get_ownership_comparison(prop)
+        assert len(result) == 1
+        assert result[0]["purchase_share"] == Decimal("100.00")
+        assert result[0]["contribution_share"] == Decimal("100.00")
+        assert result[0]["admin_share"] == Decimal("100")
+
+    def test_two_owners_different_down_payments(self, prop, user, user2, mortgage):
+        PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        period = OwnershipPeriod.objects.create(property=prop, start_date=date(2020, 1, 1))
+        o1 = prop.ownerships.get(user=user)
+        o2 = prop.ownerships.get(user=user2)
+        OwnershipPeriodShare.objects.create(period=period, owner=o1, share_pct=Decimal("60"))
+        OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("40"))
+        result = get_ownership_comparison(prop)
+        assert len(result) == 2
+        # user put 100k, user2 put 50k -> 66.67% vs 33.33%
+        alice = next(r for r in result if r["user"] == user)
+        bob = next(r for r in result if r["user"] == user2)
+        assert alice["purchase_share"] == Decimal("66.67")
+        assert bob["purchase_share"] == Decimal("33.33")
+        assert alice["admin_share"] == Decimal("60")
+        assert bob["admin_share"] == Decimal("40")
+
+    def test_shares_sum_to_100(self, prop, user, user2, mortgage):
+        PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        period = OwnershipPeriod.objects.create(property=prop, start_date=date(2020, 1, 1))
+        o1 = prop.ownerships.get(user=user)
+        o2 = prop.ownerships.get(user=user2)
+        OwnershipPeriodShare.objects.create(period=period, owner=o1, share_pct=Decimal("60"))
+        OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("40"))
+        result = get_ownership_comparison(prop)
+        purchase_total = sum(r["purchase_share"] for r in result)
+        contribution_total = sum(r["contribution_share"] for r in result)
+        assert abs(purchase_total - Decimal("100")) < Decimal("0.02")
+        assert abs(contribution_total - Decimal("100")) < Decimal("0.02")
+
+
+# ── Monthly cost with custom payments ──────────────────────
+
+
+class TestMonthlyCostCustomPayments:
+    @pytest.fixture
+    def two_owners(self, prop, user, user2, mortgage):
+        PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        period = OwnershipPeriod.objects.create(property=prop, start_date=date(2020, 1, 1))
+        o1 = prop.ownerships.get(user=user)
+        o2 = prop.ownerships.get(user=user2)
+        OwnershipPeriodShare.objects.create(period=period, owner=o1, share_pct=Decimal("60"))
+        OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("40"))
+        return o1, o2
+
+    def test_custom_payment_remainder_logic(self, prop, mortgage, user, user2, two_owners):
+        """When owner A has custom $1000, owner B gets remainder, not share_pct * total."""
+        o1, o2 = two_owners
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage,
+            owner=o1,
+            monthly_amount=Decimal("1000"),
+            effective_date=date(2020, 1, 1),
+        )
+        result = calculate_monthly_cost(prop, for_user=user)
+        assert result["your_mortgage_payment"] == Decimal("1000")
+
+        result_b = calculate_monthly_cost(prop, for_user=user2)
+        expected_b = mortgage.monthly_payment - Decimal("1000")
+        assert abs(result_b["your_mortgage_payment"] - expected_b) < Decimal("0.01")
+
+    def test_custom_payment_both_owners(self, prop, mortgage, user, user2, two_owners):
+        """When both owners have custom payments, use those directly."""
+        o1, o2 = two_owners
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage,
+            owner=o1,
+            monthly_amount=Decimal("1500"),
+            effective_date=date(2020, 1, 1),
+        )
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage,
+            owner=o2,
+            monthly_amount=Decimal("800"),
+            effective_date=date(2020, 1, 1),
+        )
+        result_a = calculate_monthly_cost(prop, for_user=user)
+        assert result_a["your_mortgage_payment"] == Decimal("1500")
+        result_b = calculate_monthly_cost(prop, for_user=user2)
+        assert result_b["your_mortgage_payment"] == Decimal("800")
+
+    def test_returns_recurring_and_rental_fields(self, prop, mortgage, user):
+        """Verify your_recurring_monthly and your_rental_offset are returned."""
+        result = calculate_monthly_cost(prop, for_user=user)
+        assert "your_recurring_monthly" in result
+        assert "your_rental_offset" in result
+
+
+# ── Per-owner amortization ─────────────────────────────────
+
+
+class TestPerOwnerAmortization:
+    @pytest.fixture
+    def two_owners(self, prop, user, user2, mortgage):
+        PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        period = OwnershipPeriod.objects.create(property=prop, start_date=date(2020, 1, 1))
+        o1 = prop.ownerships.get(user=user)
+        o2 = prop.ownerships.get(user=user2)
+        OwnershipPeriodShare.objects.create(period=period, owner=o1, share_pct=Decimal("60"))
+        OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("40"))
+        return o1, o2
+
+    def test_returns_schedule_and_summaries(self, prop, mortgage, two_owners):
+        schedule, summaries = generate_per_owner_amortization(mortgage)
+        assert len(schedule) > 0
+        assert len(summaries) == 2
+
+    def test_owner_payments_in_entries(self, prop, mortgage, two_owners):
+        schedule, _ = generate_per_owner_amortization(mortgage)
+        first = schedule[0]
+        assert "owner_payments" in first
+        assert len(first["owner_payments"]) == 2
+
+    def test_summaries_sum_to_total(self, prop, mortgage, two_owners):
+        schedule, summaries = generate_per_owner_amortization(mortgage)
+        total_from_schedule = sum(e["principal"] + e["interest"] for e in schedule)
+        total_from_summaries = sum(s["total_paid"] for s in summaries)
+        assert abs(total_from_schedule - total_from_summaries) < Decimal("1")
+
+    def test_contribution_pcts_sum_to_100(self, prop, mortgage, two_owners):
+        _, summaries = generate_per_owner_amortization(mortgage)
+        total_pct = sum(s["contribution_pct"] for s in summaries)
+        assert abs(total_pct - Decimal("100")) < Decimal("0.1")
+
+    def test_custom_payment_affects_split(self, prop, mortgage, user, user2, two_owners):
+        o1, o2 = two_owners
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage,
+            owner=o1,
+            monthly_amount=Decimal("1500"),
+            effective_date=date(2020, 1, 1),
+        )
+        schedule, summaries = generate_per_owner_amortization(mortgage)
+        alice_summary = next(s for s in summaries if s["owner"] == o1)
+        bob_summary = next(s for s in summaries if s["owner"] == o2)
+        # Alice pays more, so her contribution % should be higher
+        assert alice_summary["contribution_pct"] > bob_summary["contribution_pct"]
+
+    def test_single_owner_returns_empty_summaries(self, prop, mortgage):
+        """Single owner should return basic schedule with no summaries."""
+        schedule, summaries = generate_per_owner_amortization(mortgage)
+        assert len(summaries) == 0
+        assert len(schedule) > 0
+
+    def test_per_owner_includes_insurance(self, user, user2):
+        """Per-owner total_payment should include insurance (French mortgage)."""
+        p = Property.objects.create(
+            name="Paris Flat",
+            property_type="condo",
+            usage="primary",
+            country="FR",
+            currency="EUR",
+            address="10 Rue de Rivoli",
+            city="Paris",
+            province="75",
+            purchase_price=Decimal("300000"),
+            purchase_date=date(2023, 1, 1),
+            current_valuation=Decimal("320000"),
+            valuation_date=date(2024, 1, 1),
+        )
+        o1 = PropertyOwnership.objects.create(user=user, property=p, is_admin=True, down_payment=Decimal("30000"))
+        o2 = PropertyOwnership.objects.create(user=user2, property=p, down_payment=Decimal("30000"))
+        period = OwnershipPeriod.objects.create(property=p, start_date=date(2023, 1, 1))
+        OwnershipPeriodShare.objects.create(period=period, owner=o1, share_pct=Decimal("50"))
+        OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("50"))
+        m = Mortgage.objects.create(
+            real_estate=p,
+            lender="BNP",
+            principal=Decimal("240000"),
+            annual_rate=Decimal("3.500"),
+            rate_type="fixed",
+            amortization_years=20,
+            start_date=date(2023, 1, 1),
+            borrower_insurance_rate=Decimal("0.300"),
+        )
+        schedule, summaries = generate_per_owner_amortization(m)
+        first = schedule[0]
+        # Sum of owner payments should equal total_payment (which includes insurance)
+        owner_payment_sum = sum(op["payment"] for op in first["owner_payments"].values())
+        assert abs(owner_payment_sum - first["total_payment"]) < Decimal("0.02")
+        # Total paid by all owners across the full schedule should include insurance
+        total_from_summaries = sum(s["total_paid"] for s in summaries)
+        total_from_schedule = sum(e["total_payment"] for e in schedule)
+        assert abs(total_from_summaries - total_from_schedule) < Decimal("1")
+
+
+class TestAmortizationScheduleAnnualRate:
+    def test_annual_rate_in_entries(self, mortgage):
+        schedule = generate_amortization_schedule(mortgage)
+        assert "annual_rate" in schedule[0]
+        assert schedule[0]["annual_rate"] == Decimal("5.000")
+
+    def test_annual_rate_changes_after_rate_change(self, mortgage):
+        MortgageRateChange.objects.create(
+            mortgage=mortgage,
+            new_annual_rate=Decimal("4.000"),
+            new_rate_type="fixed",
+            effective_date=date(2025, 1, 1),
+        )
+        schedule = generate_amortization_schedule(mortgage)
+        before = next(e for e in schedule if e["date"] == date(2024, 12, 1))
+        after = next(e for e in schedule if e["date"] == date(2025, 2, 1))
+        assert before["annual_rate"] == Decimal("5.000")
+        assert after["annual_rate"] == Decimal("4.000")
+
+
+class TestEvolutionChartCurrentMonth:
+    def test_current_month_index_present(self, mortgage):
+        data = generate_evolution_chart_data(mortgage)
+        assert "current_month_index" in data
+
+    def test_current_month_index_within_schedule(self, mortgage):
+        data = generate_evolution_chart_data(mortgage)
+        if data["current_month_index"] is not None:
+            assert 0 <= data["current_month_index"] < len(data["labels"])
