@@ -1,7 +1,7 @@
 # Limpid — Project Guide
 
 ## What is Limpid?
-Educational investment dashboard for Canadian beginners. Shows what you hold, what it costs, and what you need to learn — without ever giving financial advice.
+Educational investment dashboard for Canadian (and French) beginners. Shows what you hold, what it costs, and what you need to learn — without ever giving financial advice.
 
 ## Tech Stack
 - **Backend**: Django 5.x, Python 3.12
@@ -20,7 +20,7 @@ config/                  # Django project config
 apps/
   accounts/              # User profiles, onboarding, risk quiz
   portfolio/             # Portfolio management
-  real_estate/           # Real estate patrimony management
+  real_estate/           # Real estate patrimony management (CA + FR, multi-currency)
   market_data/           # Market data integration
   transparency/          # Fee/risk transparency reports
   education/             # Learning path & lessons
@@ -40,8 +40,10 @@ scripts/
   setup-rpi.sh           # One-time RPi provisioning
   deploy.sh              # Redeploy latest image on RPi
 locale/fr/LC_MESSAGES/   # French translations
-instructions/            # Design docs & implementation plans
-.claude/plans/           # Claude Code plan files
+instructions/            # Design docs & Crescendo lesson content (EN/FR)
+docs/
+  plans/                 # Implementation plans (done/ = completed & archived)
+  research/              # Research notes
 ```
 
 ## Deployment
@@ -115,16 +117,17 @@ ssh rpi "docker image prune -f"
 - WhiteNoise serves static files with `CompressedStaticFilesStorage` (not Manifest variant — Vite already handles cache busting)
 
 ## Design System ("Clair & calme")
-- **Direction**: Off-white background, indigo primary, calm & trustworthy
+- **Direction**: Warm stone palette, indigo primary, Geist/Geist Mono fonts, calm & trustworthy
 - **Reference**: `instructions/Limpid_Design_Proposals.md`
 - **Implementation**: `instructions/Design_System_Implementation_Plan.md`
 
 ### Theme tokens (defined in `frontend/src/styles/main.css`)
-- `primary-{50..900}`: Indigo accent
-- `bg-base` (#f8fafc), `bg-card` (#ffffff)
-- `text` (#1e293b), `text-muted` (#64748b)
-- `border` (#e2e8f0)
+- `primary-{50..900}`: Indigo accent (#4e4ddb at 600)
+- `bg-base` (#fafaf9), `bg-card` (#ffffff), `bg-subtle`/`bg-hover` (#f5f5f4)
+- `text` (#1c1917), `text-muted` (#78716c), `text-faint` (#a8a29e)
+- `border` (#e7e5e4), `border-strong` (#d6d3d1)
 - `success-*`, `warning-*`, `danger-*`: Semantic colors
+- Fonts: `--font-sans` Geist, `--font-mono` Geist Mono
 
 ### Reusable components (`templates/components/`)
 - `card_start.html` / `card_end.html` — Card wrapper (props: title, variant, icon)
@@ -166,7 +169,13 @@ Components use start/end pattern for slotted content:
 - **M1**: Accounts & onboarding (user profiles, 3-step onboarding wizard, 6-question risk quiz)
 - **Design System**: Tailwind theme, sidebar/bottom nav, reusable components, restyled all pages
 - **Deployment**: RPi + Cloudflare Tunnel, CI/CD building ARM64 images to GHCR
-- **Real Estate**: Full patrimony management — 9 models, co-ownership with evolving splits, Canadian mortgage amortization (semi-annual compounding), sale simulation with GST/QST/capital gains, HTMX expense/valuation tracking, 54 tests, full FR translations
+- **Real Estate**: Full patrimony management — co-ownership with evolving splits, Canadian mortgage amortization (semi-annual compounding), sale simulation with GST/QST/capital gains, HTMX expense/valuation tracking, full FR translations
+- **Real Estate — France**: FR property support (frais de notaire, départements, plus-value tax, borrower insurance) + multi-currency (CAD/EUR)
+- **Notifications & Invitations**: Notification center, co-owner invitation flow with accept/decline (signals-based)
+- **Real Estate — Misc features**: Rate change simulation, rental income tracking, monthly cost summary, my-share toggle, per-owner payment splits, property deletion, expense proof links, Chart.js evolution charts
+- **Creation Wizard**: 7-step Alpine.js wizard replacing the single-page create form (country-aware fields, auto-calculations, review step)
+- **Design overhaul**: Geist fonts, warm stone palette, unified components
+- Test suite: 249 tests passing
 
 ## URL Patterns
 | Prefix | App |
@@ -185,6 +194,7 @@ Components use start/end pattern for slotted content:
 ## Gotchas & Lessons Learned
 - **Containerfile — Tailwind scanning**: Templates and `apps/` must be copied into the frontend build stage so Tailwind v4 `@source` directives can scan HTML classes. Without this, Tailwind purges all utility classes used in templates.
 - **Containerfile — collectstatic**: `collectstatic` needs `SECRET_KEY=build-only` env var at build time since production settings require it.
+- **Containerfile — translations**: `django.mo` is gitignored, so the image build MUST run `manage.py compilemessages` (requires `gettext` apt package). Without it, production silently serves English to FR users.
 - **WhiteNoise storage**: Use `CompressedStaticFilesStorage`, NOT `CompressedManifestStaticFilesStorage` — Vite already hashes filenames, double-hashing breaks the manifest lookup.
 - **GHCR image name**: `github.repository` may contain uppercase (`Vi-Ni/limpid`), must lowercase it for Docker tags — use `${IMAGE_NAME,,}` in CI.
 - **ALLOWED_HOSTS / CSRF_TRUSTED_ORIGINS**: Must match the exact domain in Cloudflare (`viniqo.com`, not `viniko.com`).
