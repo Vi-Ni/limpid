@@ -34,3 +34,6 @@ htmlcov/
 
 # Compiled translations
 *.mo
+
+# Claude
+.claude/settings.local.json
