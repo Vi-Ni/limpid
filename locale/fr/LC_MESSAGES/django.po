@@ -647,7 +647,6 @@ msgstr "Si votre mise de fonds était inférieure à 20 %, vous avez probablemen
 
 # ── French form field tooltips ──
 #: apps/real_estate/forms.py:165
-#, python-format
 msgid "Total 'frais de notaire' paid at purchase. Includes transfer taxes (droits de mutation), notary fees, and administrative costs. Typically 7-8.5% for existing properties, 2-3% for new builds."
 msgstr "Total des « frais de notaire » payés à l'achat. Inclut les droits de mutation, les honoraires du notaire et les frais administratifs. Typiquement 7-8,5 % pour l'ancien, 2-3 % pour le neuf."
 
@@ -1399,7 +1398,6 @@ msgid "The real estate agent's fee, typically 3-6% of the sale price in France. 
 msgstr "Les honoraires de l'agent immobilier, typiquement 3-6 % du prix de vente en France. TVA de 20 % incluse."
 
 #: apps/real_estate/tooltips.py:143
-#, python-format
 msgid "If this isn't your primary residence, you owe plus-value tax on the profit: 19% income tax + 17.2% social contributions. Abatements apply based on how long you've owned the property — full IR exemption after 22 years, full social exemption after 30."
 msgstr "Si ce n'est pas votre résidence principale, vous devez la taxe sur la plus-value : 19 % d'impôt sur le revenu + 17,2 % de prélèvements sociaux. Des abattements s'appliquent selon la durée de détention — exonération totale d'IR après 22 ans, exonération totale des prélèvements sociaux après 30 ans."
 
