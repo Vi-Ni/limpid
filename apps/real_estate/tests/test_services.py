@@ -24,6 +24,7 @@ from apps.real_estate.services import (
     calculate_monthly_cost,
     calculate_monthly_payment,
     calculate_monthly_rate,
+    compute_miz,
     estimate_sale_proceeds,
     generate_amortization_schedule,
     generate_evolution_chart_data,
@@ -38,6 +39,7 @@ from apps.real_estate.services import (
     get_remaining_balance,
     get_total_paid,
     notify_co_owners,
+    split_sale_by_miz,
 )
 
 User = get_user_model()
@@ -1279,3 +1281,87 @@ class TestContributionsUseActualPayments:
         PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
         for r in get_ownership_comparison(prop):
             assert r["end_share"] == r["contribution_share"]
+
+
+# ── Sale split by contributions (MIZ) ──────────────────────
+
+
+class TestSplitSaleByMiz:
+    def test_gain_shared_by_miz_without_floor(self):
+        result = split_sale_by_miz(Decimal("300000"), {"a": Decimal("120000"), "b": Decimal("40000")})
+        # Each takes back their MIZ, the 140k gain is split 75/25
+        assert result["a"]["total"] == Decimal("225000.00")
+        assert result["b"]["total"] == Decimal("75000.00")
+        assert result["b"]["gain"] == Decimal("35000.00")
+        assert result["b"]["gain_share_pct"] == Decimal("25.00")
+
+    def test_floor_applies_to_gain(self):
+        result = split_sale_by_miz(
+            Decimal("300000"), {"a": Decimal("120000"), "b": Decimal("40000")}, floor_pct=Decimal("30")
+        )
+        assert result["b"]["gain_share_pct"] == Decimal("30.00")
+        assert result["b"]["total"] == Decimal("82000.00")
+        assert result["a"]["total"] == Decimal("218000.00")
+
+    def test_floor_not_binding(self):
+        result = split_sale_by_miz(
+            Decimal("300000"), {"a": Decimal("100000"), "b": Decimal("80000")}, floor_pct=Decimal("30")
+        )
+        assert result["b"]["total"] == Decimal("80000") + (Decimal("120000") * 80 / 180).quantize(TWO_PLACES)
+
+    def test_loss_is_prorated_without_floor(self):
+        result = split_sale_by_miz(
+            Decimal("100000"), {"a": Decimal("120000"), "b": Decimal("40000")}, floor_pct=Decimal("30")
+        )
+        assert result["a"]["total"] == Decimal("75000.00")
+        assert result["b"]["total"] == Decimal("25000.00")
+        assert result["b"]["gain"] == Decimal("0")
+
+    def test_parts_add_up_to_net(self):
+        result = split_sale_by_miz(Decimal("300000.01"), {"a": Decimal("100000"), "b": Decimal("200000")})
+        assert sum(r["total"] for r in result.values()) == Decimal("300000.01")
+
+    def test_floor_with_more_than_two_owners_rejected(self):
+        with pytest.raises(ValueError):
+            split_sale_by_miz(
+                Decimal("300000"),
+                {"a": Decimal("1"), "b": Decimal("1"), "c": Decimal("1")},
+                floor_pct=Decimal("30"),
+            )
+
+
+class TestSaleEstimateByMiz:
+    @pytest.fixture
+    def miz_prop(self, prop, mortgage, co_owned):
+        o1, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        prop.sale_split_method = "miz"
+        prop.miz_floor_pct = Decimal("30")
+        prop.save()
+        return prop, o1, o2
+
+    def test_compute_miz_matches_contributions(self, miz_prop):
+        prop, o1, o2 = miz_prop
+        miz = compute_miz(prop)
+        assert miz[o1]["miz"] == get_owner_contributions(o1)["total"]
+        assert miz[o1]["miz_share"] + miz[o2]["miz_share"] == Decimal("100.00")
+
+    def test_per_owner_uses_miz_split(self, miz_prop):
+        prop, o1, o2 = miz_prop
+        result = estimate_sale_proceeds(prop)
+        by_owner = {r["ownership"]: r for r in result["per_owner"]}
+        assert sum(r["net_proceeds"] for r in result["per_owner"]) == result["net_proceeds"]
+        expected = split_sale_by_miz(
+            result["net_proceeds"],
+            {o: m["miz"] for o, m in compute_miz(prop).items()},
+            floor_pct=Decimal("30"),
+        )
+        assert by_owner[o1]["net_proceeds"] == expected[o1]["total"]
+        assert by_owner[o1]["net_proceeds"] > by_owner[o2]["net_proceeds"]
+
+    def test_default_method_keeps_ownership_share(self, prop, mortgage, co_owned):
+        result = estimate_sale_proceeds(prop)
+        shares = {r["share_pct"] for r in result["per_owner"]}
+        assert shares == {Decimal("50")}

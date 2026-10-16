@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 15:22-0400\n"
+"POT-Creation-Date: 2026-10-16 15:33-0400\n"
 "Language: fr\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -706,42 +706,46 @@ msgstr "Frais d'agence (achat)"
 msgid "Valeur cadastrale"
 msgstr "Valeur cadastrale"
 
-#: apps/real_estate/forms.py:333
+#: apps/real_estate/forms.py:316
+msgid "Enter a percentage between 0 and 50."
+msgstr "Entrez un pourcentage entre 0 et 50."
+
+#: apps/real_estate/forms.py:356
 #: templates/real_estate/partials/wizard_step_6.html:63
 msgid "Loan duration (years)"
 msgstr "Durée du prêt (années)"
 
-#: apps/real_estate/forms.py:358
+#: apps/real_estate/forms.py:381
 msgid "Paid by"
 msgstr "Payé par"
 
 # ── Real Estate — Property Taxes ──
-#: apps/real_estate/forms.py:380 apps/real_estate/models.py:341
+#: apps/real_estate/forms.py:403 apps/real_estate/models.py:362
 msgid "Municipal tax"
 msgstr "Taxe municipale"
 
-#: apps/real_estate/forms.py:380 apps/real_estate/models.py:342
+#: apps/real_estate/forms.py:403 apps/real_estate/models.py:363
 msgid "School tax"
 msgstr "Taxe scolaire"
 
 # French tax types
-#: apps/real_estate/forms.py:382 apps/real_estate/models.py:343
+#: apps/real_estate/forms.py:405 apps/real_estate/models.py:364
 msgid "Taxe foncière"
 msgstr "Taxe foncière"
 
-#: apps/real_estate/forms.py:383 apps/real_estate/models.py:344
+#: apps/real_estate/forms.py:406 apps/real_estate/models.py:365
 msgid "Taxe d'habitation"
 msgstr "Taxe d'habitation"
 
-#: apps/real_estate/forms.py:384 apps/real_estate/models.py:345
+#: apps/real_estate/forms.py:407 apps/real_estate/models.py:366
 msgid "IFI (wealth tax)"
 msgstr "IFI (impôt sur la fortune immobilière)"
 
-#: apps/real_estate/forms.py:474
+#: apps/real_estate/forms.py:497
 msgid "Enter a percentage between 0 and 100."
 msgstr "Entrez un pourcentage entre 0 et 100."
 
-#: apps/real_estate/forms.py:482
+#: apps/real_estate/forms.py:505
 msgid "Enter either a monthly amount or a share of the payment, not both."
 msgstr "Entrez soit un montant mensuel, soit une part du versement, pas les deux."
 
@@ -812,434 +816,458 @@ msgstr "Canada"
 msgid "France"
 msgstr "France"
 
-#: apps/real_estate/models.py:37
+#: apps/real_estate/models.py:38
+msgid "Ownership share"
+msgstr "Quote-part"
+
+#: apps/real_estate/models.py:39
+msgid "Contributions (MIZ)"
+msgstr "Contributions (MIZ)"
+
+#: apps/real_estate/models.py:42
 msgid "name"
 msgstr "nom"
 
-#: apps/real_estate/models.py:38
+#: apps/real_estate/models.py:43
 msgid "country"
 msgstr "pays"
 
-#: apps/real_estate/models.py:39
+#: apps/real_estate/models.py:44
 msgid "property type"
 msgstr "type de propriété"
 
-#: apps/real_estate/models.py:40
+#: apps/real_estate/models.py:45
 msgid "usage"
 msgstr "usage"
 
-#: apps/real_estate/models.py:41
+#: apps/real_estate/models.py:46
 msgid "address"
 msgstr "adresse"
 
-#: apps/real_estate/models.py:42
+#: apps/real_estate/models.py:47
 msgid "city"
 msgstr "ville"
 
-#: apps/real_estate/models.py:43
+#: apps/real_estate/models.py:48
 msgid "province"
 msgstr "province"
 
-#: apps/real_estate/models.py:44
+#: apps/real_estate/models.py:49
 msgid "postal code"
 msgstr "code postal"
 
-#: apps/real_estate/models.py:45
+#: apps/real_estate/models.py:50
 msgid "currency"
 msgstr "devise"
 
-#: apps/real_estate/models.py:47
+#: apps/real_estate/models.py:52
 msgid "purchase price"
 msgstr "prix d'achat"
 
-#: apps/real_estate/models.py:48
+#: apps/real_estate/models.py:53
 msgid "purchase date"
 msgstr "date d'achat"
 
-#: apps/real_estate/models.py:49
+#: apps/real_estate/models.py:54
 msgid "welcome tax paid"
 msgstr "taxe de bienvenue payée"
 
-#: apps/real_estate/models.py:50
+#: apps/real_estate/models.py:55
 msgid "notary fees at purchase"
 msgstr "frais de notaire à l'achat"
 
-#: apps/real_estate/models.py:53
+#: apps/real_estate/models.py:58
 msgid "current valuation"
 msgstr "évaluation actuelle"
 
-#: apps/real_estate/models.py:55
+#: apps/real_estate/models.py:60
 msgid "valuation date"
 msgstr "date d'évaluation"
 
-#: apps/real_estate/models.py:56
+#: apps/real_estate/models.py:61
 msgid "municipal assessment"
 msgstr "évaluation municipale"
 
+#: apps/real_estate/models.py:64
+msgid "sale split method"
+msgstr "mode de partage à la vente"
+
 #: apps/real_estate/models.py:68
+msgid "How the proceeds of a sale are shared between co-owners."
+msgstr "Comment le produit d'une vente est partagé entre copropriétaires."
+
+#: apps/real_estate/models.py:71
+msgid "minimum share of the gain (%)"
+msgstr "part minimale du gain (%)"
+
+#: apps/real_estate/models.py:76
+msgid "With the contributions method, each owner gets at least this share of the gain (two owners)."
+msgstr "Avec le partage selon les contributions, chaque propriétaire reçoit au moins cette part du gain (deux propriétaires)."
+
+#: apps/real_estate/models.py:89
 msgid "property"
 msgstr "propriété"
 
-#: apps/real_estate/models.py:69
+#: apps/real_estate/models.py:90
 msgid "properties"
 msgstr "propriétés"
 
-#: apps/real_estate/models.py:97
+#: apps/real_estate/models.py:118
 msgid "can edit property"
 msgstr "peut modifier la propriété"
 
-#: apps/real_estate/models.py:99
+#: apps/real_estate/models.py:120
 msgid "Can this owner edit property details?"
 msgstr "Ce propriétaire peut-il modifier les détails de la propriété ?"
 
-#: apps/real_estate/models.py:101
+#: apps/real_estate/models.py:122
 msgid "down payment contributed"
 msgstr "mise de fonds contribuée"
 
-#: apps/real_estate/models.py:106
+#: apps/real_estate/models.py:127
 msgid "property ownership"
 msgstr "propriété foncière"
 
-#: apps/real_estate/models.py:114 apps/real_estate/models.py:161
-#: apps/real_estate/models.py:375
+#: apps/real_estate/models.py:135 apps/real_estate/models.py:182
+#: apps/real_estate/models.py:396
 msgid "start date"
 msgstr "date de début"
 
-#: apps/real_estate/models.py:115 apps/real_estate/models.py:376
+#: apps/real_estate/models.py:136 apps/real_estate/models.py:397
 msgid "end date"
 msgstr "date de fin"
 
-#: apps/real_estate/models.py:116 apps/real_estate/models.py:213
-#: apps/real_estate/models.py:256 apps/real_estate/models.py:330
-#: apps/real_estate/models.py:377
+#: apps/real_estate/models.py:137 apps/real_estate/models.py:234
+#: apps/real_estate/models.py:277 apps/real_estate/models.py:351
+#: apps/real_estate/models.py:398
 msgid "note"
 msgstr "note"
 
-#: apps/real_estate/models.py:129 apps/real_estate/models.py:398
+#: apps/real_estate/models.py:150 apps/real_estate/models.py:419
 msgid "ownership share (%)"
 msgstr "part de propriété (%)"
 
-#: apps/real_estate/models.py:140
+#: apps/real_estate/models.py:161
 msgid "Fixed"
 msgstr "Fixe"
 
-#: apps/real_estate/models.py:141
+#: apps/real_estate/models.py:162
 msgid "Variable"
 msgstr "Variable"
 
 # French mortgage terms
-#: apps/real_estate/models.py:142
+#: apps/real_estate/models.py:163
 msgid "Mixed (taux mixte)"
 msgstr "Mixte (taux mixte)"
 
-#: apps/real_estate/models.py:146
+#: apps/real_estate/models.py:167
 msgid "Monthly"
 msgstr "Mensuel"
 
-#: apps/real_estate/models.py:147
+#: apps/real_estate/models.py:168
 msgid "Bi-weekly"
 msgstr "Aux deux semaines"
 
-#: apps/real_estate/models.py:148
+#: apps/real_estate/models.py:169
 msgid "Accelerated bi-weekly"
 msgstr "Aux deux semaines accéléré"
 
-#: apps/real_estate/models.py:152
+#: apps/real_estate/models.py:173
 msgid "lender"
 msgstr "prêteur"
 
-#: apps/real_estate/models.py:153
+#: apps/real_estate/models.py:174
 msgid "original principal"
 msgstr "capital initial"
 
-#: apps/real_estate/models.py:154
+#: apps/real_estate/models.py:175
 msgid "annual interest rate (%)"
 msgstr "taux d'intérêt annuel (%)"
 
-#: apps/real_estate/models.py:155
+#: apps/real_estate/models.py:176
 msgid "rate type"
 msgstr "type de taux"
 
-#: apps/real_estate/models.py:156
+#: apps/real_estate/models.py:177
 msgid "amortization (years)"
 msgstr "amortissement (années)"
 
-#: apps/real_estate/models.py:157
+#: apps/real_estate/models.py:178
 msgid "term (years)"
 msgstr "terme (années)"
 
-#: apps/real_estate/models.py:159
+#: apps/real_estate/models.py:180
 msgid "payment frequency"
 msgstr "fréquence de paiement"
 
-#: apps/real_estate/models.py:162
+#: apps/real_estate/models.py:183
 msgid "active"
 msgstr "actif"
 
-#: apps/real_estate/models.py:163
+#: apps/real_estate/models.py:184
 msgid "mortgage insurance premium"
 msgstr "prime d'assurance hypothécaire"
 
-#: apps/real_estate/models.py:165
+#: apps/real_estate/models.py:186
 msgid "borrower insurance rate (%)"
 msgstr "taux d'assurance emprunteur (%)"
 
-#: apps/real_estate/models.py:207
+#: apps/real_estate/models.py:228
 msgid "new annual rate (%)"
 msgstr "nouveau taux annuel (%)"
 
-#: apps/real_estate/models.py:209
+#: apps/real_estate/models.py:230
 msgid "new rate type"
 msgstr "nouveau type de taux"
 
-#: apps/real_estate/models.py:211 apps/real_estate/models.py:255
+#: apps/real_estate/models.py:232 apps/real_estate/models.py:276
 msgid "effective date"
 msgstr "date d'effet"
 
-#: apps/real_estate/models.py:212
+#: apps/real_estate/models.py:233
 msgid "simulation only"
 msgstr "simulation uniquement"
 
-#: apps/real_estate/models.py:217
+#: apps/real_estate/models.py:238
 msgid "mortgage rate change"
 msgstr "changement de taux hypothécaire"
 
-#: apps/real_estate/models.py:218
+#: apps/real_estate/models.py:239
 msgid "mortgage rate changes"
 msgstr "changements de taux hypothécaires"
 
-#: apps/real_estate/models.py:226
+#: apps/real_estate/models.py:247
 msgid "payment number"
 msgstr "numéro de paiement"
 
-#: apps/real_estate/models.py:227
+#: apps/real_estate/models.py:248
 msgid "payment date"
 msgstr "date de paiement"
 
-#: apps/real_estate/models.py:228
+#: apps/real_estate/models.py:249
 msgid "total payment"
 msgstr "paiement total"
 
-#: apps/real_estate/models.py:229
+#: apps/real_estate/models.py:250
 msgid "principal portion"
 msgstr "portion du capital"
 
-#: apps/real_estate/models.py:230
+#: apps/real_estate/models.py:251
 msgid "interest portion"
 msgstr "portion des intérêts"
 
-#: apps/real_estate/models.py:231
+#: apps/real_estate/models.py:252
 msgid "balance after payment"
 msgstr "solde après paiement"
 
-#: apps/real_estate/models.py:253
+#: apps/real_estate/models.py:274
 msgid "monthly amount"
 msgstr "montant mensuel"
 
-#: apps/real_estate/models.py:254
+#: apps/real_estate/models.py:275
 msgid "share of payment (%)"
 msgstr "part du versement (%)"
 
-#: apps/real_estate/models.py:270
+#: apps/real_estate/models.py:291
 msgid "owner monthly payment"
 msgstr "paiement mensuel du propriétaire"
 
-#: apps/real_estate/models.py:271
+#: apps/real_estate/models.py:292
 msgid "owner monthly payments"
 msgstr "paiements mensuels des propriétaires"
 
-#: apps/real_estate/models.py:286
+#: apps/real_estate/models.py:307
 msgid "Renovation / Improvement"
 msgstr "Rénovation / Amélioration"
 
-#: apps/real_estate/models.py:287
+#: apps/real_estate/models.py:308
 msgid "Repair / Maintenance"
 msgstr "Réparation / Entretien"
 
-#: apps/real_estate/models.py:288
+#: apps/real_estate/models.py:309
 msgid "Property tax"
 msgstr "Taxe foncière"
 
-#: apps/real_estate/models.py:289 templates/real_estate/amortization.html:138
+#: apps/real_estate/models.py:310 templates/real_estate/amortization.html:138
 msgid "Insurance"
 msgstr "Assurance"
 
-#: apps/real_estate/models.py:290
+#: apps/real_estate/models.py:311
 msgid "Condo fees"
 msgstr "Frais de condo"
 
 # French expense types
-#: apps/real_estate/models.py:291
+#: apps/real_estate/models.py:312
 msgid "Charges de copropriété"
 msgstr "Charges de copropriété"
 
-#: apps/real_estate/models.py:292
+#: apps/real_estate/models.py:313
 msgid "Assurance emprunteur"
 msgstr "Assurance emprunteur"
 
-#: apps/real_estate/models.py:293
+#: apps/real_estate/models.py:314
 msgid "Other"
 msgstr "Autre"
 
-#: apps/real_estate/models.py:297
+#: apps/real_estate/models.py:318
 msgid "type"
 msgstr "type"
 
-#: apps/real_estate/models.py:298 apps/real_estate/models.py:441
+#: apps/real_estate/models.py:319 apps/real_estate/models.py:462
 msgid "description"
 msgstr "description"
 
-#: apps/real_estate/models.py:299 apps/real_estate/models.py:351
+#: apps/real_estate/models.py:320 apps/real_estate/models.py:372
 msgid "amount"
 msgstr "montant"
 
-#: apps/real_estate/models.py:300 apps/real_estate/models.py:328
+#: apps/real_estate/models.py:321 apps/real_estate/models.py:349
 msgid "date"
 msgstr "date"
 
-#: apps/real_estate/models.py:302
+#: apps/real_estate/models.py:323
 msgid "increases cost base"
 msgstr "augmente le coût de base"
 
-#: apps/real_estate/models.py:304
+#: apps/real_estate/models.py:325
 msgid "Capital improvements increase the adjusted cost base for tax purposes."
 msgstr "Les améliorations augmentent le prix de base rajusté à des fins fiscales."
 
-#: apps/real_estate/models.py:306
+#: apps/real_estate/models.py:327
 msgid "proof document link"
 msgstr "lien vers le justificatif"
 
-#: apps/real_estate/models.py:320
+#: apps/real_estate/models.py:341
 msgid "Manual estimate"
 msgstr "Estimation manuelle"
 
-#: apps/real_estate/models.py:321
+#: apps/real_estate/models.py:342
 msgid "Professional appraisal"
 msgstr "Évaluation professionnelle"
 
-#: apps/real_estate/models.py:322
+#: apps/real_estate/models.py:343
 #: templates/real_estate/partials/wizard_step_4.html:38
 msgid "Municipal assessment"
 msgstr "Évaluation municipale"
 
-#: apps/real_estate/models.py:323
+#: apps/real_estate/models.py:344
 msgid "Comparable sales"
 msgstr "Ventes comparables"
 
-#: apps/real_estate/models.py:327
+#: apps/real_estate/models.py:348
 msgid "value"
 msgstr "valeur"
 
-#: apps/real_estate/models.py:329
+#: apps/real_estate/models.py:350
 msgid "source"
 msgstr "source"
 
-#: apps/real_estate/models.py:349
+#: apps/real_estate/models.py:370
 msgid "tax type"
 msgstr "type de taxe"
 
-#: apps/real_estate/models.py:350
+#: apps/real_estate/models.py:371
 msgid "year"
 msgstr "année"
 
-#: apps/real_estate/models.py:356
+#: apps/real_estate/models.py:377
 msgid "property tax"
 msgstr "taxe foncière"
 
-#: apps/real_estate/models.py:357
+#: apps/real_estate/models.py:378
 msgid "property taxes"
 msgstr "taxes foncières"
 
-#: apps/real_estate/models.py:367
+#: apps/real_estate/models.py:388
 msgid "monthly rent"
 msgstr "loyer mensuel"
 
-#: apps/real_estate/models.py:369
+#: apps/real_estate/models.py:390
 msgid "agency fee (%)"
 msgstr "frais d'agence (%)"
 
-#: apps/real_estate/models.py:373
+#: apps/real_estate/models.py:394
 msgid "Percentage taken by rental management agency"
 msgstr "Pourcentage prélevé par l'agence de gestion locative"
 
-#: apps/real_estate/models.py:381
+#: apps/real_estate/models.py:402
 msgid "rental income"
 msgstr "revenu locatif"
 
-#: apps/real_estate/models.py:382
+#: apps/real_estate/models.py:403
 msgid "rental incomes"
 msgstr "revenus locatifs"
 
-#: apps/real_estate/models.py:396
+#: apps/real_estate/models.py:417
 msgid "invitee email"
 msgstr "courriel de l'invité"
 
-#: apps/real_estate/models.py:397
+#: apps/real_estate/models.py:418
 msgid "down payment"
 msgstr "mise de fonds"
 
 # ── Notification verb labels ──
-#: apps/real_estate/models.py:409
+#: apps/real_estate/models.py:430
 msgid "Invitation sent"
 msgstr "Invitation envoyée"
 
-#: apps/real_estate/models.py:410
+#: apps/real_estate/models.py:431
 msgid "Invitation received"
 msgstr "Invitation reçue"
 
-#: apps/real_estate/models.py:411
+#: apps/real_estate/models.py:432
 msgid "Invitation accepted"
 msgstr "Invitation acceptée"
 
-#: apps/real_estate/models.py:412
+#: apps/real_estate/models.py:433
 msgid "Co-owner removed"
 msgstr "Copropriétaire retiré"
 
-#: apps/real_estate/models.py:413
+#: apps/real_estate/models.py:434
 msgid "Expense added"
 msgstr "Dépense ajoutée"
 
-#: apps/real_estate/models.py:414
+#: apps/real_estate/models.py:435
 msgid "Expense updated"
 msgstr "Dépense modifiée"
 
-#: apps/real_estate/models.py:415
+#: apps/real_estate/models.py:436
 msgid "Expense deleted"
 msgstr "Dépense supprimée"
 
-#: apps/real_estate/models.py:416
+#: apps/real_estate/models.py:437
 msgid "Tax added"
 msgstr "Taxe ajoutée"
 
-#: apps/real_estate/models.py:417
+#: apps/real_estate/models.py:438
 msgid "Tax updated"
 msgstr "Taxe modifiée"
 
-#: apps/real_estate/models.py:418
+#: apps/real_estate/models.py:439
 msgid "Tax deleted"
 msgstr "Taxe supprimée"
 
-#: apps/real_estate/models.py:419
+#: apps/real_estate/models.py:440
 msgid "Valuation added"
 msgstr "Évaluation ajoutée"
 
-#: apps/real_estate/models.py:420
+#: apps/real_estate/models.py:441
 msgid "Valuation updated"
 msgstr "Évaluation modifiée"
 
-#: apps/real_estate/models.py:421
+#: apps/real_estate/models.py:442
 msgid "Valuation deleted"
 msgstr "Évaluation supprimée"
 
-#: apps/real_estate/models.py:422
+#: apps/real_estate/models.py:443
 msgid "Property updated"
 msgstr "Propriété mise à jour"
 
-#: apps/real_estate/models.py:440
+#: apps/real_estate/models.py:461
 msgid "action"
 msgstr "action"
 
-#: apps/real_estate/signals.py:26 apps/real_estate/views.py:456
+#: apps/real_estate/signals.py:26 apps/real_estate/views.py:462
 #, python-format
 msgid "invited you to co-own %(name)s (%(share)s%%)"
 msgstr "vous a invité à devenir copropriétaire de %(name)s (%(share)s%%)"
@@ -1441,158 +1469,158 @@ msgstr "Supprimée pour toutes les résidences principales depuis 2023. S'appliq
 msgid "Wealth tax on real estate (Impot sur la Fortune Immobiliere). Applies if your total net real estate exceeds 1,300,000 EUR. Primary residence benefits from a 30% valuation abatement."
 msgstr "Impôt sur la fortune immobilière (IFI). S'applique si votre patrimoine immobilier net total dépasse 1 300 000 €. La résidence principale bénéficie d'un abattement de 30 % sur sa valeur."
 
-#: apps/real_estate/views.py:133 apps/real_estate/views.py:956
+#: apps/real_estate/views.py:134 apps/real_estate/views.py:962
 #: templates/real_estate/detail.html:59
 msgid "Equity"
 msgstr "Équité"
 
-#: apps/real_estate/views.py:133 apps/real_estate/views.py:956
+#: apps/real_estate/views.py:134 apps/real_estate/views.py:962
 msgid "Remaining mortgage"
 msgstr "Hypothèque restante"
 
-#: apps/real_estate/views.py:151 apps/real_estate/views.py:974
+#: apps/real_estate/views.py:152 apps/real_estate/views.py:980
 #: templates/real_estate/amortization.html:76
 #: templates/real_estate/detail.html:122
 msgid "Principal paid"
 msgstr "Capital remboursé"
 
-#: apps/real_estate/views.py:152 apps/real_estate/views.py:975
+#: apps/real_estate/views.py:153 apps/real_estate/views.py:981
 #: templates/real_estate/amortization.html:80
 msgid "Interest paid"
 msgstr "Intérêts payés"
 
-#: apps/real_estate/views.py:153 apps/real_estate/views.py:976
+#: apps/real_estate/views.py:154 apps/real_estate/views.py:982
 msgid "Remaining principal"
 msgstr "Capital restant"
 
-#: apps/real_estate/views.py:170 apps/real_estate/views.py:993
+#: apps/real_estate/views.py:171 apps/real_estate/views.py:999
 msgid "No expenses"
 msgstr "Aucune dépense"
 
-#: apps/real_estate/views.py:191
+#: apps/real_estate/views.py:192
 #, python-format
 msgid "%(pct)s%% of value"
 msgstr "%(pct)s%% de la valeur"
 
-#: apps/real_estate/views.py:242
+#: apps/real_estate/views.py:246
 msgid "updated property details"
 msgstr "a mis à jour les détails de la propriété"
 
 # ── Notification description templates ──
-#: apps/real_estate/views.py:278
+#: apps/real_estate/views.py:284
 #, python-format
 msgid "added expense \"%(desc)s\" (%(amount)s)"
 msgstr "a ajouté la dépense « %(desc)s » (%(amount)s)"
 
-#: apps/real_estate/views.py:306
+#: apps/real_estate/views.py:312
 #, python-format
 msgid "added valuation of %(value)s"
 msgstr "a ajouté une évaluation de %(value)s"
 
-#: apps/real_estate/views.py:406 apps/real_estate/views.py:663
+#: apps/real_estate/views.py:412 apps/real_estate/views.py:669
 msgid "A tax entry for this type and year already exists."
 msgstr "Une entrée de taxe pour ce type et cette année existe déjà."
 
-#: apps/real_estate/views.py:413
+#: apps/real_estate/views.py:419
 #, python-format
 msgid "added %(type)s tax for %(year)s (%(amount)s)"
 msgstr "a ajouté la taxe %(type)s pour %(year)s (%(amount)s)"
 
-#: apps/real_estate/views.py:482
+#: apps/real_estate/views.py:488
 #, python-format
 msgid "invited %(email)s as co-owner"
 msgstr "a invité %(email)s comme copropriétaire"
 
-#: apps/real_estate/views.py:485
+#: apps/real_estate/views.py:491
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr "Invitation envoyée à %(email)s."
 
-#: apps/real_estate/views.py:496
+#: apps/real_estate/views.py:502
 msgid "This invitation is for a different email address."
 msgstr "Cette invitation est destinée à une autre adresse courriel."
 
-#: apps/real_estate/views.py:521 apps/real_estate/views.py:550
+#: apps/real_estate/views.py:527 apps/real_estate/views.py:556
 msgid "accepted co-ownership invitation"
 msgstr "a accepté l'invitation de copropriété"
 
-#: apps/real_estate/views.py:523
+#: apps/real_estate/views.py:529
 #, python-format
 msgid "You are now a co-owner of %(name)s."
 msgstr "Vous êtes maintenant copropriétaire de %(name)s."
 
-#: apps/real_estate/views.py:614
+#: apps/real_estate/views.py:620
 #, python-format
 msgid "updated expense \"%(desc)s\" (%(amount)s)"
 msgstr "a modifié la dépense « %(desc)s » (%(amount)s)"
 
-#: apps/real_estate/views.py:636
+#: apps/real_estate/views.py:642
 #, python-format
 msgid "deleted expense \"%(desc)s\" (%(amount)s)"
 msgstr "a supprimé la dépense « %(desc)s » (%(amount)s)"
 
-#: apps/real_estate/views.py:674
+#: apps/real_estate/views.py:680
 #, python-format
 msgid "updated %(type)s tax for %(year)s"
 msgstr "a modifié la taxe %(type)s pour %(year)s"
 
-#: apps/real_estate/views.py:694
+#: apps/real_estate/views.py:700
 #, python-format
 msgid "deleted %(type)s tax for %(year)s (%(amount)s)"
 msgstr "a supprimé la taxe %(type)s pour %(year)s (%(amount)s)"
 
-#: apps/real_estate/views.py:725
+#: apps/real_estate/views.py:731
 #, python-format
 msgid "updated valuation to %(value)s on %(date)s"
 msgstr "a modifié l'évaluation à %(value)s le %(date)s"
 
-#: apps/real_estate/views.py:744
+#: apps/real_estate/views.py:750
 #, python-format
 msgid "deleted valuation of %(value)s on %(date)s"
 msgstr "a supprimé l'évaluation de %(value)s le %(date)s"
 
-#: apps/real_estate/views.py:771
+#: apps/real_estate/views.py:777
 msgid "You cannot remove yourself."
 msgstr "Vous ne pouvez pas vous retirer vous-même."
 
-#: apps/real_estate/views.py:788
+#: apps/real_estate/views.py:794
 #, python-format
 msgid "%(name)s removed"
 msgstr "%(name)s retiré"
 
-#: apps/real_estate/views.py:806
+#: apps/real_estate/views.py:812
 #, python-format
 msgid "removed you from %(name)s"
 msgstr "vous a retiré de %(name)s"
 
-#: apps/real_estate/views.py:812
+#: apps/real_estate/views.py:818
 #, python-format
 msgid "removed %(name)s from this property"
 msgstr "a retiré %(name)s de cette propriété"
 
 # ── Remove co-owner success messages ──
-#: apps/real_estate/views.py:817
+#: apps/real_estate/views.py:823
 #, python-format
 msgid "%(name)s has been removed from %(property)s."
 msgstr "%(name)s a été retiré de %(property)s."
 
-#: apps/real_estate/views.py:847
+#: apps/real_estate/views.py:853
 msgid "Property deleted."
 msgstr "Propriété supprimée."
 
-#: apps/real_estate/views.py:895
+#: apps/real_estate/views.py:901
 msgid "Rental income updated"
 msgstr "Revenu locatif mis à jour"
 
-#: apps/real_estate/views.py:1032 apps/real_estate/views.py:1081
+#: apps/real_estate/views.py:1038 apps/real_estate/views.py:1087
 msgid "Payment split updated"
 msgstr "Répartition des paiements mise à jour"
 
-#: apps/real_estate/views.py:1078
+#: apps/real_estate/views.py:1084
 msgid "This owner already has a payment split on this date."
 msgstr "Ce propriétaire a déjà une répartition à cette date."
 
-#: apps/real_estate/views.py:1118
+#: apps/real_estate/views.py:1124
 msgid "Payment split deleted"
 msgstr "Répartition des paiements supprimée"
 
@@ -2065,7 +2093,7 @@ msgstr "Supprimer définitivement"
 
 #: templates/real_estate/confirm_delete_property.html:16
 #: templates/real_estate/confirm_remove_owner.html:23
-#: templates/real_estate/create.html:86 templates/real_estate/edit.html:69
+#: templates/real_estate/create.html:86 templates/real_estate/edit.html:86
 #: templates/real_estate/invite.html:29
 #: templates/real_estate/partials/expense_form.html:25
 #: templates/real_estate/partials/rate_change_form.html:17
@@ -2312,7 +2340,7 @@ msgid "At end"
 msgstr "À terme"
 
 # ── Real Estate — Co-owners & Invitations ──
-#: templates/real_estate/detail.html:338 templates/real_estate/edit.html:57
+#: templates/real_estate/detail.html:338 templates/real_estate/edit.html:74
 msgid "Pending"
 msgstr "En attente"
 
@@ -2328,11 +2356,15 @@ msgstr "Modifier la propriété"
 msgid "Property details"
 msgstr "Détails de la propriété"
 
-#: templates/real_estate/edit.html:49
+#: templates/real_estate/edit.html:48
+msgid "Sale split"
+msgstr "Partage à la vente"
+
+#: templates/real_estate/edit.html:66
 msgid "Co-owners"
 msgstr "Copropriétaires"
 
-#: templates/real_estate/edit.html:66
+#: templates/real_estate/edit.html:83
 msgid "Save changes"
 msgstr "Enregistrer les modifications"
 
@@ -2596,9 +2628,27 @@ msgstr "Coûts totaux"
 msgid "Net proceeds"
 msgstr "Produit net"
 
-#: templates/real_estate/partials/sale_estimate.html:68
+#: templates/real_estate/partials/sale_estimate.html:69
 msgid "Per owner"
 msgstr "Par propriétaire"
+
+#: templates/real_estate/partials/sale_estimate.html:71
+msgid "split by contributions (MIZ)"
+msgstr "partage selon les contributions (MIZ)"
+
+#: templates/real_estate/partials/sale_estimate.html:71
+#, python-format
+msgid "at least %(floor)s%% of the gain each"
+msgstr "au moins %(floor)s %% du gain chacun"
+
+#: templates/real_estate/partials/sale_estimate.html:87
+#, python-format
+msgid "MIZ %(miz)s + gain %(gain)s (%(pct)s%%)"
+msgstr "MIZ %(miz)s + gain %(gain)s (%(pct)s %%)"
+
+#: templates/real_estate/partials/sale_estimate.html:89
+msgid "Sale below total MIZ: shared in proportion to MIZ"
+msgstr "Vente sous la MIZ totale : partage au prorata des MIZ"
 
 #: templates/real_estate/partials/tax_list.html:33
 msgid "Delete this tax entry?"

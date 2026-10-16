@@ -294,6 +294,29 @@ class PropertyForm(forms.ModelForm):
         return self.initial.get("country", "CA")
 
 
+class SaleSplitForm(forms.ModelForm):
+    class Meta:
+        model = Property
+        fields = ["sale_split_method", "miz_floor_pct"]
+        widgets = {
+            "sale_split_method": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "miz_floor_pct": forms.NumberInput(
+                attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01", "min": "0", "max": "50"}
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Omitted from the submission (e.g. older clients): keep the current method
+        self.fields["sale_split_method"].required = False
+
+    def clean_miz_floor_pct(self):
+        floor = self.cleaned_data.get("miz_floor_pct")
+        if floor is not None and not (0 <= floor <= 50):
+            raise forms.ValidationError(_("Enter a percentage between 0 and 50."))
+        return floor
+
+
 class MortgageForm(forms.ModelForm):
     class Meta:
         model = Mortgage

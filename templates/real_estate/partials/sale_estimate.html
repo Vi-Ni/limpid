@@ -65,13 +65,31 @@
 
   {% if estimate.per_owner|length > 1 %}
   <div class="border-t border-border pt-3 mt-3">
-    <p class="text-sm font-medium text-text mb-2">{% trans "Per owner" %}</p>
+    <p class="text-sm font-medium text-text mb-2">
+      {% trans "Per owner" %}
+      {% if property.sale_split_method == "miz" %}
+      <span class="text-xs font-normal text-text-muted">· {% trans "split by contributions (MIZ)" %}{% if property.miz_floor_pct %}, {% blocktrans with floor=property.miz_floor_pct|floatformat:0 %}at least {{ floor }}% of the gain each{% endblocktrans %}{% endif %}</span>
+      {% endif %}
+    </p>
     {% for owner in estimate.per_owner %}
-    <div class="flex items-center justify-between py-1">
-      <span class="text-sm text-text-muted">{{ owner.user.get_full_name|default:owner.user.username }} ({{ owner.share_pct|floatformat:0 }}%)</span>
-      <span class="text-sm font-semibold {% if owner.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}">
-        {% show_money owner.net_proceeds property.currency %}
-      </span>
+    <div class="py-1">
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-text-muted">{{ owner.user.get_full_name|default:owner.user.username }} ({{ owner.share_pct|floatformat:0 }}%)</span>
+        <span class="text-sm font-semibold {% if owner.net_proceeds >= 0 %}text-success-600{% else %}text-danger-600{% endif %}">
+          {% show_money owner.net_proceeds property.currency %}
+        </span>
+      </div>
+      {% if property.sale_split_method == "miz" %}
+      {% show_money owner.miz property.currency as miz_display %}
+      {% show_money owner.gain property.currency as gain_display %}
+      <p class="text-xs text-text-faint font-mono tabular-nums">
+        {% if owner.gain_share_pct is not None %}
+          {% blocktrans with miz=miz_display gain=gain_display pct=owner.gain_share_pct|floatformat:0 %}MIZ {{ miz }} + gain {{ gain }} ({{ pct }}%){% endblocktrans %}
+        {% else %}
+          {% trans "Sale below total MIZ: shared in proportion to MIZ" %}
+        {% endif %}
+      </p>
+      {% endif %}
     </div>
     {% endfor %}
   </div>

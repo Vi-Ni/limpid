@@ -34,6 +34,11 @@ class Property(models.Model):
         ("FR", _("France")),
     ]
 
+    SALE_SPLIT_CHOICES = [
+        ("ownership_share", _("Ownership share")),
+        ("miz", _("Contributions (MIZ)")),
+    ]
+
     name = models.CharField(_("name"), max_length=200)
     country = models.CharField(_("country"), max_length=2, choices=COUNTRY_CHOICES, default="CA")
     property_type = models.CharField(_("property type"), max_length=20, choices=PROPERTY_TYPE_CHOICES)
@@ -54,6 +59,22 @@ class Property(models.Model):
     )
     valuation_date = models.DateField(_("valuation date"), null=True, blank=True)
     municipal_assessment = models.DecimalField(_("municipal assessment"), max_digits=12, decimal_places=2, default=0)
+
+    sale_split_method = models.CharField(
+        _("sale split method"),
+        max_length=20,
+        choices=SALE_SPLIT_CHOICES,
+        default="ownership_share",
+        help_text=_("How the proceeds of a sale are shared between co-owners."),
+    )
+    miz_floor_pct = models.DecimalField(
+        _("minimum share of the gain (%)"),
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text=_("With the contributions method, each owner gets at least this share of the gain (two owners)."),
+    )
 
     owners = models.ManyToManyField(
         settings.AUTH_USER_MODEL,

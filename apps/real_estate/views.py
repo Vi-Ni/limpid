@@ -20,6 +20,7 @@ from .forms import (
     PropertyTaxForm,
     RateChangeForm,
     RentalIncomeForm,
+    SaleSplitForm,
     ValuationForm,
 )
 from .models import (
@@ -230,12 +231,15 @@ def property_edit(request, pk):
     pending_invitations = prop.invitations.filter(accepted=False)
     if request.method == "POST":
         form = PropertyForm(request.POST, instance=prop)
+        sale_form = SaleSplitForm(request.POST, prefix="sale", instance=prop)
         mortgage_form = (
             MortgageForm(request.POST, prefix="mortgage", instance=active_mortgage, country=prop.country)
             if active_mortgage
             else None
         )
-        if form.is_valid() and (mortgage_form is None or mortgage_form.is_valid()):
+        forms_valid = [form.is_valid(), sale_form.is_valid(), mortgage_form is None or mortgage_form.is_valid()]
+        if all(forms_valid):
+            # Both property forms share the same instance: one save persists all fields
             form.save()
             if mortgage_form:
                 mortgage_form.save()
@@ -243,6 +247,7 @@ def property_edit(request, pk):
             return redirect("real_estate:detail", pk=prop.pk)
     else:
         form = PropertyForm(instance=prop)
+        sale_form = SaleSplitForm(prefix="sale", instance=prop)
         mortgage_form = (
             MortgageForm(prefix="mortgage", instance=active_mortgage, country=prop.country) if active_mortgage else None
         )
@@ -251,6 +256,7 @@ def property_edit(request, pk):
         "real_estate/edit.html",
         {
             "form": form,
+            "sale_form": sale_form,
             "mortgage_form": mortgage_form,
             "property": prop,
             "ownership": ownership,

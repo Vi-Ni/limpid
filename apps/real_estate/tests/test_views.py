@@ -461,6 +461,61 @@ class TestExpensePaidBy:
         assert not PropertyExpense.objects.filter(description="Leak").exists()
 
 
+class TestSaleSplitSettings:
+    def test_edit_saves_sale_split_settings(self, client, prop):
+        response = client.post(
+            f"/real-estate/{prop.pk}/edit/",
+            {
+                "name": prop.name,
+                "country": "CA",
+                "property_type": prop.property_type,
+                "usage": prop.usage,
+                "currency": "CAD",
+                "address": prop.address,
+                "city": prop.city,
+                "province": "QC",
+                "purchase_price": "500000",
+                "purchase_date": "2020-01-01",
+                "sale-sale_split_method": "miz",
+                "sale-miz_floor_pct": "30",
+            },
+        )
+        assert response.status_code == 302
+        prop.refresh_from_db()
+        assert prop.sale_split_method == "miz"
+        assert prop.miz_floor_pct == Decimal("30.00")
+
+
+class TestSaleEstimateDisplay:
+    @pytest.fixture(autouse=True)
+    def english(self, settings):
+        settings.LANGUAGE_CODE = "en"
+
+    @pytest.fixture
+    def co_owned(self, prop, user, user2, mortgage):
+        o2 = PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        period = prop.ownership_periods.first()
+        period.shares.all().delete()
+        OwnershipPeriodShare.objects.create(
+            period=period, owner=prop.ownerships.get(user=user), share_pct=Decimal("50")
+        )
+        OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("50"))
+        return prop
+
+    def test_default_method_hides_miz_breakdown(self, client, co_owned):
+        response = client.get(f"/real-estate/{co_owned.pk}/", HTTP_ACCEPT_LANGUAGE="en")
+        assert b"Per owner" in response.content
+        assert b"MIZ " not in response.content
+
+    def test_miz_method_shows_breakdown(self, client, co_owned):
+        co_owned.sale_split_method = "miz"
+        co_owned.miz_floor_pct = Decimal("30")
+        co_owned.save()
+        response = client.get(f"/real-estate/{co_owned.pk}/", HTTP_ACCEPT_LANGUAGE="en")
+        assert b"split by contributions (MIZ)" in response.content
+        assert b"MIZ " in response.content
+
+
 class TestExpenseCRUD:
     def test_edit_expense_get(self, client, prop, expense):
         response = client.get(f"/real-estate/{prop.pk}/expense/{expense.pk}/edit/")

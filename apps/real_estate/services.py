@@ -321,19 +321,36 @@ def estimate_sale_proceeds(prop, sale_price=None, agent_commission_pct=None, not
     total_costs = commission_with_tax + notary_fees + capital_gains_tax
     net_proceeds = gross_equity - total_costs
 
-    shares = get_current_ownership_shares(prop)
     per_owner = []
-    for ownership, share_pct in shares.items():
-        owner_share = net_proceeds * share_pct / 100
-        contributions = get_owner_contributions(ownership)
-        per_owner.append(
-            {
-                "user": ownership.user,
-                "share_pct": share_pct,
-                "net_proceeds": owner_share.quantize(TWO_PLACES),
-                "contributions": contributions,
-            }
+    if prop.sale_split_method == "miz" and prop.ownerships.count() > 1:
+        miz = compute_miz(prop)
+        split = split_sale_by_miz(
+            net_proceeds.quantize(TWO_PLACES), {o: m["miz"] for o, m in miz.items()}, prop.miz_floor_pct
         )
+        for ownership, owner_miz in miz.items():
+            per_owner.append(
+                {
+                    "user": ownership.user,
+                    "ownership": ownership,
+                    "share_pct": owner_miz["miz_share"],
+                    "net_proceeds": split[ownership]["total"],
+                    "miz": owner_miz["miz"],
+                    "gain": split[ownership]["gain"],
+                    "gain_share_pct": split[ownership]["gain_share_pct"],
+                }
+            )
+    else:
+        for ownership, share_pct in get_current_ownership_shares(prop).items():
+            owner_share = net_proceeds * share_pct / 100
+            per_owner.append(
+                {
+                    "user": ownership.user,
+                    "ownership": ownership,
+                    "share_pct": share_pct,
+                    "net_proceeds": owner_share.quantize(TWO_PLACES),
+                    "contributions": get_owner_contributions(ownership),
+                }
+            )
 
     result = {
         "sale_price": sale_price,
@@ -349,6 +366,63 @@ def estimate_sale_proceeds(prop, sale_price=None, agent_commission_pct=None, not
     if capital_gains_details:
         result["capital_gains_details"] = capital_gains_details
     return result
+
+
+def compute_miz(prop, as_of_date=None):
+    """Each owner's MIZ (down payment + capital improvements + principal repaid) and share of the total.
+
+    Keyed by ownership; the shares always add up to 100.
+    """
+    ownerships = list(prop.ownerships.select_related("user").order_by("pk"))
+    contributions = {o: get_owner_contributions(o, as_of_date) for o in ownerships}
+    shares = _allocate(Decimal("100"), {o: c["total"] for o, c in contributions.items()})
+    return {
+        o: {
+            "down_payment": c["down_payment"],
+            "capital_improvements_paid": c["capital_improvements_paid"],
+            "principal_paid": c["principal_paid"],
+            "miz": c["total"],
+            "miz_share": shares[o],
+        }
+        for o, c in contributions.items()
+    }
+
+
+def split_sale_by_miz(net_proceeds, mizs, floor_pct=None):
+    """Split net sale proceeds between owners according to their MIZ.
+
+    If the net covers the total MIZ, each owner takes back their MIZ and the gain is shared in proportion
+    to MIZ, each owner's share of the gain being kept within [floor, 100 - floor] (two owners only).
+    Otherwise the net is shared in proportion to MIZ: the floor does not apply to losses.
+    """
+    if floor_pct and len(mizs) > 2:
+        raise ValueError("A minimum share of the gain is only supported for two owners.")
+    total_miz = sum(mizs.values())
+    weights = mizs if total_miz > 0 else {key: Decimal("1") for key in mizs}
+    total_weight = sum(weights.values())
+
+    if total_miz <= 0 or net_proceeds < total_miz:
+        totals = _allocate(net_proceeds, weights)
+        return {
+            key: {"miz": mizs[key], "gain": Decimal("0"), "gain_share_pct": None, "total": totals[key]}
+            for key in mizs
+        }
+
+    gain_shares = {key: weight / total_weight * 100 for key, weight in weights.items()}
+    if floor_pct and len(mizs) == 2:
+        low, high = sorted(gain_shares, key=lambda key: gain_shares[key])
+        if gain_shares[low] < floor_pct:
+            gain_shares = {low: floor_pct, high: 100 - floor_pct}
+    gains = _allocate(net_proceeds - total_miz, gain_shares)
+    return {
+        key: {
+            "miz": mizs[key],
+            "gain": gains[key],
+            "gain_share_pct": Decimal(gain_shares[key]).quantize(TWO_PLACES),
+            "total": mizs[key] + gains[key],
+        }
+        for key in mizs
+    }
 
 
 def _calculate_acb(prop):
