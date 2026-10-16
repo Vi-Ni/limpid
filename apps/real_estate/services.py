@@ -200,6 +200,10 @@ def get_owner_contributions(ownership, as_of_date=None):
         (get_owner_principal_paid(m, ownership, as_of_date) for m in ownership.property.mortgages.all()),
         Decimal("0"),
     )
+    return _contributions(ownership, principal_paid, as_of_date)
+
+
+def _contributions(ownership, principal_paid, as_of_date):
     expenses = ownership.expenses_paid.filter(date__lte=as_of_date)
     improvements = expenses.filter(increases_acb=True).aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
     other = expenses.filter(increases_acb=False).aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
@@ -213,12 +217,7 @@ def get_owner_contributions(ownership, as_of_date=None):
     }
 
 
-def get_principal_paid_by_owner(mortgage, as_of_date=None):
-    """Principal repaid by each owner (keyed by ownership pk) up to as_of_date, following who paid each instalment."""
-    if as_of_date is None:
-        as_of_date = date.today()
-    ownerships = list(mortgage.real_estate.ownerships.all())
-    schedule, _ = generate_per_owner_amortization(mortgage)
+def _sum_principal_by_owner(schedule, ownerships, as_of_date):
     totals = {o.pk: Decimal("0") for o in ownerships}
     for entry in schedule:
         if entry["date"] > as_of_date:
@@ -231,35 +230,55 @@ def get_principal_paid_by_owner(mortgage, as_of_date=None):
     return totals
 
 
+def get_principal_paid_by_owner(mortgage, as_of_date=None):
+    """Principal repaid by each owner (keyed by ownership pk) up to as_of_date, following who paid each instalment."""
+    if as_of_date is None:
+        as_of_date = date.today()
+    schedule, _ = generate_per_owner_amortization(mortgage)
+    return _sum_principal_by_owner(schedule, list(mortgage.real_estate.ownerships.order_by("pk")), as_of_date)
+
+
 def get_owner_principal_paid(mortgage, ownership, as_of_date=None):
     return get_principal_paid_by_owner(mortgage, as_of_date).get(ownership.pk, Decimal("0"))
 
 
 def get_ownership_comparison(prop):
-    """Per-owner breakdown: purchase share (down payment ratio) vs contribution share."""
-    ownerships = list(prop.ownerships.select_related("user").all())
+    """Per-owner shares: at purchase (down payments), to date and at the end of the amortization (contributions).
+
+    Contributions are down payment + principal actually repaid + capital improvements paid. The end
+    projection assumes the current payment splits continue until every mortgage is repaid.
+    """
+    today = date.today()
+    ownerships = list(prop.ownerships.select_related("user").order_by("pk"))
     admin_shares = get_current_ownership_shares(prop)
 
-    # At-purchase: ratio of down payments
+    schedules = [generate_per_owner_amortization(m)[0] for m in prop.mortgages.all()]
+    end_date = max([today] + [s[-1]["date"] for s in schedules if s])
+
+    def shares_at(as_of_date):
+        principal = {o.pk: Decimal("0") for o in ownerships}
+        for schedule in schedules:
+            for pk, amount in _sum_principal_by_owner(schedule, ownerships, as_of_date).items():
+                principal[pk] += amount
+        totals = {o: _contributions(o, principal[o.pk], as_of_date)["total"] for o in ownerships}
+        grand_total = sum(totals.values()) or Decimal("1")
+        return {o: (totals[o] / grand_total * 100).quantize(TWO_PLACES) for o in ownerships}
+
     total_down = sum(o.down_payment for o in ownerships) or Decimal("1")
+    today_shares = shares_at(today)
+    end_shares = shares_at(end_date)
 
-    # At-end: ratio of total contributions (down payment + principal repaid + capital improvements)
-    contributions = {o: get_owner_contributions(o) for o in ownerships}
-    grand_total = sum(c["total"] for c in contributions.values()) or Decimal("1")
-
-    result = []
-    for ownership in ownerships:
-        c = contributions[ownership]
-        result.append(
-            {
-                "user": ownership.user,
-                "ownership": ownership,
-                "admin_share": admin_shares.get(ownership, Decimal("0")),
-                "purchase_share": (ownership.down_payment / total_down * 100).quantize(TWO_PLACES),
-                "contribution_share": (c["total"] / grand_total * 100).quantize(TWO_PLACES),
-            }
-        )
-    return result
+    return [
+        {
+            "user": o.user,
+            "ownership": o,
+            "admin_share": admin_shares.get(o, Decimal("0")),
+            "purchase_share": (o.down_payment / total_down * 100).quantize(TWO_PLACES),
+            "contribution_share": today_shares[o],
+            "end_share": end_shares[o],
+        }
+        for o in ownerships
+    ]
 
 
 # ── Sale Simulation ──────────────────────────────────────────
@@ -515,7 +534,7 @@ def calculate_monthly_cost(prop, for_user=None, as_of_date=None):
         if ownership:
             shares = get_current_ownership_shares(prop, as_of_date)
             share_pct = shares.get(ownership, Decimal("100")) / 100
-            all_ownerships = list(prop.ownerships.all())
+            all_ownerships = list(prop.ownerships.order_by("pk"))
             periods = list(prop.ownership_periods.prefetch_related("shares").order_by("start_date"))
 
             # Split each next payment with the splits and shares in effect on its own date
@@ -620,7 +639,7 @@ def generate_per_owner_amortization(mortgage):
 
     schedule = generate_amortization_schedule(mortgage)
     prop = mortgage.real_estate
-    all_ownerships = list(prop.ownerships.select_related("user").all())
+    all_ownerships = list(prop.ownerships.select_related("user").order_by("pk"))
 
     if len(all_ownerships) < 2:
         return schedule, []

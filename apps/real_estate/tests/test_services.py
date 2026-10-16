@@ -1263,3 +1263,19 @@ class TestContributionsUseActualPayments:
         alice = next(r for r in get_ownership_comparison(prop) if r["user"] == user)
         assert alice["purchase_share"] == Decimal("50.00")
         assert alice["contribution_share"] > Decimal("50.00")
+
+    def test_end_share_projects_current_splits_to_end_of_amortization(self, prop, mortgage, user, co_owned):
+        _, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        result = get_ownership_comparison(prop)
+        alice = next(r for r in result if r["user"] == user)
+        # Alice pays the remainder (~57 % of each payment) until the loan is repaid
+        assert alice["end_share"] > alice["contribution_share"] > Decimal("50.00")
+        assert abs(sum(r["end_share"] for r in result) - Decimal("100")) < Decimal("0.02")
+
+    def test_end_share_equals_today_without_mortgage(self, prop, user, user2):
+        PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
+        for r in get_ownership_comparison(prop):
+            assert r["end_share"] == r["contribution_share"]

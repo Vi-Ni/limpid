@@ -65,8 +65,8 @@ TERM_TOOLTIPS = {
         "A breakdown of all expenses you've recorded by category — renovations, maintenance, insurance, etc."
     ),
     "ownership": _(
-        "Who owns this property and their respective share percentages. "
-        "Shares can change when co-owners are added or removed."
+        "Each owner's share of the contributions made so far: down payment, "
+        "mortgage principal actually repaid, and capital improvements paid."
     ),
     "lender": _("The bank or financial institution that provided your mortgage."),
     "your_equity": _(
@@ -111,8 +111,8 @@ TERM_TOOLTIPS = {
         "This reflects who put in more cash upfront when buying."
     ),
     "at_end": _(
-        "Each owner's share based on total contributions — down payment, "
-        "mortgage principal actually repaid, and capital improvements paid. This evolves over time."
+        "Projected share of contributions once the mortgage is fully repaid, "
+        "assuming the current payment splits continue."
     ),
 }
 

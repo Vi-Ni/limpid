@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 15:00-0400\n"
+"POT-Creation-Date: 2026-10-16 15:22-0400\n"
 "Language: fr\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -1335,8 +1335,8 @@ msgid "A breakdown of all expenses you've recorded by category — renovations, 
 msgstr "Un détail de toutes les dépenses enregistrées par catégorie — rénovations, entretien, assurance, etc."
 
 #: apps/real_estate/tooltips.py:68
-msgid "Who owns this property and their respective share percentages. Shares can change when co-owners are added or removed."
-msgstr "Qui est propriétaire de ce bien et leurs pourcentages de parts respectifs. Les parts peuvent changer lorsque des copropriétaires sont ajoutés ou retirés."
+msgid "Each owner's share of the contributions made so far: down payment, mortgage principal actually repaid, and capital improvements paid."
+msgstr "La part de chaque propriétaire dans les contributions faites à ce jour : mise de fonds, capital hypothécaire réellement remboursé et travaux d'amélioration payés."
 
 #: apps/real_estate/tooltips.py:71
 msgid "The bank or financial institution that provided your mortgage."
@@ -1391,8 +1391,8 @@ msgid "Each owner's share based on down payment contributions. This reflects who
 msgstr "La part de chaque propriétaire basée sur la mise de fonds. Cela reflète qui a investi le plus au moment de l'achat."
 
 #: apps/real_estate/tooltips.py:114
-msgid "Each owner's share based on total contributions — down payment, mortgage principal actually repaid, and capital improvements paid. This evolves over time."
-msgstr "La part de chaque propriétaire basée sur les contributions totales — mise de fonds, capital hypothécaire réellement remboursé et travaux d'amélioration payés. Cela évolue dans le temps."
+msgid "Projected share of contributions once the mortgage is fully repaid, assuming the current payment splits continue."
+msgstr "Part projetée des contributions une fois l'hypothèque entièrement remboursée, en supposant que les répartitions de paiement actuelles se poursuivent."
 
 #: apps/real_estate/tooltips.py:121
 msgid "The total number of years to fully pay off the mortgage. In Canada, 25 years is the most common amortization period."
@@ -2833,6 +2833,9 @@ msgstr "Leur part"
 #: templates/real_estate/partials/wizard_step_7.html:106
 msgid "Your share"
 msgstr "Votre part"
+
+#~ msgid "Who owns this property and their respective share percentages. Shares can change when co-owners are added or removed."
+#~ msgstr "Qui est propriétaire de ce bien et leurs pourcentages de parts respectifs. Les parts peuvent changer lorsque des copropriétaires sont ajoutés ou retirés."
 
 #~ msgid "Auto-calculated from co-owner's payment"
 #~ msgstr "Calculé automatiquement à partir du paiement du copropriétaire"

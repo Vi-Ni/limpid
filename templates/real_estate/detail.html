@@ -307,12 +307,12 @@
                 {{ entry.user.get_full_name|default:entry.user.username }}
               </span>
               <span class="text-lg font-semibold font-mono text-primary-600">
-                {{ entry.admin_share|floatformat:0 }}%
+                {{ entry.contribution_share|floatformat:0 }}%
               </span>
             </div>
             <div class="h-2 rounded-full bg-border overflow-hidden mb-3">
               <div class="h-full rounded-full bg-primary-500"
-                   style="width: {{ entry.admin_share|floatformat:0 }}%"></div>
+                   style="width: {{ entry.contribution_share|floatformat:0 }}%"></div>
             </div>
             <div class="flex justify-between text-xs text-text-muted">
               <span>
@@ -320,7 +320,7 @@
                 {% include "components/tooltip.html" with id="at_purchase" text=tips.at_purchase %}
               </span>
               <span>
-                {% trans "At end" %}: {{ entry.contribution_share|floatformat:0 }}%
+                {% trans "At end" %}: {{ entry.end_share|floatformat:0 }}%
                 {% include "components/tooltip.html" with id="at_end" text=tips.at_end %}
               </span>
             </div>
