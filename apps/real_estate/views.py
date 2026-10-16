@@ -44,6 +44,7 @@ from .services import (
     generate_evolution_chart_data,
     generate_per_owner_amortization,
     get_current_ownership_shares,
+    get_monthly_payment,
     get_owner_snapshot,
     get_ownership_comparison,
     get_property_snapshot,
@@ -375,6 +376,7 @@ def amortization_view(request, pk, mortgage_id):
         {
             "property": prop,
             "mortgage": mortgage,
+            "monthly_payment": get_monthly_payment(mortgage),
             "schedule": schedule,
             "paid": paid,
             "has_co_owners": has_co_owners,
@@ -1028,7 +1030,7 @@ def owner_payments(request, pk, mortgage_id):
         all_ownerships = list(prop.ownerships.all())
         if len(all_ownerships) == 2:
             other = next(o for o in all_ownerships if o != payment.owner)
-            other_amount = mortgage.monthly_payment - payment.monthly_amount
+            other_amount = get_monthly_payment(mortgage, payment.effective_date) - payment.monthly_amount
             OwnerMonthlyPayment.objects.update_or_create(
                 mortgage=mortgage,
                 owner=other,
@@ -1090,7 +1092,7 @@ def edit_owner_payment(request, pk, mortgage_id, payment_id):
             all_ownerships = list(prop.ownerships.all())
             if len(all_ownerships) == 2:
                 other = next(o for o in all_ownerships if o != updated.owner)
-                other_amount = mortgage.monthly_payment - updated.monthly_amount
+                other_amount = get_monthly_payment(mortgage, updated.effective_date) - updated.monthly_amount
                 OwnerMonthlyPayment.objects.update_or_create(
                     mortgage=mortgage,
                     owner=other,

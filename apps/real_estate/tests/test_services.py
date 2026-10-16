@@ -29,6 +29,7 @@ from apps.real_estate.services import (
     generate_evolution_chart_data,
     generate_per_owner_amortization,
     get_current_ownership_shares,
+    get_monthly_payment,
     get_owner_contributions,
     get_owner_snapshot,
     get_ownership_comparison,
@@ -166,6 +167,35 @@ class TestTotalPaid:
         assert paid["total_paid"] == paid["total_principal_paid"] + paid["total_interest_paid"]
 
 
+class TestMonthlyPaymentAsOf:
+    @pytest.fixture
+    def renewed_mortgage(self, mortgage):
+        MortgageRateChange.objects.create(
+            mortgage=mortgage, new_annual_rate=Decimal("3.000"), effective_date=date(2025, 1, 1)
+        )
+        return mortgage
+
+    def test_without_rate_change_matches_original_payment(self, mortgage):
+        expected = calculate_monthly_payment(Decimal("400000"), Decimal("5"), 25)
+        assert get_monthly_payment(mortgage, as_of_date=date(2022, 6, 1)) == expected
+
+    def test_before_rate_change_uses_original_payment(self, renewed_mortgage):
+        expected = calculate_monthly_payment(Decimal("400000"), Decimal("5"), 25)
+        assert get_monthly_payment(renewed_mortgage, as_of_date=date(2024, 12, 1)) == expected
+
+    def test_after_rate_change_uses_recalculated_payment(self, renewed_mortgage):
+        # Payment #60 (2025-01-01) is the first at the new rate, with 241 payments left
+        balance = get_remaining_balance(renewed_mortgage, as_of_date=date(2024, 12, 1))
+        r = calculate_monthly_rate(Decimal("3"))
+        expected = ((r * balance) / (1 - (1 + r) ** -241)).quantize(TWO_PLACES)
+        payment = get_monthly_payment(renewed_mortgage, as_of_date=date(2025, 1, 1))
+        assert payment == expected
+        assert payment < calculate_monthly_payment(Decimal("400000"), Decimal("5"), 25)
+
+    def test_after_full_amortization_is_zero(self, mortgage):
+        assert get_monthly_payment(mortgage, as_of_date=date(2050, 1, 1)) == Decimal("0")
+
+
 # ── Ownership ─────────────────────────────────────────────────
 
 
@@ -232,6 +262,14 @@ class TestPropertySnapshot:
         assert snapshot["mortgage_balance"] > 0
         assert snapshot["equity"] == snapshot["current_valuation"] - snapshot["mortgage_balance"]
         assert snapshot["monthly_payment"] > 0
+
+    def test_snapshot_uses_payment_after_rate_change(self, prop, mortgage):
+        MortgageRateChange.objects.create(
+            mortgage=mortgage, new_annual_rate=Decimal("3.000"), effective_date=date(2025, 1, 1)
+        )
+        snapshot = get_property_snapshot(prop)
+        assert snapshot["monthly_payment"] == get_monthly_payment(mortgage)
+        assert snapshot["monthly_payment"] < mortgage.monthly_payment
 
     def test_snapshot_no_mortgage(self, prop):
         snapshot = get_property_snapshot(prop)
@@ -760,6 +798,15 @@ class TestMonthlyCost:
         assert "taxes_monthly" in result
         assert "total_monthly" in result
         assert result["taxes_monthly"] == Decimal("400.00")
+
+    def test_monthly_cost_uses_payment_after_rate_change(self, prop, mortgage):
+        MortgageRateChange.objects.create(
+            mortgage=mortgage, new_annual_rate=Decimal("3.000"), effective_date=date(2025, 1, 1)
+        )
+        result = calculate_monthly_cost(prop, for_user=prop.ownerships.first().user)
+        assert result["mortgage_payment"] < mortgage.monthly_payment
+        assert result["mortgage_payment"] == get_monthly_payment(mortgage)
+        assert result["your_mortgage_payment"] == get_monthly_payment(mortgage)
 
     def test_monthly_cost_with_rental_income(self, prop, mortgage):
         prop.usage = "rental"

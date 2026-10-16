@@ -20,7 +20,7 @@
           {% trans "Monthly payment" %}
           {% include "components/tooltip.html" with id="amort_monthly" text=tips.monthly_payment %}
         </div>
-        <div class="text-lg font-semibold text-text font-mono tabular-nums">{% show_money mortgage.monthly_payment property.currency %}</div>
+        <div class="text-lg font-semibold text-text font-mono tabular-nums">{% show_money monthly_payment property.currency %}</div>
       </div>
       <div>
         <div class="text-xs text-text-muted">

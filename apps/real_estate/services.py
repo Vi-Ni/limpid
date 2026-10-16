@@ -131,6 +131,17 @@ def get_remaining_balance(mortgage, as_of_date=None):
     return Decimal("0")
 
 
+def get_monthly_payment(mortgage, as_of_date=None):
+    """Amount of the next scheduled payment on or after as_of_date, accounting for rate changes."""
+    if as_of_date is None:
+        as_of_date = date.today()
+    schedule = generate_amortization_schedule(mortgage)
+    for entry in schedule:
+        if entry["date"] >= as_of_date:
+            return entry["total_payment"]
+    return Decimal("0")
+
+
 def get_total_paid(mortgage, as_of_date=None):
     if as_of_date is None:
         as_of_date = date.today()
@@ -394,7 +405,7 @@ def get_property_snapshot(prop):
     monthly_payment = Decimal("0")
     for mortgage in prop.mortgages.filter(is_active=True):
         mortgage_balance += get_remaining_balance(mortgage)
-        monthly_payment += mortgage.monthly_payment
+        monthly_payment += get_monthly_payment(mortgage)
 
     valuation = prop.current_valuation or Decimal("0")
     equity = valuation - mortgage_balance
@@ -448,7 +459,7 @@ def calculate_monthly_cost(prop, for_user=None):
 
     mortgage_payment = Decimal("0")
     for m in prop.mortgages.filter(is_active=True):
-        mortgage_payment += m.monthly_payment
+        mortgage_payment += get_monthly_payment(m)
 
     latest_year = prop.taxes.aggregate(max_year=models.Max("year"))["max_year"]
     taxes_annual = Decimal("0")
@@ -508,7 +519,7 @@ def calculate_monthly_cost(prop, for_user=None):
                 if ownership in customs:
                     your_mortgage += customs[ownership]
                 else:
-                    remainder = m.monthly_payment - sum(customs.values())
+                    remainder = get_monthly_payment(m) - sum(customs.values())
                     non_custom_owners = [o for o in all_ownerships if o not in customs]
                     non_custom_share_total = sum(shares.get(o, Decimal("0")) / 100 for o in non_custom_owners)
                     if non_custom_share_total > 0:

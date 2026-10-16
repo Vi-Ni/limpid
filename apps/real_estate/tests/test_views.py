@@ -20,7 +20,7 @@ from apps.real_estate.models import (
     PropertyValuation,
     RentalIncome,
 )
-from apps.real_estate.services import get_current_ownership_shares
+from apps.real_estate.services import get_current_ownership_shares, get_monthly_payment
 
 User = get_user_model()
 
@@ -1189,6 +1189,24 @@ class TestPaymentSplitAutoCalc:
         assert payments.count() == 1
         expected = mortgage.monthly_payment - Decimal("1200")
         assert abs(payments.first().monthly_amount - expected) < Decimal("0.01")
+
+    def test_auto_calc_uses_payment_after_rate_change(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        MortgageRateChange.objects.create(
+            mortgage=mortgage, new_annual_rate=Decimal("3.000"), effective_date=date(2025, 1, 1)
+        )
+        client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
+            {
+                "owner": o1.pk,
+                "monthly_amount": "1000",
+                "effective_date": "2025-01-01",
+            },
+        )
+        other_payment = OwnerMonthlyPayment.objects.get(mortgage=mortgage, owner=o2, effective_date=date(2025, 1, 1))
+        expected = get_monthly_payment(mortgage, as_of_date=date(2025, 1, 1)) - Decimal("1000")
+        assert other_payment.monthly_amount == expected
+        assert expected < mortgage.monthly_payment - Decimal("1000")
 
 
 # ── Payment split edit/delete ──────────────────────────────
