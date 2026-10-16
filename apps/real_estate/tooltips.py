@@ -76,6 +76,11 @@ TERM_TOOLTIPS = {
         "What the lender will take on the next payment date: principal and interest, the tax reserve if "
         "the lender collects one, and insurance premiums taken with the payment."
     ),
+    "tax_escrow": _(
+        "The bank collects this reserve with each payment and pays your tax bills from it. It is based on "
+        "the bank's own estimate, so it can differ from your actual taxes shown in the monthly cost; "
+        "the bank adjusts the reserve, usually once a year."
+    ),
     "protections": _(
         "Your personal insurance (disability, life...). Only you see it. Its premium is your own cost: "
         "it never counts in the property's cost, the payment split or your contribution."

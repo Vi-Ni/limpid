@@ -122,13 +122,15 @@ def generate_amortization_schedule(mortgage):
 
 
 def get_remaining_balance(mortgage, as_of_date=None):
+    """Balance after the last instalment paid on or before as_of_date (initial principal, premium included, if none)."""
     if as_of_date is None:
         as_of_date = date.today()
-    schedule = generate_amortization_schedule(mortgage)
-    for entry in schedule:
-        if entry["date"] >= as_of_date:
-            return entry["balance"]
-    return Decimal("0")
+    balance = mortgage.effective_principal
+    for entry in generate_amortization_schedule(mortgage):
+        if entry["date"] > as_of_date:
+            break
+        balance = entry["balance"]
+    return balance
 
 
 def _next_payment_entry(mortgage, as_of_date):
@@ -191,10 +193,19 @@ def get_next_debit(mortgage, as_of_date=None):
         parts = {"principal_interest": principal_interest[o.pk], "taxes": taxes[o.pk], "premiums": premiums[o.pk]}
         per_owner[o] = {**parts, "total": sum(parts.values())}
     total_premiums = sum(premiums.values())
+
+    # The lender's reserve is an estimate: compare it with the latest year of actual tax bills
+    escrow_gap_yearly = None
+    latest_year = prop.taxes.aggregate(max_year=models.Max("year"))["max_year"]
+    if escrow and latest_year:
+        actual = prop.taxes.filter(year=latest_year).aggregate(total=models.Sum("amount"))["total"]
+        escrow_gap_yearly = (escrow * 12 - actual).quantize(TWO_PLACES)
+
     return {
         "date": debit_date,
         "principal_interest": entry["total_payment"],
         "tax_escrow": escrow,
+        "tax_escrow_gap_yearly": escrow_gap_yearly,
         "protection_premiums": total_premiums,
         "total": entry["total_payment"] + escrow + total_premiums,
         "per_owner": per_owner,

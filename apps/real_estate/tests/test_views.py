@@ -643,7 +643,14 @@ class TestProtectionViews:
         mortgage.save()
         response = client.get(f"/real-estate/{prop.pk}/", HTTP_ACCEPT_LANGUAGE="en")
         assert b"Next bank debit" in response.content
-        assert b"Tax reserve" in response.content
+        assert b"Tax reserve collected by the bank" in response.content
+
+    def test_next_debit_partial_keeps_tooltip(self, client, prop, mortgage, settings):
+        settings.LANGUAGE_CODE = "en"
+        mortgage.tax_escrow_monthly = Decimal("300")
+        mortgage.save()
+        response = client.get(f"/real-estate/{prop.pk}/next-debit/", HTTP_ACCEPT_LANGUAGE="en")
+        assert b"The bank collects this reserve" in response.content
 
 
 class TestExpenseCRUD:

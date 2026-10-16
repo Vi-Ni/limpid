@@ -165,6 +165,27 @@ class TestRemainingBalance:
         balance = get_remaining_balance(mortgage, as_of_date=date(2050, 1, 1))
         assert balance == Decimal("0")
 
+    def test_before_first_payment_is_initial_principal_with_premium(self, mortgage):
+        mortgage.insurance_premium = Decimal("10000")
+        mortgage.save()
+        assert get_remaining_balance(mortgage, as_of_date=date(2020, 1, 15)) == Decimal("410000")
+
+    def test_balance_after_last_paid_instalment(self, mortgage):
+        schedule = generate_amortization_schedule(mortgage)
+        paid_jan = next(e for e in schedule if e["date"] == date(2025, 1, 1))
+        # Mid-month: the 2025-02-01 instalment is not paid yet
+        assert get_remaining_balance(mortgage, as_of_date=date(2025, 1, 15)) == paid_jan["balance"]
+
+    def test_instalment_counts_as_paid_on_its_date(self, mortgage):
+        schedule = generate_amortization_schedule(mortgage)
+        paid_jan = next(e for e in schedule if e["date"] == date(2025, 1, 1))
+        assert get_remaining_balance(mortgage, as_of_date=date(2025, 1, 1)) == paid_jan["balance"]
+
+    def test_sale_estimate_uses_paid_balance(self, prop, mortgage):
+        expected = get_remaining_balance(mortgage)
+        assert estimate_sale_proceeds(prop)["mortgage_balance"] == expected
+        assert get_property_snapshot(prop)["mortgage_balance"] == expected
+
 
 class TestTotalPaid:
     def test_total_paid_at_year_5(self, mortgage):
@@ -1530,6 +1551,20 @@ class TestNextDebit:
         debit = get_next_debit(mortgage, date(2025, 1, 15))
         assert debit["per_owner"][o1]["taxes"] == Decimal("150.00")
         assert debit["per_owner"][o2]["taxes"] == Decimal("150.00")
+
+    def test_yearly_gap_between_reserve_and_actual_taxes(self, prop, mortgage, co_owned):
+        mortgage.tax_escrow_monthly = Decimal("300.00")
+        mortgage.save()
+        PropertyTax.objects.create(property=prop, tax_type="municipal", year=2024, amount=Decimal("9999"))
+        PropertyTax.objects.create(property=prop, tax_type="municipal", year=2025, amount=Decimal("3000"))
+        PropertyTax.objects.create(property=prop, tax_type="school", year=2025, amount=Decimal("200"))
+        # Reserve 3 600 $/year vs latest actual taxes 3 200 $
+        assert get_next_debit(mortgage, date(2025, 1, 15))["tax_escrow_gap_yearly"] == Decimal("400.00")
+
+    def test_no_gap_without_taxes(self, mortgage, co_owned):
+        mortgage.tax_escrow_monthly = Decimal("300.00")
+        mortgage.save()
+        assert get_next_debit(mortgage, date(2025, 1, 15))["tax_escrow_gap_yearly"] is None
 
     def test_without_escrow(self, mortgage, co_owned):
         debit = get_next_debit(mortgage, date(2025, 1, 15))

@@ -999,7 +999,11 @@ def next_debit_partial(request, pk):
     return render(
         request,
         "real_estate/partials/next_debit.html",
-        {"next_debit": get_next_debit(mortgage) if mortgage else None, "property": prop},
+        {
+            "next_debit": get_next_debit(mortgage) if mortgage else None,
+            "property": prop,
+            "tips": get_tooltips(prop.country),
+        },
     )
 
 

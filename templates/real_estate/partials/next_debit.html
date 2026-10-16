@@ -7,7 +7,11 @@
   {% include "components/metric_row.html" with label=_("Principal and interest") value=pi_display %}
   {% if next_debit.tax_escrow %}
   {% show_money next_debit.tax_escrow property.currency as escrow_display %}
-  {% include "components/metric_row.html" with label=_("Tax reserve") value=escrow_display %}
+  {% if next_debit.tax_escrow_gap_yearly %}
+    {% show_money next_debit.tax_escrow_gap_yearly property.currency as gap_display %}
+    {% blocktrans asvar gap_note with gap=gap_display %}{{ gap }}/yr vs actual taxes{% endblocktrans %}
+  {% endif %}
+  {% include "components/metric_row.html" with label=_("Tax reserve collected by the bank") value=escrow_display annotation=gap_note tooltip_id="tax_escrow" tooltip_text=tips.tax_escrow %}
   {% endif %}
   {% if next_debit.protection_premiums %}
   {% show_money next_debit.protection_premiums property.currency as premiums_display %}
