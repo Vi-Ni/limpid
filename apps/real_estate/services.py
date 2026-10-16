@@ -404,8 +404,7 @@ def split_sale_by_miz(net_proceeds, mizs, floor_pct=None):
     if total_miz <= 0 or net_proceeds < total_miz:
         totals = _allocate(net_proceeds, weights)
         return {
-            key: {"miz": mizs[key], "gain": Decimal("0"), "gain_share_pct": None, "total": totals[key]}
-            for key in mizs
+            key: {"miz": mizs[key], "gain": Decimal("0"), "gain_share_pct": None, "total": totals[key]} for key in mizs
         }
 
     gain_shares = {key: weight / total_weight * 100 for key, weight in weights.items()}
