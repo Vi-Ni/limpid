@@ -469,7 +469,7 @@ class OwnerProtection(models.Model):
     max_benefit_months = models.PositiveSmallIntegerField(_("maximum benefit (months)"), null=True, blank=True)
     start_date = models.DateField(_("start date"))
     end_date = models.DateField(_("end date"), null=True, blank=True)
-    note = models.CharField(_("note"), max_length=200, blank=True)
+    note = models.CharField(_("note"), max_length=500, blank=True)
 
     class Meta:
         ordering = ["-start_date"]

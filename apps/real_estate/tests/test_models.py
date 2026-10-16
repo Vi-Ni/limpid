@@ -9,6 +9,7 @@ from apps.real_estate.models import (
     Mortgage,
     MortgageRateChange,
     OwnerMonthlyPayment,
+    OwnerProtection,
     Property,
     PropertyExpense,
     PropertyOwnership,
@@ -282,6 +283,21 @@ class TestOwnerMonthlyPaymentAmountOrShare:
                 share_pct=Decimal("25.00"),
                 effective_date=date(2020, 1, 1),
             )
+
+
+class TestOwnerProtection:
+    def test_note_accepts_long_text(self, prop, user, mortgage):
+        ownership = PropertyOwnership.objects.create(user=user, property=prop, is_admin=True)
+        protection = OwnerProtection(
+            owner=ownership,
+            mortgage=mortgage,
+            coverage_type="disability",
+            insurer="Test Insurer",
+            monthly_premium=Decimal("45.00"),
+            start_date=date(2025, 1, 1),
+            note="x" * 300,
+        )
+        protection.full_clean()
 
 
 class TestExpenseProofLink:
