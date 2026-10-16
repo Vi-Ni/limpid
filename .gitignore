@@ -37,3 +37,6 @@ htmlcov/
 
 # Claude
 .claude/settings.local.json
+
+# Production data dumps (personal data, never commit)
+dumps/
