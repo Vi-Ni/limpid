@@ -242,22 +242,43 @@ class MortgagePayment(models.Model):
 
 
 class OwnerMonthlyPayment(models.Model):
-    """Track how much each co-owner contributes monthly to the mortgage."""
+    """Track how much each co-owner contributes monthly to the mortgage.
+
+    Either a fixed monthly amount or a share of each payment. Owners without an
+    entry split the remainder according to their ownership shares.
+    """
 
     mortgage = models.ForeignKey(Mortgage, on_delete=models.CASCADE, related_name="owner_payments")
     owner = models.ForeignKey(PropertyOwnership, on_delete=models.CASCADE, related_name="monthly_payments")
-    monthly_amount = models.DecimalField(_("monthly amount"), max_digits=10, decimal_places=2)
+    monthly_amount = models.DecimalField(_("monthly amount"), max_digits=10, decimal_places=2, null=True, blank=True)
+    share_pct = models.DecimalField(_("share of payment (%)"), max_digits=5, decimal_places=2, null=True, blank=True)
     effective_date = models.DateField(_("effective date"))
     note = models.CharField(_("note"), max_length=200, blank=True)
 
     class Meta:
         ordering = ["effective_date"]
         unique_together = [("mortgage", "owner", "effective_date")]
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    models.Q(monthly_amount__isnull=False, share_pct__isnull=True)
+                    | models.Q(monthly_amount__isnull=True, share_pct__isnull=False)
+                ),
+                name="owner_payment_amount_xor_share",
+            ),
+        ]
         verbose_name = _("owner monthly payment")
         verbose_name_plural = _("owner monthly payments")
 
     def __str__(self):
-        return f"{self.owner.user.email}: {self.monthly_amount}/mo from {self.effective_date}"
+        amount = f"{self.share_pct}%" if self.share_pct is not None else f"{self.monthly_amount}/mo"
+        return f"{self.owner.user.email}: {amount} from {self.effective_date}"
+
+    def amount_for(self, total_payment):
+        """Amount this owner pays out of a given scheduled payment."""
+        if self.share_pct is not None:
+            return (total_payment * self.share_pct / 100).quantize(Decimal("0.01"))
+        return self.monthly_amount
 
 
 class PropertyExpense(models.Model):

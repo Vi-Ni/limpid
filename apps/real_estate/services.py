@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
@@ -131,15 +131,19 @@ def get_remaining_balance(mortgage, as_of_date=None):
     return Decimal("0")
 
 
+def _next_payment_entry(mortgage, as_of_date):
+    for entry in generate_amortization_schedule(mortgage):
+        if entry["date"] >= as_of_date:
+            return entry
+    return None
+
+
 def get_monthly_payment(mortgage, as_of_date=None):
     """Amount of the next scheduled payment on or after as_of_date, accounting for rate changes."""
     if as_of_date is None:
         as_of_date = date.today()
-    schedule = generate_amortization_schedule(mortgage)
-    for entry in schedule:
-        if entry["date"] >= as_of_date:
-            return entry["total_payment"]
-    return Decimal("0")
+    entry = _next_payment_entry(mortgage, as_of_date)
+    return entry["total_payment"] if entry else Decimal("0")
 
 
 def get_total_paid(mortgage, as_of_date=None):
@@ -185,46 +189,63 @@ def get_current_ownership_shares(prop, as_of_date=None):
     return {share.owner: share.share_pct for share in period.shares.select_related("owner__user").all()}
 
 
-def get_owner_contributions(ownership):
-    down = ownership.down_payment
-    principal_paid = ownership.mortgage_payments.aggregate(total=models.Sum("principal_portion"))["total"] or Decimal(
-        "0"
+def get_owner_contributions(ownership, as_of_date=None):
+    """Down payment, principal actually repaid and capital improvements paid by one owner.
+
+    Other expenses paid by the owner are reported separately and do not count toward the total.
+    """
+    if as_of_date is None:
+        as_of_date = date.today()
+    principal_paid = sum(
+        (get_owner_principal_paid(m, ownership, as_of_date) for m in ownership.property.mortgages.all()),
+        Decimal("0"),
     )
-    expenses_paid = ownership.expenses_paid.aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
+    expenses = ownership.expenses_paid.filter(date__lte=as_of_date)
+    improvements = expenses.filter(increases_acb=True).aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
+    other = expenses.filter(increases_acb=False).aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
+    down = ownership.down_payment
     return {
         "down_payment": down,
         "principal_paid": principal_paid,
-        "expenses_paid": expenses_paid,
-        "total": down + principal_paid + expenses_paid,
+        "capital_improvements_paid": improvements,
+        "other_expenses_paid": other,
+        "total": down + principal_paid + improvements,
     }
+
+
+def get_principal_paid_by_owner(mortgage, as_of_date=None):
+    """Principal repaid by each owner (keyed by ownership pk) up to as_of_date, following who paid each instalment."""
+    if as_of_date is None:
+        as_of_date = date.today()
+    ownerships = list(mortgage.real_estate.ownerships.all())
+    schedule, _ = generate_per_owner_amortization(mortgage)
+    totals = {o.pk: Decimal("0") for o in ownerships}
+    for entry in schedule:
+        if entry["date"] > as_of_date:
+            break
+        if "owner_payments" in entry:
+            for pk, op in entry["owner_payments"].items():
+                totals[pk] += op["principal"]
+        elif len(ownerships) == 1:
+            totals[ownerships[0].pk] += entry["principal"]
+    return totals
+
+
+def get_owner_principal_paid(mortgage, ownership, as_of_date=None):
+    return get_principal_paid_by_owner(mortgage, as_of_date).get(ownership.pk, Decimal("0"))
 
 
 def get_ownership_comparison(prop):
     """Per-owner breakdown: purchase share (down payment ratio) vs contribution share."""
-    ownerships = prop.ownerships.select_related("user").all()
+    ownerships = list(prop.ownerships.select_related("user").all())
     admin_shares = get_current_ownership_shares(prop)
 
     # At-purchase: ratio of down payments
     total_down = sum(o.down_payment for o in ownerships) or Decimal("1")
 
-    # At-end: ratio of total contributions (down payment + principal paid + expenses)
-    contributions = {}
-    grand_total = Decimal("0")
-    for ownership in ownerships:
-        contribs = get_owner_contributions(ownership)
-        # Override principal_paid from amortization (same pattern as get_owner_snapshot)
-        total_principal = Decimal("0")
-        for mortgage in prop.mortgages.filter(is_active=True):
-            paid = get_total_paid(mortgage)
-            pct = admin_shares.get(ownership, Decimal("0"))
-            total_principal += paid["total_principal_paid"] * pct / 100
-        contribs["principal_paid"] = total_principal.quantize(TWO_PLACES)
-        contribs["total"] = contribs["down_payment"] + contribs["principal_paid"] + contribs["expenses_paid"]
-        contributions[ownership] = contribs
-        grand_total += contribs["total"]
-
-    if grand_total == 0:
-        grand_total = Decimal("1")
+    # At-end: ratio of total contributions (down payment + principal repaid + capital improvements)
+    contributions = {o: get_owner_contributions(o) for o in ownerships}
+    grand_total = sum(c["total"] for c in contributions.values()) or Decimal("1")
 
     result = []
     for ownership in ownerships:
@@ -428,16 +449,6 @@ def get_owner_snapshot(prop, user):
     snapshot = get_property_snapshot(prop)
     contributions = get_owner_contributions(ownership)
 
-    # Override principal_paid from amortization schedule (MortgagePayment records are rarely created)
-    total_principal_paid = Decimal("0")
-    for mortgage in prop.mortgages.filter(is_active=True):
-        paid = get_total_paid(mortgage)
-        total_principal_paid += paid["total_principal_paid"]
-    contributions["principal_paid"] = (total_principal_paid * share_pct / 100).quantize(TWO_PLACES)
-    contributions["total"] = (
-        contributions["down_payment"] + contributions["principal_paid"] + contributions["expenses_paid"]
-    )
-
     return {
         "share_pct": share_pct,
         "your_equity": (snapshot["equity"] * share_pct / 100).quantize(TWO_PLACES),
@@ -448,18 +459,23 @@ def get_owner_snapshot(prop, user):
     }
 
 
-# ── Notifications ────────────────────────────────────────────
+# ── Monthly cost ─────────────────────────────────────────────
 
 
-def calculate_monthly_cost(prop, for_user=None):
-    """Calculate the total monthly cost of owning a property."""
-    import datetime
-
+def calculate_monthly_cost(prop, for_user=None, as_of_date=None):
+    """Calculate the total monthly cost of owning a property, based on the next scheduled payments."""
     from .models import OwnerMonthlyPayment, RentalIncome
 
+    if as_of_date is None:
+        as_of_date = date.today()
+
     mortgage_payment = Decimal("0")
+    next_entries = []
     for m in prop.mortgages.filter(is_active=True):
-        mortgage_payment += get_monthly_payment(m)
+        entry = _next_payment_entry(m, as_of_date)
+        if entry:
+            mortgage_payment += entry["total_payment"]
+            next_entries.append((m, entry))
 
     latest_year = prop.taxes.aggregate(max_year=models.Max("year"))["max_year"]
     taxes_annual = Decimal("0")
@@ -468,7 +484,7 @@ def calculate_monthly_cost(prop, for_user=None):
     taxes_monthly = (taxes_annual / 12).quantize(TWO_PLACES)
 
     recurring_types = {"condo_fees", "charges_copro", "insurance"}
-    one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
+    one_year_ago = as_of_date - timedelta(days=365)
     recurring_total = prop.expenses.filter(expense_type__in=recurring_types, date__gte=one_year_ago).aggregate(
         total=models.Sum("amount")
     )["total"] or Decimal("0")
@@ -497,33 +513,26 @@ def calculate_monthly_cost(prop, for_user=None):
     if for_user:
         ownership = prop.ownerships.filter(user=for_user).first()
         if ownership:
-            shares = get_current_ownership_shares(prop)
+            shares = get_current_ownership_shares(prop, as_of_date)
             share_pct = shares.get(ownership, Decimal("100")) / 100
             all_ownerships = list(prop.ownerships.all())
+            periods = list(prop.ownership_periods.prefetch_related("shares").order_by("start_date"))
 
+            # Split each next payment with the splits and shares in effect on its own date
             your_mortgage = Decimal("0")
-            for m in prop.mortgages.filter(is_active=True):
-                # Collect all custom payments for this mortgage
-                customs = {}
-                for o in all_ownerships:
-                    custom = (
-                        OwnerMonthlyPayment.objects.filter(
-                            mortgage=m, owner=o, effective_date__lte=datetime.date.today()
-                        )
-                        .order_by("-effective_date")
-                        .first()
+            for m, entry in next_entries:
+                splits = list(
+                    OwnerMonthlyPayment.objects.filter(mortgage=m, effective_date__lte=entry["date"]).order_by(
+                        "effective_date"
                     )
-                    if custom:
-                        customs[o] = custom.monthly_amount
-
-                if ownership in customs:
-                    your_mortgage += customs[ownership]
-                else:
-                    remainder = get_monthly_payment(m) - sum(customs.values())
-                    non_custom_owners = [o for o in all_ownerships if o not in customs]
-                    non_custom_share_total = sum(shares.get(o, Decimal("0")) / 100 for o in non_custom_owners)
-                    if non_custom_share_total > 0:
-                        your_mortgage += (remainder * share_pct / non_custom_share_total).quantize(TWO_PLACES)
+                )
+                amounts = _split_payment(
+                    entry["total_payment"],
+                    all_ownerships,
+                    _shares_for_date(periods, all_ownerships, entry["date"]),
+                    _splits_for_date(splits, entry["date"]),
+                )
+                your_mortgage += amounts.get(ownership.pk, Decimal("0"))
 
             your_taxes = (taxes_monthly * share_pct).quantize(TWO_PLACES)
             your_recurring = (recurring_monthly * share_pct).quantize(TWO_PLACES)
@@ -539,6 +548,72 @@ def calculate_monthly_cost(prop, for_user=None):
     return result
 
 
+# ── Payment splits ───────────────────────────────────────────
+
+
+def _allocate(value, weights):
+    """Split value in proportion to weights, rounded to cents; the parts always add up to value."""
+    total_weight = sum(weights.values())
+    if not weights:
+        return {}
+    if total_weight == 0:
+        return {key: Decimal("0.00") for key in weights}
+    parts = {key: (value * weight / total_weight).quantize(TWO_PLACES) for key, weight in weights.items()}
+    residue = value - sum(parts.values())
+    if residue:
+        largest = max(weights, key=lambda key: weights[key])
+        parts[largest] += residue
+    return parts
+
+
+def _shares_for_date(periods, ownerships, as_of_date):
+    """Ownership shares (keyed by ownership pk) of the period covering as_of_date; equal shares if none."""
+    matching = None
+    for period in periods:
+        if period.start_date <= as_of_date and (period.end_date is None or period.end_date >= as_of_date):
+            matching = period
+    if matching:
+        return {share.owner_id: share.share_pct for share in matching.shares.all()}
+    if not ownerships:
+        return {}
+    equal = (Decimal("100") / len(ownerships)).quantize(TWO_PLACES)
+    return {o.pk: equal for o in ownerships}
+
+
+def _splits_for_date(splits, as_of_date):
+    """Latest payment split per owner (keyed by ownership pk) effective on or before as_of_date.
+
+    `splits` must be ordered by effective_date.
+    """
+    in_effect = {}
+    for split in splits:
+        if split.effective_date <= as_of_date:
+            in_effect[split.owner_id] = split
+    return in_effect
+
+
+def _split_payment(total_payment, ownerships, shares, splits):
+    """Split one scheduled payment between owners (amounts keyed by ownership pk).
+
+    Owners with a split pay its fixed amount or percentage, capped so the payment is never exceeded.
+    Owners without a split share the remainder according to their ownership shares.
+    """
+    amounts = {}
+    allocated = Decimal("0")
+    for o in ownerships:
+        split = splits.get(o.pk)
+        if split is not None:
+            amount = min(split.amount_for(total_payment), max(total_payment - allocated, Decimal("0")))
+            amounts[o.pk] = amount
+            allocated += amount
+    others = [o for o in ownerships if o.pk not in amounts]
+    weights = {o.pk: shares.get(o.pk, Decimal("0")) for o in others}
+    if others and not any(weights.values()):
+        weights = {o.pk: Decimal("1") for o in others}
+    amounts.update(_allocate(total_payment - allocated, weights))
+    return amounts
+
+
 def generate_per_owner_amortization(mortgage):
     """Generate amortization schedule with per-owner payment breakdown."""
     from .models import OwnerMonthlyPayment
@@ -550,33 +625,9 @@ def generate_per_owner_amortization(mortgage):
     if len(all_ownerships) < 2:
         return schedule, []
 
-    # Pre-fetch all ownership periods to avoid N+1
-    periods = list(prop.ownership_periods.prefetch_related("shares__owner__user").order_by("start_date").all())
-
-    # Pre-fetch all custom payments per owner, keyed by (owner_id, effective_date)
-    all_custom_payments = list(OwnerMonthlyPayment.objects.filter(mortgage=mortgage).order_by("effective_date"))
-
-    def get_shares_for_date(as_of_date):
-        """Get ownership shares for a specific date from pre-fetched periods."""
-        matching = None
-        for p in periods:
-            if p.start_date <= as_of_date and (p.end_date is None or p.end_date >= as_of_date):
-                matching = p
-        if matching:
-            return {s.owner: s.share_pct for s in matching.shares.all()}
-        count = len(all_ownerships)
-        if count == 0:
-            return {}
-        share = (Decimal("100") / count).quantize(TWO_PLACES)
-        return {o: share for o in all_ownerships}
-
-    def get_custom_payment_for(owner, as_of_date):
-        """Get the latest custom payment for an owner effective on or before as_of_date."""
-        result = None
-        for cp in all_custom_payments:
-            if cp.owner_id == owner.pk and cp.effective_date <= as_of_date:
-                result = cp
-        return result
+    # Pre-fetch periods and splits to avoid N+1
+    periods = list(prop.ownership_periods.prefetch_related("shares").order_by("start_date"))
+    splits = list(OwnerMonthlyPayment.objects.filter(mortgage=mortgage).order_by("effective_date"))
 
     owner_totals = {
         o.pk: {"principal": Decimal("0"), "interest": Decimal("0"), "total": Decimal("0")} for o in all_ownerships
@@ -584,51 +635,34 @@ def generate_per_owner_amortization(mortgage):
 
     for entry in schedule:
         payment_date = entry["date"]
-        shares = get_shares_for_date(payment_date)
-        total_payment = entry["total_payment"]  # includes insurance
-
-        # Collect custom payments
-        customs = {}
-        for o in all_ownerships:
-            cp = get_custom_payment_for(o, payment_date)
-            if cp:
-                customs[o] = cp.monthly_amount
-
-        remainder = max(total_payment - sum(customs.values()), Decimal("0"))
-        non_custom = [o for o in all_ownerships if o not in customs]
-        non_custom_share_total = sum(shares.get(o, Decimal("0")) / 100 for o in non_custom)
+        amounts = _split_payment(
+            entry["total_payment"],
+            all_ownerships,
+            _shares_for_date(periods, all_ownerships, payment_date),
+            _splits_for_date(splits, payment_date),
+        )
+        # Principal and interest follow what each owner actually paid
+        principals = _allocate(entry["principal"], amounts)
+        interests = _allocate(entry["interest"], amounts)
 
         owner_payments = {}
         for o in all_ownerships:
-            share_pct = shares.get(o, Decimal("0")) / 100
-            if o in customs:
-                ratio = customs[o] / total_payment if total_payment else Decimal("0")
-            elif non_custom_share_total > 0:
-                ratio = (
-                    (remainder * share_pct / non_custom_share_total) / total_payment if total_payment else Decimal("0")
-                )
-            else:
-                ratio = Decimal("0")
-
-            o_payment = (total_payment * ratio).quantize(TWO_PLACES)
-            o_principal = (entry["principal"] * ratio).quantize(TWO_PLACES)
-            o_interest = (entry["interest"] * ratio).quantize(TWO_PLACES)
             owner_payments[o.pk] = {
                 "owner": o,
-                "payment": o_payment,
-                "principal": o_principal,
-                "interest": o_interest,
+                "payment": amounts[o.pk],
+                "principal": principals[o.pk],
+                "interest": interests[o.pk],
             }
-            owner_totals[o.pk]["principal"] += o_principal
-            owner_totals[o.pk]["interest"] += o_interest
-            owner_totals[o.pk]["total"] += o_payment
+            owner_totals[o.pk]["principal"] += principals[o.pk]
+            owner_totals[o.pk]["interest"] += interests[o.pk]
+            owner_totals[o.pk]["total"] += amounts[o.pk]
 
         entry["owner_payments"] = owner_payments
 
+    grand_total = sum(t["total"] for t in owner_totals.values())
     owner_summaries = []
     for o in all_ownerships:
         totals = owner_totals[o.pk]
-        grand_total = sum(t["total"] for t in owner_totals.values())
         contribution_pct = (totals["total"] / grand_total * 100).quantize(TWO_PLACES) if grand_total else Decimal("0")
         owner_summaries.append(
             {

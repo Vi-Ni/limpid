@@ -264,11 +264,12 @@ def add_expense(request, pk):
     prop = get_object_or_404(Property, pk=pk, owners=request.user)
     ownership = prop.ownerships.get(user=request.user)
     if request.method == "POST":
-        form = ExpenseForm(request.POST)
+        form = ExpenseForm(request.POST, prop=prop)
         if form.is_valid():
             expense = form.save(commit=False)
             expense.property = prop
-            expense.paid_by = ownership
+            if expense.paid_by is None:
+                expense.paid_by = ownership
             expense.save()
             notify_co_owners(
                 prop,
@@ -282,7 +283,7 @@ def add_expense(request, pk):
             )
             response["HX-Trigger"] = "expenses-changed"
             return response
-    form = ExpenseForm()
+    form = ExpenseForm(prop=prop, initial={"paid_by": ownership})
     return render(request, "real_estate/partials/expense_form.html", {"form": form, "property": prop})
 
 
@@ -603,7 +604,7 @@ def edit_expense(request, pk, expense_id):
     prop = get_object_or_404(Property, pk=pk, owners=request.user)
     expense = get_object_or_404(PropertyExpense, pk=expense_id, property=prop)
     if request.method == "POST":
-        form = ExpenseForm(request.POST, instance=expense)
+        form = ExpenseForm(request.POST, instance=expense, prop=prop)
         if form.is_valid():
             form.save()
             notify_co_owners(
@@ -619,7 +620,7 @@ def edit_expense(request, pk, expense_id):
             response["HX-Trigger"] = "expenses-changed"
             return response
     else:
-        form = ExpenseForm(instance=expense)
+        form = ExpenseForm(instance=expense, prop=prop)
     return render(
         request,
         "real_estate/partials/expense_form.html",
@@ -1022,24 +1023,11 @@ def owner_payments(request, pk, mortgage_id):
             effective_date=payment.effective_date,
             defaults={
                 "monthly_amount": payment.monthly_amount,
+                "share_pct": payment.share_pct,
                 "note": payment.note,
             },
         )
-
-        # Auto-calc other owner's payment (2 owners only)
-        all_ownerships = list(prop.ownerships.all())
-        if len(all_ownerships) == 2:
-            other = next(o for o in all_ownerships if o != payment.owner)
-            other_amount = get_monthly_payment(mortgage, payment.effective_date) - payment.monthly_amount
-            OwnerMonthlyPayment.objects.update_or_create(
-                mortgage=mortgage,
-                owner=other,
-                effective_date=payment.effective_date,
-                defaults={
-                    "monthly_amount": other_amount,
-                    "note": _("Auto-calculated from co-owner's payment"),
-                },
-            )
+        # Owners without a split pay the remainder, computed for each instalment
 
         notify_co_owners(prop, request.user, "property_updated", _("Payment split updated"))
         payments = mortgage.owner_payments.select_related("owner__user").all()
@@ -1076,33 +1064,20 @@ def edit_owner_payment(request, pk, mortgage_id, payment_id):
     if request.method == "POST":
         form = OwnerMonthlyPaymentForm(request.POST, instance=payment, prop=prop)
         if form.is_valid():
-            updated = form.save(commit=False)
-            updated.mortgage = mortgage
-            updated, _created = OwnerMonthlyPayment.objects.update_or_create(
-                mortgage=mortgage,
-                owner=updated.owner,
-                effective_date=updated.effective_date,
-                defaults={
-                    "monthly_amount": updated.monthly_amount,
-                    "note": updated.note,
-                },
-            )
-
-            # Auto-calc other owner's payment (2 owners only)
-            all_ownerships = list(prop.ownerships.all())
-            if len(all_ownerships) == 2:
-                other = next(o for o in all_ownerships if o != updated.owner)
-                other_amount = get_monthly_payment(mortgage, updated.effective_date) - updated.monthly_amount
-                OwnerMonthlyPayment.objects.update_or_create(
+            # Edit in place; refuse to move onto a date where this owner already has a split
+            conflict = (
+                OwnerMonthlyPayment.objects.filter(
                     mortgage=mortgage,
-                    owner=other,
-                    effective_date=updated.effective_date,
-                    defaults={
-                        "monthly_amount": other_amount,
-                        "note": _("Auto-calculated from co-owner's payment"),
-                    },
+                    owner=form.cleaned_data["owner"],
+                    effective_date=form.cleaned_data["effective_date"],
                 )
-
+                .exclude(pk=payment.pk)
+                .exists()
+            )
+            if conflict:
+                form.add_error(None, _("This owner already has a payment split on this date."))
+        if form.is_valid():
+            form.save()
             notify_co_owners(prop, request.user, "property_updated", _("Payment split updated"))
             payments = mortgage.owner_payments.select_related("owner__user").all()
             response = render(

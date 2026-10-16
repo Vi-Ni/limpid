@@ -20,7 +20,7 @@ from apps.real_estate.models import (
     PropertyValuation,
     RentalIncome,
 )
-from apps.real_estate.services import get_current_ownership_shares, get_monthly_payment
+from apps.real_estate.services import get_current_ownership_shares
 
 User = get_user_model()
 
@@ -404,6 +404,61 @@ def expense(prop):
         date=date(2024, 6, 1),
         paid_by=ownership,
     )
+
+
+class TestExpensePaidBy:
+    def test_paid_by_co_owner_saved(self, client, prop, user2):
+        ownership = PropertyOwnership.objects.create(user=user2, property=prop)
+        client.post(
+            f"/real-estate/{prop.pk}/expense/",
+            {
+                "expense_type": "renovation",
+                "description": "Roof",
+                "amount": "5000",
+                "date": "2024-01-01",
+                "increases_acb": "on",
+                "paid_by": ownership.pk,
+            },
+        )
+        assert PropertyExpense.objects.get(description="Roof").paid_by == ownership
+
+    def test_edit_changes_paid_by(self, client, prop, user2, expense):
+        ownership = PropertyOwnership.objects.create(user=user2, property=prop)
+        client.post(
+            f"/real-estate/{prop.pk}/expense/{expense.pk}/edit/",
+            {
+                "expense_type": "renovation",
+                "description": "Paint",
+                "amount": "500",
+                "date": "2024-06-01",
+                "paid_by": ownership.pk,
+            },
+        )
+        expense.refresh_from_db()
+        assert expense.paid_by == ownership
+
+    def test_paid_by_limited_to_property_owners(self, client, prop, user2):
+        other = Property.objects.create(
+            name="Other",
+            property_type="house",
+            usage="primary",
+            address="1 Other St",
+            city="Laval",
+            purchase_price=Decimal("300000"),
+            purchase_date=date(2021, 1, 1),
+        )
+        foreign = PropertyOwnership.objects.create(user=user2, property=other)
+        client.post(
+            f"/real-estate/{prop.pk}/expense/",
+            {
+                "expense_type": "repair",
+                "description": "Leak",
+                "amount": "100",
+                "date": "2024-01-01",
+                "paid_by": foreign.pk,
+            },
+        )
+        assert not PropertyExpense.objects.filter(description="Leak").exists()
 
 
 class TestExpenseCRUD:
@@ -1136,7 +1191,7 @@ class TestInvitationNotifications:
 # ── Payment split auto-calc ──────────────────────────────────
 
 
-class TestPaymentSplitAutoCalc:
+class TestPaymentSplitNoComplement:
     @pytest.fixture
     def two_owner_prop(self, user, user2, prop, mortgage):
         o2 = PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("50000"))
@@ -1147,66 +1202,51 @@ class TestPaymentSplitAutoCalc:
         OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("40"))
         return prop, mortgage, o1, o2
 
-    def test_auto_creates_other_owner_payment(self, client, two_owner_prop):
+    def test_no_complement_created_for_other_owner(self, client, two_owner_prop):
         prop, mortgage, o1, o2 = two_owner_prop
         response = client.post(
             f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
-            {
-                "owner": o1.pk,
-                "monthly_amount": "1000",
-                "effective_date": "2020-01-01",
-            },
+            {"owner": o1.pk, "monthly_amount": "1000", "effective_date": "2020-01-01"},
         )
         assert response.status_code == 200
-        # Auto-created payment for other owner
-        other_payment = OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2).first()
-        assert other_payment is not None
-        expected = mortgage.monthly_payment - Decimal("1000")
-        assert abs(other_payment.monthly_amount - expected) < Decimal("0.01")
+        assert OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o1).count() == 1
+        assert not OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2).exists()
 
-    def test_auto_updates_existing_payment(self, client, two_owner_prop):
+    def test_resubmission_updates_same_entry(self, client, two_owner_prop):
         prop, mortgage, o1, o2 = two_owner_prop
-        # First submission
-        client.post(
-            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
-            {
-                "owner": o1.pk,
-                "monthly_amount": "1000",
-                "effective_date": "2020-01-01",
-            },
-        )
-        # Second submission with different amount
-        client.post(
-            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
-            {
-                "owner": o1.pk,
-                "monthly_amount": "1200",
-                "effective_date": "2020-01-01",
-            },
-        )
-        # Should update, not duplicate
-        payments = OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2, effective_date=date(2020, 1, 1))
+        url = f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/"
+        client.post(url, {"owner": o1.pk, "monthly_amount": "1000", "effective_date": "2020-01-01"})
+        client.post(url, {"owner": o1.pk, "monthly_amount": "1200", "effective_date": "2020-01-01"})
+        payments = OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o1, effective_date=date(2020, 1, 1))
         assert payments.count() == 1
-        expected = mortgage.monthly_payment - Decimal("1200")
-        assert abs(payments.first().monthly_amount - expected) < Decimal("0.01")
+        assert payments.first().monthly_amount == Decimal("1200")
 
-    def test_auto_calc_uses_payment_after_rate_change(self, client, two_owner_prop):
+    def test_percentage_split(self, client, two_owner_prop):
         prop, mortgage, o1, o2 = two_owner_prop
-        MortgageRateChange.objects.create(
-            mortgage=mortgage, new_annual_rate=Decimal("3.000"), effective_date=date(2025, 1, 1)
-        )
         client.post(
             f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
-            {
-                "owner": o1.pk,
-                "monthly_amount": "1000",
-                "effective_date": "2025-01-01",
-            },
+            {"owner": o2.pk, "share_pct": "25", "effective_date": "2020-01-01"},
         )
-        other_payment = OwnerMonthlyPayment.objects.get(mortgage=mortgage, owner=o2, effective_date=date(2025, 1, 1))
-        expected = get_monthly_payment(mortgage, as_of_date=date(2025, 1, 1)) - Decimal("1000")
-        assert other_payment.monthly_amount == expected
-        assert expected < mortgage.monthly_payment - Decimal("1000")
+        payment = OwnerMonthlyPayment.objects.get(mortgage=mortgage, owner=o2)
+        assert payment.share_pct == Decimal("25.00")
+        assert payment.monthly_amount is None
+
+    def test_amount_and_percentage_together_rejected(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        response = client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
+            {"owner": o2.pk, "monthly_amount": "1000", "share_pct": "25", "effective_date": "2020-01-01"},
+        )
+        assert response.status_code == 200
+        assert not OwnerMonthlyPayment.objects.exists()
+
+    def test_neither_amount_nor_percentage_rejected(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payments/",
+            {"owner": o2.pk, "effective_date": "2020-01-01"},
+        )
+        assert not OwnerMonthlyPayment.objects.exists()
 
 
 # ── Payment split edit/delete ──────────────────────────────
@@ -1247,11 +1287,38 @@ class TestPaymentSplitEditDelete:
         assert response.status_code == 200
         payment.refresh_from_db()
         assert payment.monthly_amount == Decimal("1300")
-        # Auto-calc for other owner
-        other_payment = OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2).first()
-        assert other_payment is not None
-        expected = mortgage.monthly_payment - Decimal("1300")
-        assert abs(other_payment.monthly_amount - expected) < Decimal("0.01")
+        assert not OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2).exists()
+
+    def test_edit_date_moves_entry(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        payment = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payment/{payment.pk}/edit/",
+            {"owner": o1.pk, "monthly_amount": "1000", "effective_date": "2021-06-01"},
+        )
+        assert OwnerMonthlyPayment.objects.filter(mortgage=mortgage).count() == 1
+        payment.refresh_from_db()
+        assert payment.effective_date == date(2021, 6, 1)
+
+    def test_edit_onto_existing_date_rejected(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        first = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1200"), effective_date=date(2021, 6, 1)
+        )
+        response = client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payment/{first.pk}/edit/",
+            {"owner": o1.pk, "monthly_amount": "900", "effective_date": "2021-06-01"},
+        )
+        assert response.status_code == 200
+        first.refresh_from_db()
+        assert first.effective_date == date(2020, 1, 1)
+        assert first.monthly_amount == Decimal("1000")
+        assert OwnerMonthlyPayment.objects.get(effective_date=date(2021, 6, 1)).monthly_amount == Decimal("1200")
 
     def test_delete_owner_payment(self, client, two_owner_prop):
         prop, mortgage, o1, o2 = two_owner_prop

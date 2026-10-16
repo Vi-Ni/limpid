@@ -338,9 +338,10 @@ class MortgageForm(forms.ModelForm):
 class ExpenseForm(forms.ModelForm):
     class Meta:
         model = PropertyExpense
-        fields = ["expense_type", "description", "amount", "date", "increases_acb", "proof_link"]
+        fields = ["expense_type", "description", "amount", "date", "paid_by", "increases_acb", "proof_link"]
         widgets = {
             "expense_type": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "paid_by": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
             "description": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
             "amount": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
             "date": forms.DateInput(format="%Y-%m-%d", attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}),
@@ -350,9 +351,13 @@ class ExpenseForm(forms.ModelForm):
             ),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, prop=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["date"].localize = False
+        paid_by = self.fields["paid_by"]
+        paid_by.label = _("Paid by")
+        paid_by.queryset = prop.ownerships.select_related("user") if prop else paid_by.queryset.none()
+        paid_by.label_from_instance = lambda o: o.user.get_full_name() or o.user.username
 
 
 class ValuationForm(forms.ModelForm):
@@ -445,10 +450,13 @@ class RentalIncomeForm(forms.ModelForm):
 class OwnerMonthlyPaymentForm(forms.ModelForm):
     class Meta:
         model = OwnerMonthlyPayment
-        fields = ["owner", "monthly_amount", "effective_date", "note"]
+        fields = ["owner", "monthly_amount", "share_pct", "effective_date", "note"]
         widgets = {
             "owner": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
             "monthly_amount": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
+            "share_pct": forms.NumberInput(
+                attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01", "min": "0", "max": "100"}
+            ),
             "effective_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
             "note": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
         }
@@ -459,3 +467,17 @@ class OwnerMonthlyPaymentForm(forms.ModelForm):
         if prop:
             self.fields["owner"].queryset = prop.ownerships.all()
             self.fields["owner"].label_from_instance = lambda o: o.user.get_full_name() or o.user.username
+
+    def clean_share_pct(self):
+        share_pct = self.cleaned_data.get("share_pct")
+        if share_pct is not None and not (0 < share_pct <= 100):
+            raise forms.ValidationError(_("Enter a percentage between 0 and 100."))
+        return share_pct
+
+    def clean(self):
+        cleaned = super().clean()
+        has_amount = cleaned.get("monthly_amount") is not None
+        has_share = cleaned.get("share_pct") is not None
+        if has_amount == has_share:
+            raise forms.ValidationError(_("Enter either a monthly amount or a share of the payment, not both."))
+        return cleaned
