@@ -68,6 +68,10 @@ TERM_TOOLTIPS = {
         "Each owner's share of the contributions made so far: down payment, "
         "mortgage principal actually repaid, and capital improvements paid."
     ),
+    "occupancy": _(
+        "The owner who lives in the property pays all of its taxes and recurring charges. "
+        "Without an occupant, they are shared by ownership share. The mortgage split is set separately."
+    ),
     "lender": _("The bank or financial institution that provided your mortgage."),
     "your_equity": _(
         "Your personal equity — how much of the property's net value belongs to you. "

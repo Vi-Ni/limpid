@@ -36,6 +36,8 @@ urlpatterns = [
         views.delete_rate_change,
         name="delete_rate_change",
     ),
+    path("<int:pk>/occupancy/", views.add_occupancy_period, name="add_occupancy_period"),
+    path("<int:pk>/occupancy/<int:period_id>/delete/", views.delete_occupancy_period, name="delete_occupancy_period"),
     path("<int:pk>/rental-income/", views.add_rental_income, name="add_rental_income"),
     path("<int:pk>/rental-income/<int:income_id>/delete/", views.delete_rental_income, name="delete_rental_income"),
     path("<int:pk>/monthly-cost/", views.monthly_cost_partial, name="monthly_cost"),

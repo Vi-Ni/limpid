@@ -6,6 +6,7 @@ from apps.accounts.forms import TAILWIND_SELECT_CLASS
 from .models import (
     Mortgage,
     MortgageRateChange,
+    OccupancyPeriod,
     OwnerMonthlyPayment,
     Property,
     PropertyExpense,
@@ -468,6 +469,34 @@ class RentalIncomeForm(forms.ModelForm):
         self.fields["start_date"].localize = False
         self.fields["end_date"].localize = False
         self.fields["end_date"].required = False
+
+
+class OccupancyPeriodForm(forms.ModelForm):
+    class Meta:
+        model = OccupancyPeriod
+        fields = ["occupant", "start_date", "end_date", "note"]
+        widgets = {
+            "occupant": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "start_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
+            "end_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
+            "note": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+        }
+
+    def __init__(self, *args, prop=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in ("start_date", "end_date"):
+            self.fields[field_name].localize = False
+        occupant = self.fields["occupant"]
+        occupant.label = _("Occupant")
+        occupant.queryset = prop.ownerships.select_related("user") if prop else occupant.queryset.none()
+        occupant.label_from_instance = lambda o: o.user.get_full_name() or o.user.username
+
+    def clean(self):
+        cleaned = super().clean()
+        start, end = cleaned.get("start_date"), cleaned.get("end_date")
+        if start and end and end < start:
+            self.add_error("end_date", _("The end date must be after the start date."))
+        return cleaned
 
 
 class OwnerMonthlyPaymentForm(forms.ModelForm):

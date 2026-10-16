@@ -15,6 +15,7 @@ from .forms import (
     ExpenseForm,
     InviteCoOwnerForm,
     MortgageForm,
+    OccupancyPeriodForm,
     OwnerMonthlyPaymentForm,
     PropertyForm,
     PropertyTaxForm,
@@ -26,6 +27,7 @@ from .forms import (
 from .models import (
     Mortgage,
     MortgageRateChange,
+    OccupancyPeriod,
     OwnerMonthlyPayment,
     OwnershipPeriod,
     OwnershipPeriodShare,
@@ -46,6 +48,7 @@ from .services import (
     generate_per_owner_amortization,
     get_current_ownership_shares,
     get_monthly_payment,
+    get_occupant,
     get_owner_snapshot,
     get_ownership_comparison,
     get_property_snapshot,
@@ -215,6 +218,9 @@ def property_detail(request, pk):
             "cost_mine": cost_mine,
             "has_co_owners": has_co_owners,
             "rental_incomes": rental_incomes,
+            "occupancy_periods": prop.occupancy_periods.select_related("occupant__user"),
+            "current_occupant": get_occupant(prop),
+            "occupancy_owner_count": prop.ownerships.count(),
             "owner_payment_form": owner_payment_form,
             "ownership_comparison": ownership_comparison,
             "mortgage_pct": mortgage_pct,
@@ -908,6 +914,43 @@ def add_rental_income(request, pk):
         response["HX-Trigger"] = "rental-changed"
         return response
     return render(request, "real_estate/partials/rental_income_form.html", {"form": form, "property": prop})
+
+
+def _render_occupancy(request, prop):
+    response = render(
+        request,
+        "real_estate/partials/occupancy_list.html",
+        {
+            "occupancy_periods": prop.occupancy_periods.select_related("occupant__user"),
+            "current_occupant": get_occupant(prop),
+            "property": prop,
+        },
+    )
+    response["HX-Trigger"] = "occupancy-changed"
+    return response
+
+
+@login_required
+def add_occupancy_period(request, pk):
+    prop = get_object_or_404(Property.objects.filter(owners=request.user), pk=pk)
+    form = OccupancyPeriodForm(request.POST or None, prop=prop)
+    if request.method == "POST" and form.is_valid():
+        period = form.save(commit=False)
+        period.real_estate = prop
+        period.save()
+        notify_co_owners(prop, request.user, "property_updated", _("Occupancy updated"))
+        return _render_occupancy(request, prop)
+    return render(request, "real_estate/partials/occupancy_form.html", {"form": form, "property": prop})
+
+
+@login_required
+def delete_occupancy_period(request, pk, period_id):
+    prop = get_object_or_404(Property.objects.filter(owners=request.user), pk=pk)
+    period = get_object_or_404(OccupancyPeriod, pk=period_id, real_estate=prop)
+    if request.method == "DELETE":
+        period.delete()
+        notify_co_owners(prop, request.user, "property_updated", _("Occupancy updated"))
+    return _render_occupancy(request, prop)
 
 
 @login_required

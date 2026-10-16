@@ -411,6 +411,25 @@ class RentalIncome(models.Model):
         return (self.monthly_rent - fee).quantize(Decimal("0.01"))
 
 
+class OccupancyPeriod(models.Model):
+    """An owner living in the property: they pay all of its taxes and recurring charges."""
+
+    real_estate = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="occupancy_periods")
+    occupant = models.ForeignKey(PropertyOwnership, on_delete=models.CASCADE, related_name="occupancy_periods")
+    start_date = models.DateField(_("start date"))
+    end_date = models.DateField(_("end date"), null=True, blank=True)
+    note = models.CharField(_("note"), max_length=200, blank=True)
+
+    class Meta:
+        ordering = ["-start_date"]
+        verbose_name = _("occupancy period")
+        verbose_name_plural = _("occupancy periods")
+
+    def __str__(self):
+        end = self.end_date or "ongoing"
+        return f"{self.occupant.user}: {self.start_date} → {end}"
+
+
 class PropertyInvitation(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="invitations")
     invited_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

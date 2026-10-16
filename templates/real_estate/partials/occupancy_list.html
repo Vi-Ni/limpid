@@ -1,0 +1,29 @@
+{% load i18n %}
+
+<p class="text-sm text-text mb-3">
+  {% if current_occupant %}
+    {% blocktrans with name=current_occupant.user.get_full_name|default:current_occupant.user.username %}{{ name }} lives here and pays all taxes and charges.{% endblocktrans %}
+  {% else %}
+    {% trans "Nobody lives here: taxes and charges are shared by ownership share." %}
+  {% endif %}
+</p>
+
+{% if occupancy_periods %}
+<div class="space-y-2">
+  {% for period in occupancy_periods %}
+  <div class="flex items-center justify-between py-2 border-b border-border/60 group">
+    <div>
+      <span class="text-sm font-medium">{{ period.occupant.user.get_full_name|default:period.occupant.user.username }}</span>
+      <span class="text-xs text-text-muted ml-2">{% trans "from" %} {{ period.start_date }}</span>
+      {% if period.end_date %}<span class="text-xs text-text-muted">→ {{ period.end_date }}</span>{% endif %}
+      {% if period.note %}<span class="text-xs text-text-faint ml-2">{{ period.note }}</span>{% endif %}
+    </div>
+    <button hx-delete="{% url 'real_estate:delete_occupancy_period' property.pk period.pk %}"
+            hx-target="#occupancy-list" hx-swap="innerHTML" hx-confirm="{% trans 'Delete this occupancy period?' %}"
+            class="text-xs text-danger-500 hover:text-danger-700 opacity-0 group-hover:opacity-100 transition-opacity">
+      {% trans "Delete" %}
+    </button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

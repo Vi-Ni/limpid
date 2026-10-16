@@ -189,6 +189,20 @@ def get_current_ownership_shares(prop, as_of_date=None):
     return {share.owner: share.share_pct for share in period.shares.select_related("owner__user").all()}
 
 
+def get_occupant(prop, as_of_date=None):
+    """Ownership of the owner living in the property on as_of_date, or None."""
+    if as_of_date is None:
+        as_of_date = date.today()
+    period = (
+        prop.occupancy_periods.filter(start_date__lte=as_of_date)
+        .filter(models.Q(end_date__gte=as_of_date) | models.Q(end_date__isnull=True))
+        .select_related("occupant__user")
+        .order_by("-start_date")
+        .first()
+    )
+    return period.occupant if period else None
+
+
 def get_owner_contributions(ownership, as_of_date=None):
     """Down payment, principal actually repaid and capital improvements paid by one owner.
 
@@ -626,8 +640,11 @@ def calculate_monthly_cost(prop, for_user=None, as_of_date=None):
                 )
                 your_mortgage += amounts.get(ownership.pk, Decimal("0"))
 
-            your_taxes = (taxes_monthly * share_pct).quantize(TWO_PLACES)
-            your_recurring = (recurring_monthly * share_pct).quantize(TWO_PLACES)
+            # The occupant pays all taxes and charges; otherwise they follow the ownership share
+            occupant = get_occupant(prop, as_of_date)
+            charges_share = share_pct if occupant is None else Decimal(occupant == ownership)
+            your_taxes = (taxes_monthly * charges_share).quantize(TWO_PLACES)
+            your_recurring = (recurring_monthly * charges_share).quantize(TWO_PLACES)
             your_rental_offset = (rental_net * share_pct).quantize(TWO_PLACES)
             your_total = (your_mortgage + your_taxes + your_recurring - your_rental_offset).quantize(TWO_PLACES)
 

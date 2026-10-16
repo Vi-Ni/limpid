@@ -8,6 +8,7 @@ from django.test import Client
 from apps.real_estate.models import (
     Mortgage,
     MortgageRateChange,
+    OccupancyPeriod,
     OwnerMonthlyPayment,
     OwnershipPeriod,
     OwnershipPeriodShare,
@@ -514,6 +515,63 @@ class TestSaleEstimateDisplay:
         response = client.get(f"/real-estate/{co_owned.pk}/", HTTP_ACCEPT_LANGUAGE="en")
         assert b"split by contributions (MIZ)" in response.content
         assert b"MIZ " in response.content
+
+
+class TestOccupancyViews:
+    @pytest.fixture
+    def co_owner(self, prop, user2):
+        return PropertyOwnership.objects.create(user=user2, property=prop)
+
+    def test_add_period(self, client, prop, co_owner):
+        response = client.post(
+            f"/real-estate/{prop.pk}/occupancy/",
+            {"occupant": co_owner.pk, "start_date": "2025-10-01"},
+        )
+        assert response.status_code == 200
+        assert response["HX-Trigger"] == "occupancy-changed"
+        period = OccupancyPeriod.objects.get(real_estate=prop)
+        assert period.occupant == co_owner
+        assert period.end_date is None
+
+    def test_occupant_limited_to_property_owners(self, client, prop, user2):
+        other = Property.objects.create(
+            name="Other",
+            property_type="house",
+            usage="primary",
+            address="1 Other St",
+            city="Laval",
+            purchase_price=Decimal("300000"),
+            purchase_date=date(2021, 1, 1),
+        )
+        foreign = PropertyOwnership.objects.create(user=user2, property=other)
+        client.post(f"/real-estate/{prop.pk}/occupancy/", {"occupant": foreign.pk, "start_date": "2025-10-01"})
+        assert not OccupancyPeriod.objects.exists()
+
+    def test_end_before_start_rejected(self, client, prop, co_owner):
+        client.post(
+            f"/real-estate/{prop.pk}/occupancy/",
+            {"occupant": co_owner.pk, "start_date": "2025-10-01", "end_date": "2025-01-01"},
+        )
+        assert not OccupancyPeriod.objects.exists()
+
+    def test_delete_period(self, client, prop, co_owner):
+        period = OccupancyPeriod.objects.create(real_estate=prop, occupant=co_owner, start_date=date(2025, 10, 1))
+        response = client.delete(f"/real-estate/{prop.pk}/occupancy/{period.pk}/delete/")
+        assert response["HX-Trigger"] == "occupancy-changed"
+        assert not OccupancyPeriod.objects.exists()
+
+    def test_non_owner_cannot_add(self, prop, user2):
+        c = Client()
+        c.login(username="bob", password="testpass123")
+        response = c.post(f"/real-estate/{prop.pk}/occupancy/", {"start_date": "2025-10-01"})
+        assert response.status_code == 404
+
+    def test_detail_shows_who_pays_card(self, client, prop, co_owner, settings):
+        settings.LANGUAGE_CODE = "en"
+        OccupancyPeriod.objects.create(real_estate=prop, occupant=co_owner, start_date=date(2025, 10, 1))
+        response = client.get(f"/real-estate/{prop.pk}/", HTTP_ACCEPT_LANGUAGE="en")
+        assert b"Who pays what" in response.content
+        assert b"bob" in response.content
 
 
 class TestExpenseCRUD:

@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from apps.real_estate.models import (
     Mortgage,
     MortgageRateChange,
+    OccupancyPeriod,
     OwnerMonthlyPayment,
     OwnershipPeriod,
     OwnershipPeriodShare,
@@ -31,6 +32,7 @@ from apps.real_estate.services import (
     generate_per_owner_amortization,
     get_current_ownership_shares,
     get_monthly_payment,
+    get_occupant,
     get_owner_contributions,
     get_owner_principal_paid,
     get_owner_snapshot,
@@ -1365,3 +1367,53 @@ class TestSaleEstimateByMiz:
         result = estimate_sale_proceeds(prop)
         shares = {r["share_pct"] for r in result["per_owner"]}
         assert shares == {Decimal("50")}
+
+
+# ── Occupancy: who pays taxes and charges ──────────────────
+
+
+class TestOccupancy:
+    @pytest.fixture
+    def charged(self, prop, co_owned):
+        PropertyTax.objects.create(property=prop, tax_type="municipal", year=2025, amount=Decimal("4800"))
+        PropertyExpense.objects.create(
+            property=prop,
+            expense_type="insurance",
+            description="Home insurance",
+            amount=Decimal("1200"),
+            date=date(2025, 3, 1),
+        )
+        return co_owned
+
+    def test_occupant_pays_all_taxes_and_charges(self, prop, user, user2, charged):
+        o1, _ = charged
+        OccupancyPeriod.objects.create(real_estate=prop, occupant=o1, start_date=date(2024, 1, 1))
+        as_of = date(2025, 6, 15)
+        mine = calculate_monthly_cost(prop, for_user=user, as_of_date=as_of)
+        other = calculate_monthly_cost(prop, for_user=user2, as_of_date=as_of)
+        assert mine["your_taxes_monthly"] == Decimal("400.00")
+        assert mine["your_recurring_monthly"] == Decimal("100.00")
+        assert other["your_taxes_monthly"] == Decimal("0.00")
+        assert other["your_recurring_monthly"] == Decimal("0.00")
+
+    def test_ended_period_falls_back_to_ownership_shares(self, prop, user2, charged):
+        o1, _ = charged
+        OccupancyPeriod.objects.create(
+            real_estate=prop, occupant=o1, start_date=date(2024, 1, 1), end_date=date(2025, 1, 31)
+        )
+        other = calculate_monthly_cost(prop, for_user=user2, as_of_date=date(2025, 6, 15))
+        assert other["your_taxes_monthly"] == Decimal("200.00")
+
+    def test_without_period_shares_by_ownership(self, prop, user2, charged):
+        other = calculate_monthly_cost(prop, for_user=user2, as_of_date=date(2025, 6, 15))
+        assert other["your_taxes_monthly"] == Decimal("200.00")
+
+    def test_get_occupant_picks_period_covering_date(self, prop, co_owned):
+        o1, o2 = co_owned
+        OccupancyPeriod.objects.create(
+            real_estate=prop, occupant=o1, start_date=date(2021, 1, 1), end_date=date(2023, 12, 31)
+        )
+        OccupancyPeriod.objects.create(real_estate=prop, occupant=o2, start_date=date(2024, 1, 1))
+        assert get_occupant(prop, date(2022, 6, 1)) == o1
+        assert get_occupant(prop, date(2025, 6, 1)) == o2
+        assert get_occupant(prop, date(2020, 6, 1)) is None
