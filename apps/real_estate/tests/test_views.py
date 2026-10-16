@@ -1289,6 +1289,37 @@ class TestPaymentSplitEditDelete:
         assert payment.monthly_amount == Decimal("1300")
         assert not OwnerMonthlyPayment.objects.filter(mortgage=mortgage, owner=o2).exists()
 
+    def test_edit_date_moves_entry(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        payment = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payment/{payment.pk}/edit/",
+            {"owner": o1.pk, "monthly_amount": "1000", "effective_date": "2021-06-01"},
+        )
+        assert OwnerMonthlyPayment.objects.filter(mortgage=mortgage).count() == 1
+        payment.refresh_from_db()
+        assert payment.effective_date == date(2021, 6, 1)
+
+    def test_edit_onto_existing_date_rejected(self, client, two_owner_prop):
+        prop, mortgage, o1, o2 = two_owner_prop
+        first = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o1, monthly_amount=Decimal("1200"), effective_date=date(2021, 6, 1)
+        )
+        response = client.post(
+            f"/real-estate/{prop.pk}/mortgage/{mortgage.pk}/owner-payment/{first.pk}/edit/",
+            {"owner": o1.pk, "monthly_amount": "900", "effective_date": "2021-06-01"},
+        )
+        assert response.status_code == 200
+        first.refresh_from_db()
+        assert first.effective_date == date(2020, 1, 1)
+        assert first.monthly_amount == Decimal("1000")
+        assert OwnerMonthlyPayment.objects.get(effective_date=date(2021, 6, 1)).monthly_amount == Decimal("1200")
+
     def test_delete_owner_payment(self, client, two_owner_prop):
         prop, mortgage, o1, o2 = two_owner_prop
         payment = OwnerMonthlyPayment.objects.create(

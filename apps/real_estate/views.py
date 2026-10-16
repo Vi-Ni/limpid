@@ -1064,19 +1064,20 @@ def edit_owner_payment(request, pk, mortgage_id, payment_id):
     if request.method == "POST":
         form = OwnerMonthlyPaymentForm(request.POST, instance=payment, prop=prop)
         if form.is_valid():
-            updated = form.save(commit=False)
-            updated.mortgage = mortgage
-            updated, _created = OwnerMonthlyPayment.objects.update_or_create(
-                mortgage=mortgage,
-                owner=updated.owner,
-                effective_date=updated.effective_date,
-                defaults={
-                    "monthly_amount": updated.monthly_amount,
-                    "share_pct": updated.share_pct,
-                    "note": updated.note,
-                },
+            # Edit in place; refuse to move onto a date where this owner already has a split
+            conflict = (
+                OwnerMonthlyPayment.objects.filter(
+                    mortgage=mortgage,
+                    owner=form.cleaned_data["owner"],
+                    effective_date=form.cleaned_data["effective_date"],
+                )
+                .exclude(pk=payment.pk)
+                .exists()
             )
-
+            if conflict:
+                form.add_error(None, _("This owner already has a payment split on this date."))
+        if form.is_valid():
+            form.save()
             notify_co_owners(prop, request.user, "property_updated", _("Payment split updated"))
             payments = mortgage.owner_payments.select_related("owner__user").all()
             response = render(

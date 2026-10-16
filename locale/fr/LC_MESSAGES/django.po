@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 14:52-0400\n"
+"POT-Creation-Date: 2026-10-16 15:00-0400\n"
 "Language: fr\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -1584,11 +1584,15 @@ msgstr "Propriété supprimée."
 msgid "Rental income updated"
 msgstr "Revenu locatif mis à jour"
 
-#: apps/real_estate/views.py:1032 apps/real_estate/views.py:1080
+#: apps/real_estate/views.py:1032 apps/real_estate/views.py:1081
 msgid "Payment split updated"
 msgstr "Répartition des paiements mise à jour"
 
-#: apps/real_estate/views.py:1117
+#: apps/real_estate/views.py:1078
+msgid "This owner already has a payment split on this date."
+msgstr "Ce propriétaire a déjà une répartition à cette date."
+
+#: apps/real_estate/views.py:1118
 msgid "Payment split deleted"
 msgstr "Répartition des paiements supprimée"
 
