@@ -61,6 +61,14 @@
   {% endif %}
   {% endif %}
 
+  {# Personal protections (own cost only) #}
+  {% if has_co_owners and cost_mine.your_protections_monthly %}
+  <div x-show="showMine" x-cloak>
+    {% show_money cost_mine.your_protections_monthly property.currency as yprot %}
+    {% include "components/metric_row.html" with label=_("My protections") value=yprot %}
+  </div>
+  {% endif %}
+
   {# Net total #}
   <div x-show="!showMine">
     <div class="flex items-baseline justify-between py-3 mt-1">

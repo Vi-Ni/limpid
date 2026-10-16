@@ -1,0 +1,42 @@
+{% load i18n real_estate_filters %}
+
+{% if next_debit %}
+<p class="text-xs text-text-muted mb-2">{{ next_debit.date }}</p>
+<div class="space-y-0">
+  {% show_money next_debit.principal_interest property.currency as pi_display %}
+  {% include "components/metric_row.html" with label=_("Principal and interest") value=pi_display %}
+  {% if next_debit.tax_escrow %}
+  {% show_money next_debit.tax_escrow property.currency as escrow_display %}
+  {% include "components/metric_row.html" with label=_("Tax reserve") value=escrow_display %}
+  {% endif %}
+  {% if next_debit.protection_premiums %}
+  {% show_money next_debit.protection_premiums property.currency as premiums_display %}
+  {% include "components/metric_row.html" with label=_("Insurance premiums") value=premiums_display %}
+  {% endif %}
+  <div class="flex items-baseline justify-between py-3 mt-1">
+    <span class="text-sm font-semibold text-text">{% trans "Total debited" %}</span>
+    <span class="text-lg font-semibold font-mono tabular-nums text-text">{% show_money next_debit.total property.currency %}</span>
+  </div>
+</div>
+
+{% if next_debit.per_owner|length > 1 %}
+<div class="border-t border-border pt-3 mt-1">
+  <p class="text-sm font-medium text-text mb-2">{% trans "Who pays what" %}</p>
+  {% for ownership, part in next_debit.per_owner.items %}
+  <div class="py-1">
+    <div class="flex items-center justify-between">
+      <span class="text-sm text-text-muted">{{ ownership.user.get_full_name|default:ownership.user.username }}</span>
+      <span class="text-sm font-semibold font-mono tabular-nums">{% show_money part.total property.currency %}</span>
+    </div>
+    {% show_money part.principal_interest property.currency as part_pi %}
+    {% show_money part.taxes property.currency as part_taxes %}
+    <p class="text-xs text-text-faint font-mono tabular-nums">
+      {% blocktrans with pi=part_pi taxes=part_taxes %}{{ pi }} payment + {{ taxes }} taxes{% endblocktrans %}{% if part.premiums %}{% show_money part.premiums property.currency as part_premiums %} + {% blocktrans with premiums=part_premiums %}{{ premiums }} insurance{% endblocktrans %}{% endif %}
+    </p>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% else %}
+<p class="text-sm text-text-muted">{% trans "No upcoming payment." %}</p>
+{% endif %}

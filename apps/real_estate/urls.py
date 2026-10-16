@@ -41,6 +41,9 @@ urlpatterns = [
     path("<int:pk>/rental-income/", views.add_rental_income, name="add_rental_income"),
     path("<int:pk>/rental-income/<int:income_id>/delete/", views.delete_rental_income, name="delete_rental_income"),
     path("<int:pk>/monthly-cost/", views.monthly_cost_partial, name="monthly_cost"),
+    path("<int:pk>/next-debit/", views.next_debit_partial, name="next_debit"),
+    path("<int:pk>/protections/", views.add_protection, name="add_protection"),
+    path("<int:pk>/protections/<int:protection_id>/delete/", views.delete_protection, name="delete_protection"),
     path("<int:pk>/charts/", views.charts_partial, name="charts_partial"),
     path("<int:pk>/mortgage/<int:mortgage_id>/owner-payments/", views.owner_payments, name="owner_payments"),
     path(

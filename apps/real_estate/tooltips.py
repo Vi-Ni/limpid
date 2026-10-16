@@ -72,6 +72,14 @@ TERM_TOOLTIPS = {
         "The owner who lives in the property pays all of its taxes and recurring charges. "
         "Without an occupant, they are shared by ownership share. The mortgage split is set separately."
     ),
+    "next_debit": _(
+        "What the lender will take on the next payment date: principal and interest, the tax reserve if "
+        "the lender collects one, and insurance premiums taken with the payment."
+    ),
+    "protections": _(
+        "Your personal insurance (disability, life...). Only you see it. Its premium is your own cost: "
+        "it never counts in the property's cost, the payment split or your contribution."
+    ),
     "lender": _("The bank or financial institution that provided your mortgage."),
     "your_equity": _(
         "Your personal equity — how much of the property's net value belongs to you. "

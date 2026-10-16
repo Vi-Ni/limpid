@@ -8,6 +8,7 @@ from .models import (
     MortgageRateChange,
     OccupancyPeriod,
     OwnerMonthlyPayment,
+    OwnerProtection,
     Property,
     PropertyExpense,
     PropertyInvitation,
@@ -332,9 +333,11 @@ class MortgageForm(forms.ModelForm):
             "start_date",
             "insurance_premium",
             "borrower_insurance_rate",
+            "tax_escrow_monthly",
         ]
         widgets = {
             "lender": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+            "tax_escrow_monthly": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
             "principal": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
             "annual_rate": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.001"}),
             "rate_type": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
@@ -490,6 +493,51 @@ class OccupancyPeriodForm(forms.ModelForm):
         occupant.label = _("Occupant")
         occupant.queryset = prop.ownerships.select_related("user") if prop else occupant.queryset.none()
         occupant.label_from_instance = lambda o: o.user.get_full_name() or o.user.username
+
+    def clean(self):
+        cleaned = super().clean()
+        start, end = cleaned.get("start_date"), cleaned.get("end_date")
+        if start and end and end < start:
+            self.add_error("end_date", _("The end date must be after the start date."))
+        return cleaned
+
+
+class OwnerProtectionForm(forms.ModelForm):
+    class Meta:
+        model = OwnerProtection
+        fields = [
+            "coverage_type",
+            "insurer",
+            "coverage_option",
+            "mortgage",
+            "monthly_premium",
+            "monthly_benefit",
+            "waiting_days",
+            "max_benefit_months",
+            "start_date",
+            "end_date",
+            "note",
+        ]
+        widgets = {
+            "coverage_type": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "insurer": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+            "coverage_option": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS, "placeholder": "75 %"}),
+            "mortgage": forms.Select(attrs={"class": TAILWIND_SELECT_CLASS}),
+            "monthly_premium": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
+            "monthly_benefit": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS, "step": "0.01"}),
+            "waiting_days": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+            "max_benefit_months": forms.NumberInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+            "start_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
+            "end_date": forms.DateInput(attrs={"class": TAILWIND_INPUT_CLASS, "type": "date"}, format="%Y-%m-%d"),
+            "note": forms.TextInput(attrs={"class": TAILWIND_INPUT_CLASS}),
+        }
+
+    def __init__(self, *args, prop=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in ("start_date", "end_date"):
+            self.fields[field_name].localize = False
+        mortgage = self.fields["mortgage"]
+        mortgage.queryset = prop.mortgages.all() if prop else mortgage.queryset.none()
 
     def clean(self):
         cleaned = super().clean()

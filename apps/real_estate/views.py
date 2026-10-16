@@ -17,6 +17,7 @@ from .forms import (
     MortgageForm,
     OccupancyPeriodForm,
     OwnerMonthlyPaymentForm,
+    OwnerProtectionForm,
     PropertyForm,
     PropertyTaxForm,
     RateChangeForm,
@@ -29,6 +30,7 @@ from .models import (
     MortgageRateChange,
     OccupancyPeriod,
     OwnerMonthlyPayment,
+    OwnerProtection,
     OwnershipPeriod,
     OwnershipPeriodShare,
     Property,
@@ -48,6 +50,7 @@ from .services import (
     generate_per_owner_amortization,
     get_current_ownership_shares,
     get_monthly_payment,
+    get_next_debit,
     get_occupant,
     get_owner_snapshot,
     get_ownership_comparison,
@@ -221,6 +224,8 @@ def property_detail(request, pk):
             "occupancy_periods": prop.occupancy_periods.select_related("occupant__user"),
             "current_occupant": get_occupant(prop),
             "occupancy_owner_count": prop.ownerships.count(),
+            "my_protections": ownership.protections.select_related("mortgage"),
+            "next_debit": get_next_debit(active_mortgage) if active_mortgage else None,
             "owner_payment_form": owner_payment_form,
             "ownership_comparison": ownership_comparison,
             "mortgage_pct": mortgage_pct,
@@ -951,6 +956,51 @@ def delete_occupancy_period(request, pk, period_id):
         period.delete()
         notify_co_owners(prop, request.user, "property_updated", _("Occupancy updated"))
     return _render_occupancy(request, prop)
+
+
+def _render_protections(request, prop, ownership):
+    response = render(
+        request,
+        "real_estate/partials/protection_list.html",
+        {"my_protections": ownership.protections.select_related("mortgage"), "property": prop},
+    )
+    response["HX-Trigger"] = "protections-changed"
+    return response
+
+
+@login_required
+def add_protection(request, pk):
+    prop = get_object_or_404(Property.objects.filter(owners=request.user), pk=pk)
+    ownership = prop.ownerships.get(user=request.user)
+    form = OwnerProtectionForm(request.POST or None, prop=prop)
+    if request.method == "POST" and form.is_valid():
+        protection = form.save(commit=False)
+        protection.owner = ownership
+        protection.save()
+        return _render_protections(request, prop, ownership)
+    return render(request, "real_estate/partials/protection_form.html", {"form": form, "property": prop})
+
+
+@login_required
+def delete_protection(request, pk, protection_id):
+    prop = get_object_or_404(Property.objects.filter(owners=request.user), pk=pk)
+    ownership = prop.ownerships.get(user=request.user)
+    # Protections are private: only their owner can see or delete them
+    protection = get_object_or_404(OwnerProtection, pk=protection_id, owner=ownership)
+    if request.method == "DELETE":
+        protection.delete()
+    return _render_protections(request, prop, ownership)
+
+
+@login_required
+def next_debit_partial(request, pk):
+    prop = get_object_or_404(Property.objects.filter(owners=request.user), pk=pk)
+    mortgage = prop.mortgages.filter(is_active=True).first()
+    return render(
+        request,
+        "real_estate/partials/next_debit.html",
+        {"next_debit": get_next_debit(mortgage) if mortgage else None, "property": prop},
+    )
 
 
 @login_required

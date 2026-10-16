@@ -10,6 +10,7 @@ from apps.real_estate.models import (
     MortgageRateChange,
     OccupancyPeriod,
     OwnerMonthlyPayment,
+    OwnerProtection,
     OwnershipPeriod,
     OwnershipPeriodShare,
     Property,
@@ -572,6 +573,77 @@ class TestOccupancyViews:
         response = client.get(f"/real-estate/{prop.pk}/", HTTP_ACCEPT_LANGUAGE="en")
         assert b"Who pays what" in response.content
         assert b"bob" in response.content
+
+
+class TestProtectionViews:
+    @pytest.fixture
+    def co_owner(self, prop, user2):
+        return PropertyOwnership.objects.create(user=user2, property=prop)
+
+    def test_add_protection_for_requesting_owner(self, client, prop, user, mortgage):
+        response = client.post(
+            f"/real-estate/{prop.pk}/protections/",
+            {
+                "coverage_type": "disability",
+                "insurer": "Test Insurer",
+                "coverage_option": "75 %",
+                "mortgage": mortgage.pk,
+                "monthly_premium": "45.00",
+                "waiting_days": "60",
+                "max_benefit_months": "24",
+                "start_date": "2025-01-01",
+            },
+        )
+        assert response.status_code == 200
+        assert response["HX-Trigger"] == "protections-changed"
+        protection = OwnerProtection.objects.get()
+        assert protection.owner == prop.ownerships.get(user=user)
+        assert protection.mortgage == mortgage
+
+    def test_other_owner_protection_hidden(self, client, prop, co_owner, settings):
+        settings.LANGUAGE_CODE = "en"
+        OwnerProtection.objects.create(
+            owner=co_owner,
+            coverage_type="life",
+            insurer="Secret Insurer",
+            monthly_premium=Decimal("30"),
+            start_date=date(2025, 1, 1),
+        )
+        response = client.get(f"/real-estate/{prop.pk}/", HTTP_ACCEPT_LANGUAGE="en")
+        assert b"My protections" in response.content
+        assert b"Secret Insurer" not in response.content
+
+    def test_cannot_delete_other_owner_protection(self, client, prop, co_owner):
+        protection = OwnerProtection.objects.create(
+            owner=co_owner,
+            coverage_type="life",
+            insurer="Secret Insurer",
+            monthly_premium=Decimal("30"),
+            start_date=date(2025, 1, 1),
+        )
+        response = client.delete(f"/real-estate/{prop.pk}/protections/{protection.pk}/delete/")
+        assert response.status_code == 404
+        assert OwnerProtection.objects.filter(pk=protection.pk).exists()
+
+    def test_delete_own_protection(self, client, prop, user):
+        protection = OwnerProtection.objects.create(
+            owner=prop.ownerships.get(user=user),
+            coverage_type="disability",
+            insurer="Test Insurer",
+            monthly_premium=Decimal("45"),
+            start_date=date(2025, 1, 1),
+        )
+        response = client.delete(f"/real-estate/{prop.pk}/protections/{protection.pk}/delete/")
+        assert response["HX-Trigger"] == "protections-changed"
+        assert not OwnerProtection.objects.exists()
+
+    def test_detail_shows_next_debit(self, client, prop, mortgage, settings):
+        settings.LANGUAGE_CODE = "en"
+        mortgage.tax_escrow_monthly = Decimal("300")
+        mortgage.save()
+        response = client.get(f"/real-estate/{prop.pk}/", HTTP_ACCEPT_LANGUAGE="en")
+        assert b"Next bank debit" in response.content
+        assert b"Tax reserve" in response.content
 
 
 class TestExpenseCRUD:

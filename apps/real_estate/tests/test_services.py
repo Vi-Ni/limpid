@@ -9,6 +9,7 @@ from apps.real_estate.models import (
     MortgageRateChange,
     OccupancyPeriod,
     OwnerMonthlyPayment,
+    OwnerProtection,
     OwnershipPeriod,
     OwnershipPeriodShare,
     Property,
@@ -32,6 +33,7 @@ from apps.real_estate.services import (
     generate_per_owner_amortization,
     get_current_ownership_shares,
     get_monthly_payment,
+    get_next_debit,
     get_occupant,
     get_owner_contributions,
     get_owner_principal_paid,
@@ -1417,3 +1419,119 @@ class TestOccupancy:
         assert get_occupant(prop, date(2022, 6, 1)) == o1
         assert get_occupant(prop, date(2025, 6, 1)) == o2
         assert get_occupant(prop, date(2020, 6, 1)) is None
+
+
+# ── Personal protections (owner-only insurance premiums) ───
+
+
+@pytest.fixture
+def protection(mortgage, co_owned):
+    o1, _ = co_owned
+    return OwnerProtection.objects.create(
+        owner=o1,
+        mortgage=mortgage,
+        coverage_type="disability",
+        insurer="Test Insurer",
+        monthly_premium=Decimal("45.00"),
+        start_date=date(2024, 1, 1),
+    )
+
+
+class TestProtections:
+    def test_premium_added_to_owner_cost_only(self, prop, user, user2, co_owned, protection):
+        as_of = date(2025, 1, 15)
+        mine = calculate_monthly_cost(prop, for_user=user, as_of_date=as_of)
+        other = calculate_monthly_cost(prop, for_user=user2, as_of_date=as_of)
+        assert mine["your_protections_monthly"] == Decimal("45.00")
+        assert mine["your_total_monthly"] == (
+            mine["your_mortgage_payment"] + mine["your_taxes_monthly"] + mine["your_recurring_monthly"] + Decimal("45")
+        )
+        assert other["your_protections_monthly"] == Decimal("0")
+
+    def test_premium_not_in_property_cost_splits_or_miz(self, prop, mortgage, user, co_owned):
+        as_of = date(2025, 1, 15)
+        total_before = calculate_monthly_cost(prop, as_of_date=as_of)["total_monthly"]
+        miz_before = {o: m["miz"] for o, m in compute_miz(prop).items()}
+        OwnerProtection.objects.create(
+            owner=co_owned[0],
+            mortgage=mortgage,
+            coverage_type="life",
+            insurer="Test Insurer",
+            monthly_premium=Decimal("45.00"),
+            start_date=date(2024, 1, 1),
+        )
+        assert calculate_monthly_cost(prop, as_of_date=as_of)["total_monthly"] == total_before
+        assert {o: m["miz"] for o, m in compute_miz(prop).items()} == miz_before
+        schedule, _ = generate_per_owner_amortization(mortgage)
+        assert sum(op["payment"] for op in schedule[0]["owner_payments"].values()) == schedule[0]["total_payment"]
+
+    def test_inactive_protection_not_counted(self, prop, user, protection):
+        protection.end_date = date(2024, 12, 31)
+        protection.save()
+        cost = calculate_monthly_cost(prop, for_user=user, as_of_date=date(2025, 1, 15))
+        assert cost["your_protections_monthly"] == Decimal("0")
+        future = calculate_monthly_cost(prop, for_user=user, as_of_date=date(2023, 6, 1))
+        assert future["your_protections_monthly"] == Decimal("0")
+
+
+# ── Next bank debit ────────────────────────────────────────
+
+
+class TestNextDebit:
+    @pytest.fixture
+    def debit_setup(self, prop, mortgage, co_owned):
+        o1, o2 = co_owned
+        mortgage.tax_escrow_monthly = Decimal("300.00")
+        mortgage.save()
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        OccupancyPeriod.objects.create(real_estate=prop, occupant=o1, start_date=date(2020, 1, 1))
+        return o1, o2
+
+    def test_decomposes_next_debit(self, mortgage, debit_setup):
+        o1, o2 = debit_setup
+        as_of = date(2025, 1, 15)
+        payment = get_monthly_payment(mortgage, as_of)
+        debit = get_next_debit(mortgage, as_of)
+        assert debit["date"] == date(2025, 2, 1)
+        assert debit["principal_interest"] == payment
+        assert debit["tax_escrow"] == Decimal("300.00")
+        assert debit["protection_premiums"] == Decimal("0")
+        assert debit["total"] == payment + Decimal("300")
+        assert debit["per_owner"][o2]["total"] == Decimal("1000")
+        assert debit["per_owner"][o1]["total"] == payment - Decimal("1000") + Decimal("300")
+        assert sum(o["total"] for o in debit["per_owner"].values()) == debit["total"]
+
+    def test_protection_premium_goes_to_its_owner(self, mortgage, debit_setup, protection):
+        o1, o2 = debit_setup
+        as_of = date(2025, 1, 15)
+        debit = get_next_debit(mortgage, as_of)
+        assert debit["protection_premiums"] == Decimal("45.00")
+        assert debit["per_owner"][o1]["premiums"] == Decimal("45.00")
+        assert debit["per_owner"][o2]["total"] == Decimal("1000")
+        assert sum(o["total"] for o in debit["per_owner"].values()) == debit["total"]
+
+    def test_protection_on_other_loan_not_in_debit(self, mortgage, debit_setup):
+        o1, _ = debit_setup
+        OwnerProtection.objects.create(
+            owner=o1,
+            coverage_type="life",
+            insurer="Test Insurer",
+            monthly_premium=Decimal("20.00"),
+            start_date=date(2024, 1, 1),
+        )
+        assert get_next_debit(mortgage, date(2025, 1, 15))["protection_premiums"] == Decimal("0")
+
+    def test_escrow_shared_by_ownership_without_occupant(self, prop, mortgage, co_owned):
+        o1, o2 = co_owned
+        mortgage.tax_escrow_monthly = Decimal("300.00")
+        mortgage.save()
+        debit = get_next_debit(mortgage, date(2025, 1, 15))
+        assert debit["per_owner"][o1]["taxes"] == Decimal("150.00")
+        assert debit["per_owner"][o2]["taxes"] == Decimal("150.00")
+
+    def test_without_escrow(self, mortgage, co_owned):
+        debit = get_next_debit(mortgage, date(2025, 1, 15))
+        assert debit["tax_escrow"] == Decimal("0")
+        assert debit["total"] == debit["principal_interest"]

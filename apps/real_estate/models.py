@@ -188,6 +188,14 @@ class Mortgage(models.Model):
         decimal_places=3,
         default=0,
     )
+    tax_escrow_monthly = models.DecimalField(
+        _("tax reserve (monthly)"),
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text=_("Property tax reserve the lender collects with each payment, if any."),
+    )
 
     class Meta:
         ordering = ["-start_date"]
@@ -428,6 +436,48 @@ class OccupancyPeriod(models.Model):
     def __str__(self):
         end = self.end_date or "ongoing"
         return f"{self.occupant.user}: {self.start_date} → {end}"
+
+
+class OwnerProtection(models.Model):
+    """Personal insurance of one owner (disability, life...): their own cost, never shared."""
+
+    COVERAGE_CHOICES = [
+        ("disability", _("Disability")),
+        ("life", _("Life")),
+        ("critical_illness", _("Critical illness")),
+        ("job_loss", _("Job loss")),
+    ]
+
+    owner = models.ForeignKey(PropertyOwnership, on_delete=models.CASCADE, related_name="protections")
+    mortgage = models.ForeignKey(
+        Mortgage,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="protections",
+        verbose_name=_("debited with mortgage"),
+        help_text=_("Select the mortgage if the premium is taken with its payment."),
+    )
+    coverage_type = models.CharField(_("coverage"), max_length=20, choices=COVERAGE_CHOICES)
+    insurer = models.CharField(_("insurer"), max_length=200)
+    coverage_option = models.CharField(_("option"), max_length=100, blank=True)
+    monthly_premium = models.DecimalField(
+        _("monthly premium"), max_digits=10, decimal_places=2, help_text=_("Including taxes.")
+    )
+    monthly_benefit = models.DecimalField(_("monthly benefit"), max_digits=10, decimal_places=2, null=True, blank=True)
+    waiting_days = models.PositiveSmallIntegerField(_("waiting period (days)"), null=True, blank=True)
+    max_benefit_months = models.PositiveSmallIntegerField(_("maximum benefit (months)"), null=True, blank=True)
+    start_date = models.DateField(_("start date"))
+    end_date = models.DateField(_("end date"), null=True, blank=True)
+    note = models.CharField(_("note"), max_length=200, blank=True)
+
+    class Meta:
+        ordering = ["-start_date"]
+        verbose_name = _("personal protection")
+        verbose_name_plural = _("personal protections")
+
+    def __str__(self):
+        return f"{self.owner.user}: {self.get_coverage_type_display()} ({self.insurer})"
 
 
 class PropertyInvitation(models.Model):

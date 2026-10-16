@@ -97,7 +97,7 @@
       {% include "components/card_start.html" with title=_("Monthly Cost") tooltip_id="monthly_cost" tooltip_text=tips.monthly_cost %}
         <div id="monthly-cost-container"
              hx-get="{% url 'real_estate:monthly_cost' property.pk %}"
-             hx-trigger="expenses-changed from:body, taxes-changed from:body, rental-changed from:body, mortgage-changed from:body, payments-changed from:body, occupancy-changed from:body"
+             hx-trigger="expenses-changed from:body, taxes-changed from:body, rental-changed from:body, mortgage-changed from:body, payments-changed from:body, occupancy-changed from:body, protections-changed from:body"
              hx-swap="innerHTML">
           {% include "real_estate/partials/monthly_cost.html" %}
         </div>
@@ -130,6 +130,17 @@
           {% endif %}
         </div>
       {% include "components/card_end.html" %}
+
+      {# Next bank debit #}
+      {% if mortgage %}
+      {% include "components/card_start.html" with title=_("Next bank debit") tooltip_id="next_debit" tooltip_text=tips.next_debit %}
+        <div hx-get="{% url 'real_estate:next_debit' property.pk %}"
+             hx-trigger="mortgage-changed from:body, payments-changed from:body, occupancy-changed from:body, protections-changed from:body"
+             hx-swap="innerHTML">
+          {% include "real_estate/partials/next_debit.html" %}
+        </div>
+      {% include "components/card_end.html" %}
+      {% endif %}
 
       {# Mortgage #}
       {% if mortgage %}
@@ -188,6 +199,22 @@
         <canvas data-chart="evolution" data-chart-data='{{ evolution_chart }}'></canvas>
       {% include "components/card_end.html" %}
       {% endif %}
+
+      {# Personal protections: private to the viewing owner #}
+      {% include "components/card_start.html" with title=_("My protections") tooltip_id="protections" tooltip_text=tips.protections %}
+        <div id="protection-list">
+          {% include "real_estate/partials/protection_list.html" %}
+        </div>
+        <div class="mt-4 pt-4 border-t border-border">
+          <button hx-get="{% url 'real_estate:add_protection' property.pk %}"
+                  hx-target="#protection-form-container"
+                  hx-swap="innerHTML"
+                  class="btn-ghost text-primary-600 hover:text-primary-700 text-sm">
+            {% trans "+ Add protection" %}
+          </button>
+          <div id="protection-form-container"></div>
+        </div>
+      {% include "components/card_end.html" %}
 
       {# Who pays what: the occupant pays taxes and charges #}
       {% if occupancy_owner_count > 1 %}

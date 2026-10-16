@@ -146,6 +146,68 @@ def get_monthly_payment(mortgage, as_of_date=None):
     return entry["total_payment"] if entry else Decimal("0")
 
 
+def get_next_debit(mortgage, as_of_date=None):
+    """Next amount the lender debits for this mortgage, decomposed, and what each owner bears.
+
+    Principal and interest follow the payment splits, the tax reserve follows occupancy (or the
+    ownership shares), and each owner bears their own protection premiums taken with the payment.
+    Per-owner amounts are keyed by ownership. Returns None once the mortgage is repaid.
+    """
+    from .models import OwnerMonthlyPayment
+
+    if as_of_date is None:
+        as_of_date = date.today()
+    entry = _next_payment_entry(mortgage, as_of_date)
+    if entry is None:
+        return None
+    debit_date = entry["date"]
+    prop = mortgage.real_estate
+    ownerships = list(prop.ownerships.select_related("user").order_by("pk"))
+    periods = list(prop.ownership_periods.prefetch_related("shares").order_by("start_date"))
+    shares = _shares_for_date(periods, ownerships, debit_date)
+    splits = list(
+        OwnerMonthlyPayment.objects.filter(mortgage=mortgage, effective_date__lte=debit_date).order_by("effective_date")
+    )
+    principal_interest = _split_payment(
+        entry["total_payment"], ownerships, shares, _splits_for_date(splits, debit_date)
+    )
+
+    escrow = mortgage.tax_escrow_monthly or Decimal("0")
+    occupant = get_occupant(prop, debit_date)
+    if occupant is not None:
+        escrow_weights = {o.pk: Decimal(o == occupant) for o in ownerships}
+    else:
+        escrow_weights = {o.pk: shares.get(o.pk, Decimal("0")) for o in ownerships}
+        if not any(escrow_weights.values()):
+            escrow_weights = {o.pk: Decimal("1") for o in ownerships}
+    taxes = _allocate(escrow, escrow_weights)
+
+    premiums = {o.pk: Decimal("0") for o in ownerships}
+    for protection in _active_on(mortgage.protections.all(), debit_date):
+        premiums[protection.owner_id] += protection.monthly_premium
+
+    per_owner = {}
+    for o in ownerships:
+        parts = {"principal_interest": principal_interest[o.pk], "taxes": taxes[o.pk], "premiums": premiums[o.pk]}
+        per_owner[o] = {**parts, "total": sum(parts.values())}
+    total_premiums = sum(premiums.values())
+    return {
+        "date": debit_date,
+        "principal_interest": entry["total_payment"],
+        "tax_escrow": escrow,
+        "protection_premiums": total_premiums,
+        "total": entry["total_payment"] + escrow + total_premiums,
+        "per_owner": per_owner,
+    }
+
+
+def _active_on(queryset, as_of_date):
+    """Rows of a start_date / end_date queryset in effect on as_of_date."""
+    return queryset.filter(start_date__lte=as_of_date).filter(
+        models.Q(end_date__gte=as_of_date) | models.Q(end_date__isnull=True)
+    )
+
+
 def get_total_paid(mortgage, as_of_date=None):
     if as_of_date is None:
         as_of_date = date.today()
@@ -646,12 +708,19 @@ def calculate_monthly_cost(prop, for_user=None, as_of_date=None):
             your_taxes = (taxes_monthly * charges_share).quantize(TWO_PLACES)
             your_recurring = (recurring_monthly * charges_share).quantize(TWO_PLACES)
             your_rental_offset = (rental_net * share_pct).quantize(TWO_PLACES)
-            your_total = (your_mortgage + your_taxes + your_recurring - your_rental_offset).quantize(TWO_PLACES)
+            # Personal protections are the owner's own cost, never part of the property's
+            your_protections = sum(
+                (p.monthly_premium for p in _active_on(ownership.protections.all(), as_of_date)), Decimal("0")
+            )
+            your_total = (your_mortgage + your_taxes + your_recurring + your_protections - your_rental_offset).quantize(
+                TWO_PLACES
+            )
 
             result["your_mortgage_payment"] = your_mortgage
             result["your_taxes_monthly"] = your_taxes
             result["your_recurring_monthly"] = your_recurring
             result["your_rental_offset"] = your_rental_offset
+            result["your_protections_monthly"] = your_protections
             result["your_total_monthly"] = your_total
 
     return result
