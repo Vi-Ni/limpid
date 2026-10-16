@@ -40,3 +40,6 @@ htmlcov/
 
 # Production data dumps (personal data, never commit)
 dumps/
+
+# Working plans (may contain personal data); archived plans in done/ stay tracked
+docs/plans/*.md
