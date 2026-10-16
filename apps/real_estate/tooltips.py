@@ -29,8 +29,12 @@ TERM_TOOLTIPS = {
         "A larger down payment means less mortgage debt and lower insurance costs."
     ),
     "principal_paid": _(
-        "The total amount of mortgage principal you've paid off so far. "
+        "The mortgage principal you've paid off so far, based on what you actually paid each month. "
         "This is the portion of your payments that actually reduces your debt."
+    ),
+    "capital_improvements_paid": _(
+        "Renovations and improvements you paid that increase the property's cost base. "
+        "They count toward your contribution; repairs and other expenses don't."
     ),
     "monthly_payment": _(
         "Your regular mortgage payment amount, including both principal and interest. "
@@ -108,7 +112,7 @@ TERM_TOOLTIPS = {
     ),
     "at_end": _(
         "Each owner's share based on total contributions — down payment, "
-        "mortgage principal paid, and expenses. This evolves over time."
+        "mortgage principal actually repaid, and capital improvements paid. This evolves over time."
     ),
 }
 

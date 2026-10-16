@@ -31,6 +31,7 @@ from apps.real_estate.services import (
     get_current_ownership_shares,
     get_monthly_payment,
     get_owner_contributions,
+    get_owner_principal_paid,
     get_owner_snapshot,
     get_ownership_comparison,
     get_property_snapshot,
@@ -246,7 +247,8 @@ class TestOwnerContributions:
         contributions = get_owner_contributions(ownership)
         assert contributions["down_payment"] == Decimal("100000")
         assert contributions["principal_paid"] == Decimal("0")
-        assert contributions["expenses_paid"] == Decimal("0")
+        assert contributions["capital_improvements_paid"] == Decimal("0")
+        assert contributions["other_expenses_paid"] == Decimal("0")
         assert contributions["total"] == Decimal("100000")
 
 
@@ -1089,3 +1091,175 @@ class TestEvolutionChartCurrentMonth:
         data = generate_evolution_chart_data(mortgage)
         if data["current_month_index"] is not None:
             assert 0 <= data["current_month_index"] < len(data["labels"])
+
+
+# ── Payment splits drive principal attribution ─────────────
+
+
+@pytest.fixture
+def co_owned(prop, user, user2, mortgage):
+    """Two owners with equal down payments and a 50/50 ownership period."""
+    o1 = prop.ownerships.get(user=user)
+    o2 = PropertyOwnership.objects.create(user=user2, property=prop, down_payment=Decimal("100000"))
+    period = OwnershipPeriod.objects.create(property=prop, start_date=date(2020, 1, 1))
+    OwnershipPeriodShare.objects.create(period=period, owner=o1, share_pct=Decimal("50"))
+    OwnershipPeriodShare.objects.create(period=period, owner=o2, share_pct=Decimal("50"))
+    return o1, o2
+
+
+class TestOwnerPrincipalPaid:
+    def test_without_split_follows_ownership_shares(self, mortgage, co_owned):
+        o1, o2 = co_owned
+        as_of = date(2025, 1, 1)
+        total = get_total_paid(mortgage, as_of)["total_principal_paid"]
+        p1 = get_owner_principal_paid(mortgage, o1, as_of)
+        p2 = get_owner_principal_paid(mortgage, o2, as_of)
+        assert p1 + p2 == total
+        # Odd cents of each instalment go to the same owner: a few cents over the years
+        assert abs(p1 - p2) < Decimal("0.50")
+
+    def test_fixed_split_attributes_principal_to_actual_payer(self, mortgage, co_owned):
+        o1, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        as_of = date(2025, 1, 1)
+        total = get_total_paid(mortgage, as_of)["total_principal_paid"]
+        payment = get_monthly_payment(mortgage, as_of)
+        p1 = get_owner_principal_paid(mortgage, o1, as_of)
+        p2 = get_owner_principal_paid(mortgage, o2, as_of)
+        assert p1 + p2 == total
+        # o1 pays the remainder of each payment, so gets that share of the principal, not 50 %
+        assert abs(p1 - total * (payment - 1000) / payment) < Decimal("0.50")
+
+    def test_stops_at_as_of_date(self, mortgage, co_owned):
+        o1, _ = co_owned
+        early = get_owner_principal_paid(mortgage, o1, date(2021, 1, 1))
+        late = get_owner_principal_paid(mortgage, o1, date(2025, 1, 1))
+        assert Decimal("0") < early < late
+
+    def test_single_owner_gets_all_principal(self, mortgage, user, prop):
+        as_of = date(2025, 1, 1)
+        o1 = prop.ownerships.get(user=user)
+        total = get_total_paid(mortgage, as_of)["total_principal_paid"]
+        assert get_owner_principal_paid(mortgage, o1, as_of) == total
+
+
+class TestSplitConsistency:
+    def test_equal_shares_sum_exactly_to_payment(self, mortgage, co_owned):
+        schedule, _ = generate_per_owner_amortization(mortgage)
+        for entry in schedule[:24]:
+            assert sum(op["payment"] for op in entry["owner_payments"].values()) == entry["total_payment"]
+            assert sum(op["principal"] for op in entry["owner_payments"].values()) == entry["principal"]
+
+    def test_one_fixed_entry_sums_to_payment(self, mortgage, co_owned):
+        _, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        schedule, _ = generate_per_owner_amortization(mortgage)
+        for entry in schedule[:24]:
+            assert entry["owner_payments"][o2.pk]["payment"] == Decimal("1000.00")
+            assert sum(op["payment"] for op in entry["owner_payments"].values()) == entry["total_payment"]
+
+    def test_fixed_amount_above_payment_is_capped(self, mortgage, co_owned):
+        o1, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("9000"), effective_date=date(2020, 1, 1)
+        )
+        schedule, _ = generate_per_owner_amortization(mortgage)
+        first = schedule[0]
+        assert first["owner_payments"][o2.pk]["payment"] == first["total_payment"]
+        assert first["owner_payments"][o1.pk]["payment"] == Decimal("0.00")
+
+    def test_percentage_split_follows_rate_change(self, mortgage, co_owned):
+        _, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, share_pct=Decimal("25.00"), effective_date=date(2020, 1, 1)
+        )
+        MortgageRateChange.objects.create(
+            mortgage=mortgage, new_annual_rate=Decimal("3.000"), effective_date=date(2025, 1, 1)
+        )
+        schedule, _ = generate_per_owner_amortization(mortgage)
+        before = next(e for e in schedule if e["date"] == date(2024, 12, 1))
+        after = next(e for e in schedule if e["date"] == date(2025, 2, 1))
+        assert before["owner_payments"][o2.pk]["payment"] == (before["total_payment"] / 4).quantize(TWO_PLACES)
+        assert after["owner_payments"][o2.pk]["payment"] == (after["total_payment"] / 4).quantize(TWO_PLACES)
+        assert after["owner_payments"][o2.pk]["payment"] < before["owner_payments"][o2.pk]["payment"]
+
+
+class TestMonthlyCostSplitTiming:
+    def test_uses_split_in_effect_on_next_payment(self, prop, mortgage, user, user2, co_owned):
+        _, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("900"), effective_date=date(2025, 2, 1)
+        )
+        as_of = date(2025, 1, 15)  # next payment is 2025-02-01
+        payment = get_monthly_payment(mortgage, as_of)
+        cost_o2 = calculate_monthly_cost(prop, for_user=user2, as_of_date=as_of)
+        cost_o1 = calculate_monthly_cost(prop, for_user=user, as_of_date=as_of)
+        assert cost_o2["your_mortgage_payment"] == Decimal("900.00")
+        assert cost_o1["your_mortgage_payment"] == payment - Decimal("900")
+
+    def test_percentage_split_in_monthly_cost(self, prop, mortgage, user2, co_owned):
+        _, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, share_pct=Decimal("25.00"), effective_date=date(2020, 1, 1)
+        )
+        as_of = date(2025, 1, 15)
+        cost = calculate_monthly_cost(prop, for_user=user2, as_of_date=as_of)
+        assert cost["your_mortgage_payment"] == (get_monthly_payment(mortgage, as_of) / 4).quantize(TWO_PLACES)
+
+
+class TestContributionsUseActualPayments:
+    def test_only_capital_improvements_count(self, prop, co_owned):
+        o1, _ = co_owned
+        PropertyExpense.objects.create(
+            property=prop,
+            expense_type="renovation",
+            description="Kitchen",
+            amount=Decimal("20000"),
+            date=date(2022, 5, 1),
+            increases_acb=True,
+            paid_by=o1,
+        )
+        PropertyExpense.objects.create(
+            property=prop,
+            expense_type="repair",
+            description="Plumber",
+            amount=Decimal("800"),
+            date=date(2022, 6, 1),
+            paid_by=o1,
+        )
+        c = get_owner_contributions(o1, as_of_date=date(2023, 1, 1))
+        assert c["capital_improvements_paid"] == Decimal("20000")
+        assert c["other_expenses_paid"] == Decimal("800")
+        assert c["total"] == c["down_payment"] + c["principal_paid"] + Decimal("20000")
+
+    def test_principal_paid_follows_split(self, mortgage, co_owned):
+        o1, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        as_of = date(2025, 1, 1)
+        assert get_owner_contributions(o1, as_of)["principal_paid"] == get_owner_principal_paid(mortgage, o1, as_of)
+
+    def test_snapshot_principal_follows_split(self, prop, mortgage, user, co_owned):
+        o1, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        snapshot = get_owner_snapshot(prop, user)
+        assert snapshot["your_contributions"]["principal_paid"] == get_owner_principal_paid(mortgage, o1)
+
+    def test_comparison_reflects_who_pays(self, prop, mortgage, user, co_owned):
+        _, o2 = co_owned
+        OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=o2, monthly_amount=Decimal("1000"), effective_date=date(2020, 1, 1)
+        )
+        alice = next(r for r in get_ownership_comparison(prop) if r["user"] == user)
+        assert alice["purchase_share"] == Decimal("50.00")
+        assert alice["contribution_share"] > Decimal("50.00")

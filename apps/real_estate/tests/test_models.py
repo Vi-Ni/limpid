@@ -251,6 +251,39 @@ class TestOwnerMonthlyPayment:
             )
 
 
+class TestOwnerMonthlyPaymentAmountOrShare:
+    @pytest.fixture
+    def ownership(self, prop, user):
+        return PropertyOwnership.objects.create(user=user, property=prop, is_admin=True)
+
+    def test_share_pct_only(self, mortgage, ownership):
+        p = OwnerMonthlyPayment.objects.create(
+            mortgage=mortgage, owner=ownership, share_pct=Decimal("25.00"), effective_date=date(2020, 1, 1)
+        )
+        assert p.monthly_amount is None
+        assert "25" in str(p)
+
+    def test_amount_for_payment(self, mortgage, ownership):
+        fixed = OwnerMonthlyPayment(owner=ownership, monthly_amount=Decimal("900"))
+        pct = OwnerMonthlyPayment(owner=ownership, share_pct=Decimal("25.00"))
+        assert fixed.amount_for(Decimal("2000")) == Decimal("900")
+        assert pct.amount_for(Decimal("2000.20")) == Decimal("500.05")
+
+    def test_neither_amount_nor_share_rejected(self, mortgage, ownership):
+        with pytest.raises(IntegrityError):
+            OwnerMonthlyPayment.objects.create(mortgage=mortgage, owner=ownership, effective_date=date(2020, 1, 1))
+
+    def test_both_amount_and_share_rejected(self, mortgage, ownership):
+        with pytest.raises(IntegrityError):
+            OwnerMonthlyPayment.objects.create(
+                mortgage=mortgage,
+                owner=ownership,
+                monthly_amount=Decimal("900"),
+                share_pct=Decimal("25.00"),
+                effective_date=date(2020, 1, 1),
+            )
+
+
 class TestExpenseProofLink:
     def test_proof_link_optional(self, prop, user):
         ownership = PropertyOwnership.objects.create(user=user, property=prop, is_admin=True)

@@ -120,6 +120,14 @@
           {% include "components/metric_row.html" with label=_("Down payment") value=dp_display tooltip_id="down_payment" tooltip_text=tips.down_payment %}
           {% show_money owner_snapshot.your_contributions.principal_paid property.currency as princ_display %}
           {% include "components/metric_row.html" with label=_("Principal paid") value=princ_display tooltip_id="principal_paid" tooltip_text=tips.principal_paid %}
+          {% if owner_snapshot.your_contributions.capital_improvements_paid %}
+          {% show_money owner_snapshot.your_contributions.capital_improvements_paid property.currency as impr_display %}
+          {% include "components/metric_row.html" with label=_("Capital improvements paid") value=impr_display tooltip_id="capital_improvements_paid" tooltip_text=tips.capital_improvements_paid %}
+          {% endif %}
+          {% if owner_snapshot.your_contributions.other_expenses_paid %}
+          {% show_money owner_snapshot.your_contributions.other_expenses_paid property.currency as other_display %}
+          {% include "components/metric_row.html" with label=_("Other expenses paid") value=other_display annotation=_("not counted in your contribution") %}
+          {% endif %}
         </div>
       {% include "components/card_end.html" %}
 

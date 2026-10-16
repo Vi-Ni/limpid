@@ -6,8 +6,12 @@
   <div class="flex items-center justify-between py-2 border-b border-border/60">
     <div>
       <span class="text-sm">{{ p.owner.user.get_full_name|default:p.owner.user.username }}</span>
+      {% if p.share_pct is not None %}
+      <span class="font-mono text-sm font-semibold ml-2">{{ p.share_pct|floatformat:2 }} % {% trans "of each payment" %}</span>
+      {% else %}
       {% show_money p.monthly_amount property.currency as pmt_display %}
       <span class="font-mono text-sm font-semibold ml-2">{{ pmt_display }}/{% trans "mo" %}</span>
+      {% endif %}
       <span class="text-xs text-text-muted ml-2">{% trans "from" %} {{ p.effective_date }}</span>
     </div>
     <div class="flex items-center gap-2">
@@ -27,7 +31,8 @@
 <form hx-post="{% if editing %}{% url 'real_estate:edit_owner_payment' property.pk mortgage.pk payment.pk %}{% else %}{% url 'real_estate:owner_payments' property.pk mortgage.pk %}{% endif %}"
       hx-target="#owner-payments-container" hx-swap="innerHTML" class="space-y-3">
   {% csrf_token %}
-  <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+  <p class="text-xs text-text-muted">{% trans "Enter a monthly amount or a share of the payment. Owners without a split pay the remainder." %}</p>
+  <div class="grid grid-cols-2 gap-3 sm:grid-cols-5">
     {% for field in form %}
     <div>
       <label class="block text-xs text-text-muted mb-1">{{ field.label }}</label>
@@ -36,6 +41,9 @@
     </div>
     {% endfor %}
   </div>
+  {% if form.non_field_errors %}
+  <p class="text-xs text-danger-600">{{ form.non_field_errors.0 }}</p>
+  {% endif %}
   <button type="submit" class="btn-primary text-sm">
     {% if editing %}{% trans "Update payment split" %}{% else %}{% trans "Set payment split" %}{% endif %}
   </button>
